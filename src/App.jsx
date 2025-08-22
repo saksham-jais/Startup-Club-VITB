@@ -8,8 +8,8 @@ function App() {
 		<>
 			<Navbar />
 			<HeroSection
-				buildingImg="https://example.com/building.jpg"
-				personImg="https://example.com/person.jpg"
+				buildingImg="/vite.svg"
+				personImg="/src/assets/react.svg"
 				phoneImg="https://example.com/phone.jpg"
 			/>
 		</>

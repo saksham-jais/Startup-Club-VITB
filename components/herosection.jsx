@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 
 const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 	const defaultBuildingImg =
@@ -32,32 +32,32 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 				<div className="container mx-auto px-4">
 					<div className="flex flex-col md:flex-row items-center justify-between">
 						{/* Left side: Details with animation */}
-						<div className="md:w-1/2 mb-10 md:mb-0">
-							<h1 className="text-5xl md:text-6xl font-bold text-black leading-tight animate-land">
+						<div className="md:w-1/2 mb-10 md:mb-0 animate-land">
+							<h1 className="text-5xl md:text-6xl font-bold text-black leading-tight">
 								Bank Smarter.
 								<br />
 								Live Better.
 							</h1>
-							<p className="text-lg md:text-xl text-gray-600 mt-6 max-w-lg animate-land">
+							<p className="text-lg md:text-xl text-gray-600 mt-6 max-w-lg">
 								Manage your finances effortlessly with our advanced banking
 								solutions. Safe, fast, and designed for your everyday needs.
 							</p>
 							<div className="mt-8 flex items-center space-x-4">
-								<button className="bg-purple-500 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-600 transition duration-300 animate-land">
+								<button className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-600 transition duration-300">
 									Get Started Today
 								</button>
 								<a
 									href="#"
-									className="text-purple-500 font-medium hover:underline animate-land"
+									className="text-blue-500 font-medium hover:underline"
 								>
 									Learn More &gt;
 								</a>
 							</div>
 							<div className="mt-10 flex space-x-6 text-sm text-gray-500">
-								<a href="#" className="hover:text-purple-500 animate-land">
+								<a href="#" className="hover:text-blue-500">
 									Personalized Finance
 								</a>
-								<a href="#" className="hover:text-purple-500 animate-land">
+								<a href="#" className="hover:text-blue-500">
 									Investment Tools
 								</a>
 								{/* Add more links as needed */}
@@ -65,42 +65,29 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 						</div>
 
 						{/* Right side: Image collage with animation */}
-						<div className="md:w-1/2 relative h-80 md:h-96">
+						<div className="md:w-1/2 relative h-80 md:h-96 animate-land">
 							{/* Placeholder for building image */}
 							<img
 								src={buildingImg || defaultBuildingImg}
 								alt="Building"
-								className="absolute top-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg animate-land"
+								className="absolute top-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg"
 							/>
 							{/* Placeholder for person image */}
 							<img
 								src={personImg || defaultPersonImg}
 								alt="Person"
-								className="absolute top-0 right-0 w-2/3 md:w-1/2 h-full rounded-lg shadow-lg object-cover animate-land"
+								className="absolute top-0 right-0 w-2/3 md:w-1/2 h-full rounded-lg shadow-lg object-cover"
 							/>
 							{/* Placeholder for phone image */}
 							<img
 								src={phoneImg || defaultPhoneImg}
 								alt="Phone"
-								className="absolute bottom-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg animate-land"
+								className="absolute bottom-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg"
 							/>
-							{/* Best Services box */}
-							<div className="absolute bottom-0 right-0 bg-purple-200 text-purple-800 p-4 rounded-lg shadow-lg font-bold text-lg animate-land">
+							<div className="absolute bottom-0 right-0 bg-blue-200/75 text-blue-800 p-4 rounded-lg shadow-lg font-bold text-lg">
 								WE PROVIDE
 								<br />
 								BEST SERVICES
-							</div>
-							{/* Example overlay bubbles - adjust positions as needed */}
-							<div className="absolute top-10 left-20 bg-white p-2 rounded-full shadow-md flex items-center space-x-2 text-sm animate-land">
-								<span className="bg-blue-100 p-1 rounded">🇺🇸</span>
-								<span>New Loan</span>
-							</div>
-							<div className="absolute top-20 right-10 bg-white p-2 rounded-full shadow-md text-sm animate-land">
-								Pedro Neto $50.00
-							</div>
-							{/* Arrow or other elements */}
-							<div className="absolute bottom-10 right-20 text-purple-500 text-2xl animate-land">
-								&rarr;
 							</div>
 						</div>
 					</div>
