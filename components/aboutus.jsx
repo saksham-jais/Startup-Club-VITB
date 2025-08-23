@@ -82,6 +82,18 @@ const AboutUs = () => {
 			},
 		},
 		{
+			name: "Patricia Stanley",
+			role: "Product Lead",
+			image:
+				"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=250&h=300",
+			socials: {
+				facebook: "https://facebook.com/patricia",
+				instagram: "https://instagram.com/patricia",
+				linkedin: "https://linkedin.com/in/patricia",
+				twitter: "https://twitter.com/patricia"
+			},
+		},
+		{
 			name: "Evelyn Stone",
 			role: "Photographer",
 			image:
@@ -97,7 +109,7 @@ const AboutUs = () => {
 	return (
 		<div className="container mx-auto py-10 text-center">
 			<h2 className="text-3xl font-bold text-blue-900 mb-8 no-underline hover:underline">OUR TEAM</h2>
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+			<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 				{members.map((member, index) => (
 					<TeamCard key={index} {...member} />
 				))}
