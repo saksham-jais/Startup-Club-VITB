@@ -36,7 +36,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
     <div className="flex items-center justify-center w-full h-full">
       <div className={`relative transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${glowEffect ? "animate-flash" : ""}`}>
-        <img src="/src/assets/sc.png" alt="VITERA Club Logo" className="w-[250px] h-auto" />
+        <img src="/src/assets/sc.png" alt="Startup Club" className="w-[250px] h-auto" />
       </div>
     </div>
   </div>
