@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/navbar";
 import "./App.css";
+import "./index.css";
 import HeroSection from "../components/herosection";
 import AboutUs from "../components/aboutus";
 
