@@ -1,2 +1,28 @@
 @import "tailwindcss";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+
+/* Custom animations */
+@layer utilities {
+    @keyframes land {
+      0% { transform: translateY(-100vh); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+  
+    @keyframes flash {
+      0%   { filter: drop-shadow(0 0 15px rgba(0, 150, 255, 0.5)); opacity: 0.1; }
+      30%  { filter: drop-shadow(0 0 80px rgba(0, 180, 255, 0.8)); opacity: 1; }
+      60%  { filter: drop-shadow(0 0 120px rgba(0, 200, 255, 0.9)); opacity: 1; }
+      100% { filter: drop-shadow(0 0 15px rgba(0, 150, 255, 0.5)); opacity: 0; }
+    }
+  
+    /* Create utility classes */
+    .animate-land {
+      animation: land 1s ease-out forwards;
+    }
+  
+    .animate-flash {
+      animation: flash 2s cubic-bezier(0.19, 1, 0.22, 1) forwards; /* duration increased to 2s */
+    }
+  }
+  
+  
