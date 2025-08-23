@@ -15,13 +15,13 @@ const TeamCard = ({ name, role, image, socials }) => {
     ? Object.entries(socials).filter(([_, url]) => url)
     : [];
 	return (
-		<div className="relative w-64 rounded-lg overflow-hidden shadow-lg group">
+		<div className="relative w-60 rounded-lg overflow-hidden shadow-lg group">
 			{/* Image */}
 			<img src={image} alt={name} className="w-full h-80 object-cover" />
 
 			{/* Social bar (thin top bar that slides down) */}
 			<div
-				className={`absolute top-0 right-0 w-12 bg-pink-500 flex flex-col items-center space-y-3 py-2
+				className={`absolute top-0 right-0 w-12 bg-blue-500 flex flex-col items-center space-y-3 py-2
                  rounded-bl-lg
                   transform -translate-y-full opacity-0
                  group-hover:translate-y-0 group-hover:opacity-100
@@ -44,12 +44,12 @@ const TeamCard = ({ name, role, image, socials }) => {
 
 			{/* Name & Role at bottom */}
 			<div
-				className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-4
+				className="absolute bottom-0 left-0 right-0 bg-black/60 bg-opacity-60 text-white p-2
                  transform translate-y-full group-hover:translate-y-0
                  transition-transform duration-500 ease-in-out"
 			>
 				<h3 className="text-xl font-bold">{name}</h3>
-				<p className="text-pink-300">{role}</p>
+				<p className="text-blue-300">{role}</p>
 			</div>
 		</div>
 	);
@@ -96,7 +96,7 @@ const AboutUs = () => {
 	];
 	return (
 		<div className="container mx-auto py-10 text-center">
-			<h2 className="text-3xl font-bold text-blue-900 mb-8">OUR TEAM</h2>
+			<h2 className="text-3xl font-bold text-blue-900 mb-8 no-underline hover:underline">OUR TEAM</h2>
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 				{members.map((member, index) => (
 					<TeamCard key={index} {...member} />
