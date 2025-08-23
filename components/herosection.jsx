@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 
 const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 	const defaultBuildingImg =
 		"https://via.placeholder.com/300x200?text=Building";
 	const defaultPersonImg = "https://via.placeholder.com/300x400?text=Person";
 	const defaultPhoneImg = "https://via.placeholder.com/300x200?text=Phone";
+	const [isLoading, setIsLoading] = useState(true);
+	const [glowEffect, setGlowEffect] = useState(false);
 
 	useEffect(() => {
 		// Trigger animation on mount or refresh
@@ -14,8 +16,32 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 		});
 	}, []);
 
+	useEffect(() => {
+		// Start flash immediately
+		setGlowEffect(true);
+	  
+		// Hide loading screen after desired time
+		const loadingTimer = setTimeout(() => {
+		  setIsLoading(false);
+		}, 2000); // adjust duration as needed
+	  
+		return () => clearTimeout(loadingTimer);
+	  }, []);
+	  
+
 	return (
 		<>
+		      {/* Loading Screen */}
+			  {isLoading && (
+  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
+    <div className="flex items-center justify-center w-full h-full">
+      <div className={`relative transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${glowEffect ? "animate-flash" : ""}`}>
+        <img src="/src/assets/sc.png" alt="Startup Club" className="w-[250px] h-auto" />
+      </div>
+    </div>
+  </div>
+)}
+
 			{" "}
 			<style>
 				{`
