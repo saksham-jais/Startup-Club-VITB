@@ -1,5 +1,4 @@
 import React, { useEffect,useState } from "react";
-
 const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 	const defaultBuildingImg =
 		"https://via.placeholder.com/300x200?text=Building";
