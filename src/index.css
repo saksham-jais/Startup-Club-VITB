@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+body, * {
+  cursor: none !important;
+}
 
 /* Custom animations */
 @layer utilities {

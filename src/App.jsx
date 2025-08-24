@@ -5,10 +5,12 @@ import "./index.css";
 import HeroSection from "../components/herosection";
 import AboutUs from "../components/aboutus";
 import AnimatedCards from "../components/event";
+import CustomCursor from "../components/cursor";
 
 function App() {
 	return (
 		<>
+			<CustomCursor />
 			<Navbar />
 			<HeroSection
 				buildingImg="/vite.svg"
