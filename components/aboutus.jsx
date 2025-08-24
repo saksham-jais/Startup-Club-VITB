@@ -51,7 +51,7 @@ const TeamCard = ({ name, role, image, socials }) => {
 };
 
 const AboutUs = () => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
+  const { ref, inView } = useInView({ threshold: 0.5 });
 
   const members = [
     {
@@ -94,7 +94,7 @@ const AboutUs = () => {
       name: "Evelyn Stone",
       role: "Photographer",
       image:
-        "https://images.unsplash.com/photo-1529626455594-4ff0802cf91f?auto=format&fit=crop&w=250&h=300",
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
       socials: {
         facebook: "#",
         instagram: "#",
@@ -106,17 +106,28 @@ const AboutUs = () => {
 
   // Card animation variants
   const cardVariants = {
-    hidden: (i) => ({
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      rotate: i % 2 === 0 ? -10 : 10, // tilt like a stack
-    }),
+    hidden: (i) => {
+      const mid = (members.length - 1) / 2;
+      const cardWidth = 240; // px, from w-60 (15rem = 240px)
+      const gap = 32; // px, from gap-8 (2rem = 32px)
+      const naturalLeft = i * (cardWidth + gap);
+      const center = (members.length * cardWidth + (members.length - 1) * gap) / 2;
+      const targetLeft = center - cardWidth / 2 + (i - mid) * 20; // fan spread
+      const x = targetLeft - naturalLeft;
+      return {
+        scale: 0.8,
+        y: 50,
+        rotate: (i - mid) * 10,
+        x,
+        opacity: 0.8,
+      };
+    },
     visible: (i) => ({
-      opacity: 1,
       scale: 1,
       y: 0,
       rotate: 0,
+      x: 0,
+      opacity: 1,
       transition: {
         duration: 0.6,
         ease: "easeOut",
