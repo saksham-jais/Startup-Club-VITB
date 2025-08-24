@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -52,6 +52,7 @@ const TeamCard = ({ name, role, image, socials }) => {
 
 const AboutUs = () => {
   const { ref, inView } = useInView({ threshold: 0.5 });
+  const [showAll, setShowAll] = useState(false);
 
   const members = [
     {
@@ -102,9 +103,20 @@ const AboutUs = () => {
         twitter: "#",
       },
     },
+    {
+      name: "Evelyn Stone",
+      role: "Photographer",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
+      socials: {
+        facebook: "#",
+        instagram: "#",
+        linkedin: "#",
+        twitter: "#",
+      },
+    }
   ];
 
-  // Card animation variants
   const cardVariants = {
     hidden: (i) => {
       const mid = (members.length - 1) / 2;
@@ -136,6 +148,8 @@ const AboutUs = () => {
     }),
   };
 
+  const displayedMembers = showAll ? members : members.slice(0, 4);
+
   return (
     <div className="container mx-auto py-10 text-center" ref={ref}>
       <h2 className="text-3xl font-bold text-blue-900 mb-8">OUR TEAM</h2>
@@ -146,12 +160,23 @@ const AboutUs = () => {
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
       >
-        {members.map((member, index) => (
+        {displayedMembers.map((member, index) => (
           <motion.div key={index} custom={index} variants={cardVariants}>
             <TeamCard {...member} />
           </motion.div>
         ))}
       </motion.div>
+
+      {/* View More/Less Button */}
+      <div className="flex justify-center mt-8">
+        <button
+          className="relative border-none block py-3 px-8 text-xl bg-transparent cursor-pointer select-none overflow-hidden text-blue-600 z-10 font-inherit font-medium hover:text-white active:[&>span]:before:bg-blue-700"
+          onClick={() => setShowAll(!showAll)}
+        >
+          <span className="absolute inset-0 bg-transparent z-[-1] border-4 border-blue-600 before:content-[''] before:block before:absolute before:w-[8%] before:h-[500%] before:bg-white before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:-rotate-[60deg] before:transition-all before:duration-300 hover:before:-rotate-90 hover:before:w-full hover:before:bg-blue-600 group-hover:before:-rotate-90 group-hover:before:w-full group-hover:before:bg-blue-600" />
+          {showAll ? "View Less" : "View More"}
+        </button>
+      </div>
     </div>
   );
 };
