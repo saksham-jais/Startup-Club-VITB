@@ -43,7 +43,6 @@ export default function AnimatedCards() {
             const isActive = offset === 0;
             const style = {
               position: "absolute",
-              top: "50%",
               left: "50%",
               zIndex: 20 - Math.abs(offset),
               transform: `
