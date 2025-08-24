@@ -6,6 +6,7 @@ import HeroSection from "../components/herosection";
 import AboutUs from "../components/aboutus";
 import AnimatedCards from "../components/event";
 import CustomCursor from "../components/cursor";
+import TestimonialComponent from "../components/testimonial";
 
 function App() {
 	return (
@@ -13,14 +14,15 @@ function App() {
 			<CustomCursor />
 			<Navbar />
 			<HeroSection
-				buildingImg="/vite.svg"
-				personImg="/src/assets/react.svg"
-				phoneImg="https://example.com/phone.jpg"
+				buildingImg="https://picsum.photos/300/200?random=3"
+				personImg="https://picsum.photos/300/200?random=2"
+				phoneImg="https://picsum.photos/300/200?random=1"
 			/>
-			<AboutUs/>
+			<AboutUs />
 			<div className="max-h-[600px] bg-gray-900 flex items-center justify-center">
-      <AnimatedCards />
-    </div>
+				<AnimatedCards />
+			</div>
+			<TestimonialComponent />
 		</>
 	);
 }
