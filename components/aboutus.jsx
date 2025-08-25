@@ -20,9 +20,9 @@ const TeamCard = ({ name, role, image, socials }) => {
       <img src={image} alt={name} className="w-full h-80 object-cover" />
       <div
         className="absolute top-0 right-0 w-12 bg-blue-500 flex flex-col items-center space-y-3 py-2
-                   rounded-bl-lg transform -translate-y-full opacity-0
-                   group-hover:translate-y-0 group-hover:opacity-100
-                   transition-all duration-700 ease-in-out"
+                    rounded-bl-lg transform -translate-y-full opacity-0
+                    group-hover:translate-y-0 group-hover:opacity-100
+                    transition-all duration-700 ease-in-out"
       >
         {activeSocials.map(([platform, url]) => (
           <a
@@ -38,8 +38,8 @@ const TeamCard = ({ name, role, image, socials }) => {
       </div>
       <div
         className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2
-                   transform translate-y-full group-hover:translate-y-0
-                   transition-transform duration-500 ease-in-out"
+                    transform translate-y-full group-hover:translate-y-0
+                    transition-transform duration-500 ease-in-out"
       >
         <h3 className="text-xl font-bold">{name}</h3>
         <p className="text-blue-300">{role}</p>
@@ -113,72 +113,6 @@ const AboutUs = () => {
 
   const displayedMembers = showAll ? members : members.slice(0, 4);
 
-  const centerVariants = {
-    hidden: (i) => {
-      const numCards = 4; // Fixed to 4 cards in non-view-more mode
-      const mid = (numCards - 1) / 2;
-      const cardWidth = 240; // w-60 = 15rem = 240px
-      const gap = 32; // gap-8 = 2rem = 32px
-      const naturalLeft = i * (cardWidth + gap);
-      const totalWidth = numCards * cardWidth + (numCards - 1) * gap;
-      const center = totalWidth / 2;
-      const targetLeft = center - cardWidth / 2 + (i - mid) * 20; // Slight fan spread
-      const x = targetLeft - naturalLeft;
-      return {
-        scale: 0.8,
-        y: 50,
-        rotate: (i - mid) * 5, // Reduced rotation for less distortion
-        x,
-        opacity: 0.8,
-      };
-    },
-    visible: (i) => ({
-      scale: 1,
-      y: 0,
-      rotate: 0,
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-        delay: i * 0.2,
-      },
-    }),
-  };
-
-  const rowVariants = {
-    hidden: (i) => {
-      const cols = 4; // Based on md:grid-cols-4
-      const row = Math.floor(i / cols);
-      const x = (row % 2 === 0) ? 500 : -500; // From right for even rows, left for odd
-      return {
-        scale: 0.8,
-        y: 50,
-        x,
-        opacity: 0.8,
-      };
-    },
-    visible: (i) => ({
-      scale: 1,
-      y: 0,
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-        delay: i * 0.1,
-      },
-    }),
-  };
-
-const getVariants = (index) => {
-  if (showAll) {
-    return rowVariants;
-  } else {
-    return centerVariants;
-  }
-};
-
   return (
     <div className="container mx-auto py-10 text-center" ref={ref}>
       <h2 className="text-3xl font-bold text-blue-900 mb-8 hover:underline">OUR TEAM</h2>
@@ -189,7 +123,48 @@ const getVariants = (index) => {
         animate={inView ? "visible" : "hidden"}
       >
         {displayedMembers.map((member, index) => (
-          <motion.div key={index} custom={index} variants={getVariants(index)}>
+          <motion.div
+            key={index}
+            custom={index}
+            variants={{
+              hidden: () => {
+                // Fan spread only in compact mode
+                if (showAll) {
+                  return { scale: 0.8, y: 50, rotate: 0, x: 0, opacity: 0.8 };
+                }
+                const numCards = 4;
+                const mid = (numCards - 1) / 2;
+                const cardWidth = 240;
+                const gap = 32;
+                const naturalLeft = index * (cardWidth + gap);
+                const totalWidth = numCards * cardWidth + (numCards - 1) * gap;
+                const center = totalWidth / 2;
+                const targetLeft = center - cardWidth / 2 + (index - mid) * 20;
+                const x = targetLeft - naturalLeft;
+                return {
+                  scale: 0.8,
+                  y: 50,
+                  rotate: (index - mid) * 5,
+                  x,
+                  opacity: 0.8,
+                };
+              },
+              visible: {
+                scale: 1,
+                y: 0,
+                rotate: 0,
+                x: 0,
+                opacity: 1,
+                transition: {
+                  duration: 0.6,
+                  ease: "easeOut",
+                  delay: index * (showAll ? 0.1 : 0.2),
+                },
+              },
+            }}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+          >
             <TeamCard {...member} />
           </motion.div>
         ))}
