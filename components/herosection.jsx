@@ -79,7 +79,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
                 solutions. Safe, fast, and designed for your everyday needs.
               </p>
               <div className="mt-8 flex items-center space-x-4">
-                <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-600 transition duration-300">
+                <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-blue-500 hover:border-3  transition duration-300">
                   Get Started Today
                 </button>
                 <a

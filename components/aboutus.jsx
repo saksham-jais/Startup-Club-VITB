@@ -18,7 +18,6 @@ const TeamCard = ({ name, role, image, socials }) => {
   return (
     <div className="relative w-60 rounded-lg overflow-hidden shadow-lg group">
       <img src={image} alt={name} className="w-full h-80 object-cover" />
-      {/* Social bar */}
       <div
         className="absolute top-0 right-0 w-12 bg-blue-500 flex flex-col items-center space-y-3 py-2
                    rounded-bl-lg transform -translate-y-full opacity-0
@@ -37,7 +36,6 @@ const TeamCard = ({ name, role, image, socials }) => {
           </a>
         ))}
       </div>
-      {/* Name & Role */}
       <div
         className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2
                    transform translate-y-full group-hover:translate-y-0
@@ -60,76 +58,76 @@ const AboutUs = () => {
       role: "Founder",
       image:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
-      socials: {
-        facebook: "#",
-        instagram: "#",
-        linkedin: "#",
-        twitter: "#",
-      },
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
     },
     {
       name: "Patricia Stanley",
       role: "Product Lead",
       image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&h=300",
-      socials: {
-        facebook: "#",
-        instagram: "#",
-        linkedin: "#",
-        twitter: "#",
-      },
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
     },
     {
       name: "John Stanley",
       role: "Content Lead",
       image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&h=300",
-      socials: {
-        facebook: "#",
-        instagram: "#",
-        linkedin: "#",
-        twitter: "#",
-      },
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
     },
     {
       name: "Evelyn Stone",
       role: "Photographer",
       image:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
-      socials: {
-        facebook: "#",
-        instagram: "#",
-        linkedin: "#",
-        twitter: "#",
-      },
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
     },
     {
       name: "Evelyn Stone",
       role: "Photographer",
       image:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
-      socials: {
-        facebook: "#",
-        instagram: "#",
-        linkedin: "#",
-        twitter: "#",
-      },
-    }
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
+    },
+    {
+      name: "Evelyn Stone",
+      role: "Photographer",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
+    },
+    {
+      name: "Evelyn Stone",
+      role: "Photographer",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
+    },
+    {
+      name: "Evelyn Stone",
+      role: "Photographer",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&h=300",
+      socials: { facebook: "#", instagram: "#", linkedin: "#", twitter: "#" },
+    },
   ];
 
-  const cardVariants = {
+  const displayedMembers = showAll ? members : members.slice(0, 4);
+
+  const centerVariants = {
     hidden: (i) => {
-      const mid = (members.length - 1) / 2;
-      const cardWidth = 240; // px, from w-60 (15rem = 240px)
-      const gap = 32; // px, from gap-8 (2rem = 32px)
+      const numCards = 4; // Fixed to 4 cards in non-view-more mode
+      const mid = (numCards - 1) / 2;
+      const cardWidth = 240; // w-60 = 15rem = 240px
+      const gap = 32; // gap-8 = 2rem = 32px
       const naturalLeft = i * (cardWidth + gap);
-      const center = (members.length * cardWidth + (members.length - 1) * gap) / 2;
-      const targetLeft = center - cardWidth / 2 + (i - mid) * 20; // fan spread
+      const totalWidth = numCards * cardWidth + (numCards - 1) * gap;
+      const center = totalWidth / 2;
+      const targetLeft = center - cardWidth / 2 + (i - mid) * 20; // Slight fan spread
       const x = targetLeft - naturalLeft;
       return {
         scale: 0.8,
         y: 50,
-        rotate: (i - mid) * 10,
+        rotate: (i - mid) * 5, // Reduced rotation for less distortion
         x,
         opacity: 0.8,
       };
@@ -143,31 +141,60 @@ const AboutUs = () => {
       transition: {
         duration: 0.6,
         ease: "easeOut",
-        delay: i * 0.2, // staggered reveal
+        delay: i * 0.2,
       },
     }),
   };
 
-  const displayedMembers = showAll ? members : members.slice(0, 4);
+  const rowVariants = {
+    hidden: (i) => {
+      const cols = 4; // Based on md:grid-cols-4
+      const row = Math.floor(i / cols);
+      const x = (row % 2 === 0) ? 500 : -500; // From right for even rows, left for odd
+      return {
+        scale: 0.8,
+        y: 50,
+        x,
+        opacity: 0.8,
+      };
+    },
+    visible: (i) => ({
+      scale: 1,
+      y: 0,
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+        delay: i * 0.1,
+      },
+    }),
+  };
+
+const getVariants = (index) => {
+  if (showAll) {
+    return rowVariants;
+  } else {
+    return centerVariants;
+  }
+};
 
   return (
     <div className="container mx-auto py-10 text-center" ref={ref}>
-      <h2 className="text-3xl font-bold text-blue-900 mb-8">OUR TEAM</h2>
+      <h2 className="text-3xl font-bold text-blue-900 mb-8 hover:underline">OUR TEAM</h2>
 
-      {/* Motion Grid */}
       <motion.div
         className="grid grid-cols-1 md:grid-cols-4 gap-8"
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
       >
         {displayedMembers.map((member, index) => (
-          <motion.div key={index} custom={index} variants={cardVariants}>
+          <motion.div key={index} custom={index} variants={getVariants(index)}>
             <TeamCard {...member} />
           </motion.div>
         ))}
       </motion.div>
 
-      {/* View More/Less Button */}
       <div className="flex justify-center mt-8">
         <button
           className="relative border-none block py-3 px-8 text-xl bg-transparent cursor-pointer select-none overflow-hidden text-blue-600 z-10 font-inherit font-medium hover:text-white active:[&>span]:before:bg-blue-700"
