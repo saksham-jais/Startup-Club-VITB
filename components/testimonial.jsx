@@ -60,94 +60,121 @@ const CARD_DATA = [
   },
 ];
 
-// Helper function to get the nearest card index to the center of the scroller
-const getNearestCardIndex = (translateX, cardWidth) => {
-  // Calculate how many cards have been scrolled past, roughly.
-  // The sign is important: -translateX means we are dragging to the left.
-  const scrolledCards = -translateX / (cardWidth + 32); // 32px is the gap
-  // Round to the nearest whole number to find the closest card index
-  return Math.round(scrolledCards);
-};
-
 export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollX, setScrollX] = useState(0);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [padding, setPadding] = useState(0);
   
   const scrollerRef = useRef(null);
   const cardRef = useRef(null);
-  
+
+  // Set dynamic padding to center cards
+  useEffect(() => {
+    const updatePadding = () => {
+      if (scrollerRef.current && cardRef.current) {
+        const containerWidth = scrollerRef.current.offsetWidth;
+        const cardWidth = cardRef.current.offsetWidth;
+        setPadding((containerWidth / 2) - (cardWidth / 2));
+      }
+    };
+
+    updatePadding();
+    window.addEventListener('resize', updatePadding);
+    return () => window.removeEventListener('resize', updatePadding);
+  }, []);
+
+  // Automatic scrolling effect
+  useEffect(() => {
+    if (isDragging || padding === 0) return; // Skip if dragging or padding not set
+
+    const interval = setInterval(() => {
+      if (scrollerRef.current && cardRef.current) {
+        const cardWidth = cardRef.current.offsetWidth;
+        const gap = 32;
+        const fullStep = cardWidth + gap;
+        const nextIndex = (activeCardIndex + 1) % CARD_DATA.length;
+        const targetPosition = nextIndex * fullStep;
+
+        // Smoothly scroll to the next card
+        scrollerRef.current.scrollTo({
+          left: targetPosition,
+          behavior: 'smooth',
+        });
+        setActiveCardIndex(nextIndex);
+      }
+    }, 3000); // 3-second delay
+
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, [isDragging, activeCardIndex, padding]);
+
   // This effect updates the active card index as the user scrolls
   useEffect(() => {
     const handleScrollUpdate = () => {
       if (scrollerRef.current && cardRef.current) {
-        // Get the width of a single card
         const cardWidth = cardRef.current.offsetWidth;
-        // Get the scroll position of the scroller container
+        const gap = 32;
+        const fullStep = cardWidth + gap;
         const scrollPosition = scrollerRef.current.scrollLeft;
-        // Calculate the center position of the scroller relative to the total width
-        const centerOffset = scrollerRef.current.offsetWidth / 2;
-        // Find which card is closest to the center
-        const nearestIndex = Math.floor((scrollPosition + centerOffset - (cardWidth / 2)) / (cardWidth + 32)); // 32px is the gap
         
-        // Update the active card index, making sure it's within bounds
-        setActiveCardIndex(Math.max(0, Math.min(nearestIndex, CARD_DATA.length - 1)));
+        // Calculate the nearest card index based on the center
+        const nearestIndex = Math.max(0, Math.min(
+          Math.round(scrollPosition / fullStep),
+          CARD_DATA.length - 1
+        ));
+        setActiveCardIndex(nearestIndex);
       }
     };
     
-    // Add event listener to track scrolling
     const currentRef = scrollerRef.current;
     if (currentRef) {
       currentRef.addEventListener('scroll', handleScrollUpdate);
     }
     
-    // Cleanup function to remove the event listener
     return () => {
       if (currentRef) {
         currentRef.removeEventListener('scroll', handleScrollUpdate);
       }
     };
-  }, []);
+  }, [padding]);
 
   // Handle the start of a drag action
   const handleMouseDown = (e) => {
     setIsDragging(true);
-    // Record the initial X position of the mouse click
     setStartX(e.pageX - scrollerRef.current.offsetLeft);
-    // Record the initial scroll position
     setScrollX(scrollerRef.current.scrollLeft);
   };
   
   // Handle the drag movement
   const handleMouseMove = (e) => {
-    // Only proceed if a drag is in progress
     if (!isDragging) return;
     e.preventDefault();
     
-    // Calculate the distance the cursor has moved
     const x = e.pageX - scrollerRef.current.offsetLeft;
     const walk = (x - startX);
     
-    // Update the scroll position of the container
     scrollerRef.current.scrollLeft = scrollX - walk;
   };
   
   // Handle the end of a drag action
   const handleMouseUp = () => {
     setIsDragging(false);
-    // After dragging, find the closest card and snap to it
     if (scrollerRef.current && cardRef.current) {
+      const cardWidth = cardRef.current.offsetWidth;
+      const gap = 32;
+      const fullStep = cardWidth + gap;
       const scrollPosition = scrollerRef.current.scrollLeft;
-      const cardWidth = cardRef.current.offsetWidth + 32; // Add gap
-      const targetIndex = Math.round(scrollPosition / cardWidth);
+      const nearestIndex = Math.max(0, Math.min(
+        Math.round(scrollPosition / fullStep),
+        CARD_DATA.length - 1
+      ));
       
-      // Smoothly scroll to the new position
       scrollerRef.current.scrollTo({
-        left: targetIndex * cardWidth,
+        left: nearestIndex * fullStep,
         behavior: 'smooth'
       });
-      setActiveCardIndex(targetIndex);
+      setActiveCardIndex(nearestIndex);
     }
   };
   
@@ -164,17 +191,21 @@ export default function App() {
 
       <div
         ref={scrollerRef}
-        className="flex overflow-x-hidden w-full cursor-grab active:cursor-grabbing snap-x snap-mandatory py-8 px-4"
+        className="flex overflow-x-scroll overflow-y-hidden w-full cursor-grab active:cursor-grabbing snap-x snap-mandatory py-8 px-4 scrollbar-hide"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
+        style={{ WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none' }}
       >
-        <div className="flex gap-8 pl-[50vw] pr-[50vw] overflow-visible">
+        <div 
+          className="flex gap-8 overflow-visible"
+          style={{ paddingLeft: `${padding}px`, paddingRight: `${padding}px` }}
+        >
           {CARD_DATA.map((card, index) => (
             <div
               key={card.id}
-              ref={cardRef}
+              ref={index === 0 ? cardRef : null}
               className={`
                 group
                 flex-shrink-0
