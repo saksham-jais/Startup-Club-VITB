@@ -60,7 +60,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
         `}
       </style>
 
-      <section className="bg-gradient-to-b from-white to-gray-50 py-20 overflow-hidden">
+      <section className="bg-gradient-to-b from-white to-gray-50 py-20 overflow-hidden top-10 relative">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between">
             {/* Left side: Details with animation */}

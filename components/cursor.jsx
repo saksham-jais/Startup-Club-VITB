@@ -29,8 +29,8 @@ export default function CustomCursor() {
           top: 0;
           left: 0;
           pointer-events: none;
-          width: 30px;
-          height: 30px;
+          width: 20px;
+          height: 20px;
           background-size: contain;
           background-repeat: no-repeat;
           transform: translate(-50%, -50%);

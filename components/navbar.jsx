@@ -1,90 +1,92 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { FaRegSmileBeam } from "react-icons/fa"; // Example icon
 
 export default function Navbar() {
 	const [scrolled, setScrolled] = useState(false);
 	const location = useLocation();
 
 	useEffect(() => {
-		const handleScroll = () => {
-			setScrolled(window.scrollY > 50);
-		};
+		const handleScroll = () => setScrolled(window.scrollY > 10);
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
-	const navItems = [
-		{ name: "Home", path: "/" },
-		{ name: "About", path: "/aboutus" },
-		{ name: "Services", path: "/services" },
-		{ name: "Testimonials", path: "/testimonial" },
-		{ name: "LogIn/SignUp", path: "/login_signup" },
-	];
-
-	// Show navbar background only if scrolled OR not on home
-	const showContainer = scrolled || location.pathname !== "/";
-
 	return (
-		<>
-			<style>
-				{`
-          @keyframes land {
-            0% { transform: translateY(-100vh); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-          }
-          .animate-land {
-            animation: land 1s ease-out forwards;
-          }
-        `}
-			</style>
-			<nav className="fixed top-0 left-0 w-full z-50 transition-colors duration-500 animate-land">
-				{/* Background container (fades in/out) */}
-				<div
-					className={`absolute inset-0 transition-all duration-500 ease-in-out
-          ${
-						showContainer
-							? "bg-white shadow-lg opacity-100 translate-y-0"
-							: "bg-transparent opacity-0 translate-y-0"
-					}`}
-				/>
-
-				{/* Links (always visible, stagger only when container is visible) */}
-				<div className="relative max-w-7xl mx-auto px-6 py-4 flex items-center justify-center space-x-8">
-					{navItems.map((item, index) => (
-						<Link
-							key={item.name}
-							to={item.path}
-							className={`
-              relative font-semibold transform transition-all duration-500 ease-out
-              ${
-								location.pathname === item.path 
-									? "text-blue-600"
-									: showContainer
-									? "text-black hover:text-blue-600"
-									: "text-blue-200 hover:text-blue-400"
-							}
-              ${
-								showContainer
-									? `opacity-100 translate-y-0 scale-100 delay-[${
-											index * 150
-									  }ms]`
-									: "opacity-100 translate-y-0 scale-100 delay-[0ms]"
-							}
-            `}
-						>
-							<span
-								className={`px-4 py-2 rounded-full transition-all duration-300 ${
-									location.pathname === item.path
-										? "border-3 border-blue-400"
-										: "hover:bg-blue-400/20"
-								}`}
-							>
-								{item.name}
-							</span>
-						</Link>
-					))}
+		<nav className="
+  w-full fixed top-0 left-0 z-50
+  flex items-center justify-center
+  py-1
+  bg-transparent
+">
+			<div className="
+    flex items-center justify-between gap-10
+    px-6 py-2
+    rounded-full
+    bg-[#101926]
+    shadow-xl
+    mx-auto
+    border border-[#212B36]/40
+    max-w-[1500px] w-full
+  ">
+				{/* Logo */}
+				<div className="flex items-center space-x-2">
+					<div className="w-10 h-10 rounded-full bg-[#2CEFE3] flex items-center justify-center">
+						<svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+							<circle cx="12" cy="12" r="10" stroke="#101926" strokeWidth="2" />
+							<circle cx="12" cy="12" r="4" fill="#101926" />
+						</svg>
+					</div>
+					<span className="text-white text-xl font-bold tracking-widest">Start<span className="text-[#2CEFE3]">Up</span>Club</span>
 				</div>
-			</nav>
-		</>
+
+				{/* Main Nav */}
+				<div className="flex-1 flex justify-center">
+					<div className="bg-[#172033] rounded-full px-2 py-1 flex items-center gap-0">
+						{[
+							{ name: "Home", path: "/" },
+							{ name: "Teams", path: "/teams" },
+							{ name: "About Us", path: "#about" },
+							{ name: "Event Timeline", path: "/events" },
+							{ name: "Testimonials", path: "#testimonials" },
+						].map(({ name, path }, i) => (
+							<Link
+								key={name}
+								to={path}
+								className={`
+          px-6 py-2 font-semibold text-white
+          transition
+          ${location.pathname === path
+										? "rounded-full border border-[#2CEFE3] bg-[#172033] shadow"
+										: "bg-transparent"}
+          ${i === 0 ? "rounded-l-full" : ""}
+          ${i === 4 ? "rounded-r-full" : ""}
+        `}
+							>
+								{name}
+							</Link>
+						))}
+					</div>
+				</div>
+
+				{/* Login/Signup */}
+				<div className="flex items-center gap-2">
+					<Link
+						to="/login"
+						className="px-5 py-2 rounded-full font-medium transition bg-[#172033] text-white border border-[#232D37]/60 hover:bg-[#232D37]"
+					>
+						Login
+					</Link>
+					<span className="text-white text-opacity-30 px-2 text-xl select-none">|</span>
+					<Link
+						to="/signup"
+						className="px-6 py-2 rounded-full font-medium bg-[#2CEFE3] text-[#101926] shadow transition hover:bg-[#2CEFE3]/90"
+					>
+						Sign up
+					</Link>
+				</div>
+			</div>
+		</nav>
+
 	);
 }
