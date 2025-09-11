@@ -183,7 +183,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#11082c] text-gray-300 font-inter p-4 overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#11082c] text-gray-300 font-inter p-4">
       <div className="max-w-7xl mx-auto text-center py-12">
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">TESTIMONIALS</h1>
         <div className="w-16 h-1 bg-[#472c91] mx-auto mb-10"></div>
@@ -191,12 +191,17 @@ export default function App() {
 
       <div
         ref={scrollerRef}
-        className="flex overflow-x-scroll overflow-y-hidden w-full cursor-grab active:cursor-grabbing snap-x snap-mandatory py-8 px-4 scrollbar-hide"
+        className="relative flex overflow-x-scroll overflow-y-hidden w-full cursor-grab active:cursor-grabbing snap-x snap-mandatory py-8 px-4"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
-        style={{ WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none' }}
+        style={{ 
+          WebkitOverflowScrolling: 'touch', 
+          msOverflowStyle: 'none', 
+          scrollbarWidth: 'none', 
+          '-ms-overflow-style': 'none'
+        }}
       >
         <div 
           className="flex gap-8 overflow-visible"
@@ -209,27 +214,29 @@ export default function App() {
               className={`
                 group
                 flex-shrink-0
-                w-80 h-[28rem]
+                w-80
                 bg-[#180a37]
                 rounded-xl
                 shadow-xl
                 border-2
                 border-white/5
-                transition-transform
+                transition-all
                 duration-500
                 ease-out
-                transform
-                ${index === activeCardIndex ? 'scale-110' : 'scale-100'}
                 snap-center
+                relative
+                ${index === activeCardIndex ? 'z-10' : 'z-0'}
               `}
               style={{
+                height: index === activeCardIndex ? '30.8rem' : '28rem', // 1.1 * 28rem = 30.8rem
                 transform: `scale(${index === activeCardIndex ? '1.1' : '1.0'})`,
-                transitionProperty: 'transform, opacity',
+                transitionProperty: 'transform, height, z-index',
                 transitionDuration: '500ms',
                 transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                overflow: 'visible',
               }}
             >
-              <div className="relative w-full h-48 rounded-t-xl overflow-hidden">
+              <div className="relative w-full h-full rounded-xl overflow-hidden">
                 <div
                   className={`
                     absolute
@@ -244,33 +251,35 @@ export default function App() {
                   `}
                   style={{ backgroundImage: `url(${card.imageUrl})` }}
                 ></div>
-              </div>
-              <div className="p-6 flex flex-col items-start text-left">
-                <h3 className="text-xl font-semibold mb-2 leading-snug">{card.title}</h3>
-                <p className="text-sm text-white/50 mb-4 flex items-center">
-                  <span>{card.date}</span>
-                  <span className="mx-2">/</span>
-                  <span>{card.comment}</span>
-                </p>
-                <p className="text-base text-gray-400 mb-6">{card.description}</p>
-                <a
-                  href="#"
-                  className="text-gray-200 hover:text-white transition-colors duration-200"
-                >
-                  <span className="flex items-center">
-                    Read more
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-200"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                    </svg>
-                  </span>
-                </a>
+                <div className="p-6 flex flex-col items-start text-left h-full justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 leading-snug">{card.title}</h3>
+                    <p className="text-sm text-white/50 mb-4 flex items-center">
+                      <span>{card.date}</span>
+                      <span className="mx-2">/</span>
+                      <span>{card.comment}</span>
+                    </p>
+                    <p className="text-base text-gray-400 mb-6">{card.description}</p>
+                  </div>
+                  <a
+                    href="#"
+                    className="text-gray-200 hover:text-white transition-colors duration-200"
+                  >
+                    <span className="flex items-center">
+                      Read more
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-200"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
               </div>
             </div>
           ))}
