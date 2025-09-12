@@ -9,6 +9,7 @@ import Testimonial from "../components/testimonial";
 import { EventTimeline } from '../components/eventTimeline';
 import { EventDetail } from '../components/EventDetail';
 import Teams from '../components/Teams';
+import ClubDetails from '../components/ClubDetails.jsx';
 
 function Home({ cards }) {
   return (
@@ -35,6 +36,8 @@ function App({ cards }) {
         <Route path="/events" element={<EventTimeline />} />
         <Route path="/events/:id" element={<EventDetail />} />
         <Route path="/teams" element={<Teams />} />
+        <Route path="/ClubDetails" element={<ClubDetails />} />
+        <Route path="/testimonials" element={<Testimonial />} />
         {/* Add other routes here */}
       </Route>
     </Routes>

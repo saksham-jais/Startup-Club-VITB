@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaRegSmileBeam } from "react-icons/fa"; // Example icon
 
 export default function Navbar() {
 	const [scrolled, setScrolled] = useState(false);
@@ -12,23 +11,18 @@ export default function Navbar() {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
+	// Updated navigation links
+	const navLinks = [
+		{ name: "Home", path: "/" },
+		{ name: "Teams", path: "/teams" },
+		{ name: "About Us", path: "/ClubDetails" }, // Corrected path from previous step
+		{ name: "Event Timeline", path: "/events" },
+		{ name: "Testimonials", path: "/testimonials" }, // Changed to a hash link
+	];
+
 	return (
-		<nav className="
-  w-full fixed top-0 left-0 z-50
-  flex items-center justify-center
-  py-1
-  bg-transparent
-">
-			<div className="
-    flex items-center justify-between gap-10
-    px-6 py-2
-    rounded-full
-    bg-[#101926]
-    shadow-xl
-    mx-auto
-    border border-[#212B36]/40
-    max-w-[1500px] w-full
-  ">
+		<nav className="w-full fixed top-0 left-0 z-50 flex items-center justify-center py-1 bg-transparent">
+			<div className="flex items-center justify-between gap-10 px-6 py-2 rounded-full bg-[#101926] shadow-xl mx-auto border border-[#212B36]/40 max-w-[1500px] w-full">
 				{/* Logo */}
 				<div className="flex items-center space-x-2">
 					<div className="w-10 h-10 rounded-full bg-[#2CEFE3] flex items-center justify-center">
@@ -43,25 +37,16 @@ export default function Navbar() {
 				{/* Main Nav */}
 				<div className="flex-1 flex justify-center">
 					<div className="bg-[#172033] rounded-full px-2 py-1 flex items-center gap-0">
-						{[
-							{ name: "Home", path: "/" },
-							{ name: "Teams", path: "/teams" },
-							{ name: "About Us", path: "#about" },
-							{ name: "Event Timeline", path: "/events" },
-							{ name: "Testimonials", path: "#testimonials" },
-						].map(({ name, path }, i) => (
+						{navLinks.map(({ name, path }) => (
 							<Link
 								key={name}
 								to={path}
 								className={`
-          px-6 py-2 font-semibold text-white
-          transition
-          ${location.pathname === path
+									px-6 py-2 font-semibold text-white transition
+									${(location.pathname === path && !path.includes('#'))
 										? "rounded-full border border-[#2CEFE3] bg-[#172033] shadow"
 										: "bg-transparent"}
-          ${i === 0 ? "rounded-l-full" : ""}
-          ${i === 4 ? "rounded-r-full" : ""}
-        `}
+								`}
 							>
 								{name}
 							</Link>
@@ -87,6 +72,5 @@ export default function Navbar() {
 				</div>
 			</div>
 		</nav>
-
 	);
 }
