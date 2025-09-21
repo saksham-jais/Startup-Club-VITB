@@ -185,7 +185,7 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#11082c] text-gray-300 font-inter p-4">
       <div className="max-w-7xl mx-auto text-center py-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">TESTIMONIALS</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">STARTUP INSIGHTS</h1>
         <div className="w-16 h-1 bg-[#472c91] mx-auto mb-10"></div>
       </div>
 

@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "../components/MainLayout";
 import HeroSection from "../components/herosection";
-import AboutUs from "../components/aboutus";
 import AnimatedCards from "../components/event";
 import Testimonial from "../components/testimonial";
 import { EventTimeline } from '../components/eventTimeline';
@@ -19,7 +18,6 @@ function Home({ cards }) {
         personImg="https://picsum.photos/300/200?random=2"
         phoneImg="https://picsum.photos/300/200?random=3"
       />
-      <AboutUs />
       <div className="min-h-[600px] bg-gray-900 flex items-center justify-center">
         <AnimatedCards cards={cards} />
       </div>

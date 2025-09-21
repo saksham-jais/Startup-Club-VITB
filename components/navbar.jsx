@@ -17,7 +17,6 @@ export default function Navbar() {
 		{ name: "Teams", path: "/teams" },
 		{ name: "About Us", path: "/ClubDetails" }, // Corrected path from previous step
 		{ name: "Event Timeline", path: "/events" },
-		{ name: "Testimonials", path: "/testimonials" }, // Changed to a hash link
 	];
 
 	return (
