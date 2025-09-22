@@ -57,12 +57,24 @@ export default function AnimatedCards() {
   }
 };
 
-  const onDragEnd = () => {
-    isDragging.current = false;
+const onDragEnd = () => {
+  isDragging.current = false;
+
+  // Clear any existing interval to prevent stacking
+  if (intervalRef.current) {
+    clearInterval(intervalRef.current);
+  }
+
+  // Start a new interval after a short delay to allow the drag-end transition to complete
+  setTimeout(() => {
     intervalRef.current = setInterval(() => {
-      setActiveIndex(prev => (prev === cards.length - 1 ? 0 : prev + 1));
-    }, 2500);
-  };
+      setActiveIndex((prev) => (prev === cards.length - 1 ? 0 : prev + 1));
+    }, 4000);
+  }, 700); // Delay matches the 0.7s transition duration
+};
+  const baseWidth = 400;      // width for non-active cards
+const activeWidth = 400;
+const [dragging, setDragging] = useState(false);
 
   return (
     <div className="flex flex-col items-center w-full py-10 bg-white max-h-[600px]">
@@ -86,6 +98,8 @@ export default function AnimatedCards() {
               position: "absolute",
               left: "50%",
               zIndex: 20 - Math.abs(offset),
+              width: isActive ? `${activeWidth}px` : `${baseWidth}px`,
+              transition: dragging ? "none" : "all 0.7s cubic-bezier(.52,.07,.36,1)",
               transform: `
                 translate(-50%, -50%)
                 translateX(${offset * 140}px)
@@ -93,7 +107,6 @@ export default function AnimatedCards() {
                 rotate(${offset * 4}deg)
               `,
               opacity: Math.abs(offset) > 2 ? 0 : 1,
-              transition: "all 0.7s cubic-bezier(.52,.07,.36,1)",
               top: isActive ? "50%" : "calc(50% + 20px)",
             };
 

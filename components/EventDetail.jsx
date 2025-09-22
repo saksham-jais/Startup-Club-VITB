@@ -17,7 +17,7 @@ export function EventDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+    <div className="min-h-screen w-full max-w-7xl bg-gray-50 flex flex-col items-center overflow-x-hidden mx-auto my-20">
       <div className="w-full relative h-80 md:h-[32rem] flex items-center justify-center overflow-hidden">
         <img
           src={event.img}
