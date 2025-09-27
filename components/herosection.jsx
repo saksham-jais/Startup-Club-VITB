@@ -80,7 +80,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
               </p>
               <div className="mt-8 flex items-center space-x-4">
                 <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-blue-500 hover:border-3  transition duration-300">
-                  Get Started Today
+                  Join Us
                 </button>
                 <a
                   href="#"

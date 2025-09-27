@@ -218,7 +218,7 @@ export default function App() {
                 bg-blue-400
                 rounded-xl
                 shadow-xl
-                border-2
+                border-4
                 border-white/5
                 transition-all
                 duration-500
@@ -228,7 +228,7 @@ export default function App() {
                 ${index === activeCardIndex ? 'z-10' : 'z-0'}
               `}
               style={{
-                height: index === activeCardIndex ? '30.8rem' : '28rem', // 1.1 * 28rem = 30.8rem
+                height: index === activeCardIndex ? '30.8rem' : '28rem', 
                 transform: `scale(${index === activeCardIndex ? '1.1' : '1.0'})`,
                 transitionProperty: 'transform, height, z-index',
                 transitionDuration: '500ms',
