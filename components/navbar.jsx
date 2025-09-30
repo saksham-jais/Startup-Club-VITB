@@ -11,11 +11,10 @@ export default function Navbar() {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
-	// Updated navigation links
 	const navLinks = [
 		{ name: "Home", path: "/" },
 		{ name: "Teams", path: "/teams" },
-		{ name: "About Us", path: "/ClubDetails" }, // Corrected path from previous step
+		{ name: "About Us", path: "/ClubDetails" }, 
 		{ name: "Event Timeline", path: "/events" },
 	];
 
@@ -24,13 +23,13 @@ export default function Navbar() {
 			<div className="flex items-center justify-between gap-10 px-6 py-2 rounded-full bg-[#101926] shadow-xl mx-auto border border-[#212B36]/40 max-w-[1500px] w-full">
 				{/* Logo */}
 				<div className="flex items-center space-x-2">
-					<div className="w-10 h-10 rounded-full bg-[#2CEFE3] flex items-center justify-center">
+					<div className="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center">
 						<svg viewBox="0 0 24 24" fill="none" width="24" height="24">
-							<circle cx="12" cy="12" r="10" stroke="#101926" strokeWidth="2" />
-							<circle cx="12" cy="12" r="4" fill="#101926" />
+							<circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" />
+							<circle cx="12" cy="12" r="4" fill="white" />
 						</svg>
 					</div>
-					<span className="text-white text-xl font-bold tracking-widest">Start<span className="text-[#2CEFE3]">Up</span>Club</span>
+					<span className="text-white text-xl font-bold tracking-widest">Start<span className="text-blue-400">Up</span>Club</span>
 				</div>
 
 				{/* Main Nav */}
@@ -43,7 +42,7 @@ export default function Navbar() {
 								className={`
 									px-6 py-2 font-semibold text-white transition
 									${(location.pathname === path && !path.includes('#'))
-										? "rounded-full border border-[#2CEFE3] bg-[#172033] shadow"
+										? "rounded-full border-3 border-blue-400 bg-[#172033] shadow"
 										: "bg-transparent"}
 								`}
 							>
@@ -64,7 +63,7 @@ export default function Navbar() {
 					<span className="text-white text-opacity-30 px-2 text-xl select-none">|</span>
 					<Link
 						to="/signup"
-						className="px-6 py-2 rounded-full font-medium bg-[#2CEFE3] text-[#101926] shadow transition hover:bg-[#2CEFE3]/90"
+						className="px-6 py-2 rounded-full font-medium bg-blue-400 text-white shadow transition hover:bg-blue-400/90"
 					>
 						Sign up
 					</Link>
