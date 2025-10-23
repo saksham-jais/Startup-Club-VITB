@@ -1,87 +1,100 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const cards = [
-  { title: "calming breathing", bg: "from-blue-400 to-blue-200" },
-  { title: "nighttime practice", bg: "from-pink-400 to-purple-200" },
-  { title: "energizing practice", bg: "from-cyan-400 to-blue-200" },
-  { title: "meditation", bg: "from-purple-300 to-indigo-200" },
-  { title: "relaxation", bg: "from-indigo-300 to-purple-400" },
-  { title: "calming breathing", bg: "from-blue-400 to-blue-200" },
-  { title: "nighttime practice", bg: "from-pink-400 to-purple-200" },
-  { title: "energizing practice", bg: "from-cyan-400 to-blue-200" },
-  { title: "meditation", bg: "from-purple-300 to-indigo-200" },
-  { title: "relaxation", bg: "from-indigo-300 to-purple-400" },
-  { title: "calming breathing", bg: "from-blue-400 to-blue-200" },
-  { title: "nighttime practice", bg: "from-pink-400 to-purple-200" },
-  { title: "energizing practice", bg: "from-cyan-400 to-blue-200" },
-  { title: "meditation", bg: "from-purple-300 to-indigo-200" },
-  { title: "relaxation", bg: "from-indigo-300 to-purple-400" },
-  { title: "calming breathing", bg: "from-blue-400 to-blue-200" },
-  { title: "nighttime practice", bg: "from-pink-400 to-purple-200" },
-  { title: "energizing practice", bg: "from-cyan-400 to-blue-200" },
-  { title: "meditation", bg: "from-purple-300 to-indigo-200" },
-  { title: "relaxation", bg: "from-indigo-300 to-purple-400" },
+const slides = [
+  {
+    title: "Example headline",
+    description:
+      "Discover our innovative solutions tailored to your needs. Join us today and experience the difference.",
+    buttonText: "Sign up today",
+    bgImage: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/158072/spiderweb.jpg",
+    bgPosition: "center top",
+  },
+  {
+    title: "Another example headline",
+    description:
+      "Explore our wide range of services designed to empower your success. Learn more about what we offer.",
+    buttonText: "Learn more",
+    bgImage: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/158072/hearthand.jpg",
+    bgPosition: "center center",
+  },
+  {
+    title: "One more for good measure",
+    description:
+      "Browse our gallery to see the impact of our work. Get inspired and start your journey with us.",
+    buttonText: "Browse gallery",
+    bgImage: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/158072/woman-camera.jpg",
+    bgPosition: "center bottom",
+  },
 ];
 
-export default function AnimatedCards() {
-  const [activeIndex, setActiveIndex] = useState(7);
+export default function FullscreenCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
   const intervalRef = useRef();
   const dragStartX = useRef(null);
   const isDragging = useRef(false);
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
-      setActiveIndex(prev => (prev === cards.length - 1 ? 0 : prev + 1));
-    }, 2500);
+      setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    }, 4000);
     return () => clearInterval(intervalRef.current);
   }, []);
 
-  // Drag handlers
   const onDragStart = (e) => {
     isDragging.current = true;
-    dragStartX.current = e.type === "touchstart" ? e.touches.clientX : e.clientX;
+    dragStartX.current = e.type === "touchstart" ? e.touches[0].clientX : e.clientX;
     clearInterval(intervalRef.current);
   };
+
   const onDragMove = (e) => {
-  if (!isDragging.current) return;
-  const clientX = e.type === "touchmove" ? e.touches.clientX : e.clientX;
-  const deltaX = clientX - dragStartX.current;
-  // Faster response with 30px threshold
-  if (Math.abs(deltaX) > 30) {
-    if (deltaX < 0 && activeIndex < cards.length - 1) {
-      setActiveIndex(activeIndex + 1);
-    } else if (deltaX > 0 && activeIndex > 0) {
-      setActiveIndex(activeIndex - 1);
+    if (!isDragging.current) return;
+    const clientX = e.type === "touchmove" ? e.touches[0].clientX : e.clientX;
+    const deltaX = clientX - dragStartX.current;
+    if (Math.abs(deltaX) > 30) {
+      if (deltaX < 0 && activeIndex < slides.length - 1) {
+        setActiveIndex(activeIndex + 1);
+      } else if (deltaX > 0 && activeIndex > 0) {
+        setActiveIndex(activeIndex - 1);
+      }
+      isDragging.current = false;
     }
+  };
+
+  const onDragEnd = () => {
     isDragging.current = false;
-  }
-};
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    setTimeout(() => {
+      intervalRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+      }, 4000);
+    }, 700);
+  };
 
-const onDragEnd = () => {
-  isDragging.current = false;
-
-  // Clear any existing interval to prevent stacking
-  if (intervalRef.current) {
+  const goToSlide = (index) => {
+    setActiveIndex(index);
     clearInterval(intervalRef.current);
-  }
-
-  // Start a new interval after a short delay to allow the drag-end transition to complete
-  setTimeout(() => {
-    intervalRef.current = setInterval(() => {
-      setActiveIndex((prev) => (prev === cards.length - 1 ? 0 : prev + 1));
-    }, 4000);
-  }, 700); // Delay matches the 0.7s transition duration
-};
-  const baseWidth = 400;      // width for non-active cards
-const activeWidth = 400;
-const [dragging, setDragging] = useState(false);
+    setTimeout(() => {
+      intervalRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+      }, 4000);
+    }, 700);
+  };
 
   return (
-    <div className="flex flex-col items-center w-full py-10 bg-white max-h-[600px]">
-      <h1 className="text-4xl md:text-5xl font-bold text-[#140e6e] mb-6">EVENTS</h1>
+    <div className="relative w-full h-screen flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="w-full text-center py-8 bg-gradient-to-b from-white to-gray-50">
+        <h1 className="text-4xl md:text-5xl font-bold text-blue-500 mb-4">
+          EVENTS
+        </h1>
+        <div className="w-16 h-1 bg-blue-500 mx-auto"></div>
+      </div>
+
+      {/* Carousel */}
       <div
-        className="relative overflow-hidden"
-        style={{ width: "1000px", height: "500px" }}
+        className="relative flex-1 w-full overflow-hidden"
         onMouseDown={onDragStart}
         onMouseMove={onDragMove}
         onMouseUp={onDragEnd}
@@ -91,41 +104,70 @@ const [dragging, setDragging] = useState(false);
         onTouchEnd={onDragEnd}
       >
         <div className="relative w-full h-full">
-          {cards.map((card, idx) => {
-            const offset = idx - activeIndex;
-            const isActive = offset === 0;
-            const style = {
-              position: "absolute",
-              left: "50%",
-              zIndex: 20 - Math.abs(offset),
-              width: isActive ? `${activeWidth}px` : `${baseWidth}px`,
-              transition: dragging ? "none" : "all 0.7s cubic-bezier(.52,.07,.36,1)",
-              transform: `
-                translate(-50%, -50%)
-                translateX(${offset * 140}px)
-                scale(${isActive ? 1.1 : 0.85})
-                rotate(${offset * 4}deg)
-              `,
-              opacity: Math.abs(offset) > 2 ? 0 : 1,
-              top: isActive ? "50%" : "calc(50% + 20px)",
-            };
-
-            return (
-              <div
-                key={idx}
-                className={`w-64 h-80 rounded-xl text-white shadow-2xl
-                  bg-gradient-to-br ${card.bg} flex flex-col justify-end p-6
-                  border-2 border-white/10 select-none`}
-                style={style}
-              >
-                <h2 className="text-xl font-bold mb-4">{card.title}</h2>
-                <button className="self-end bg-white text-black px-3 py-1 rounded-full shadow hover:bg-gray-100 transition">
-                  &#9654;
-                </button>
+          {slides.map((slide, idx) => (
+            <div
+              key={idx}
+              className={`absolute inset-0 transition-opacity duration-700 ${
+                idx === activeIndex ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                backgroundImage: `url(${slide.bgImage})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: slide.bgPosition,
+                backgroundColor: "#777",
+              }}
+            >
+              <div className="flex items-center justify-center h-full max-w-6xl mx-auto px-4">
+                <div className="text-center text-white z-10">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                    {slide.title}
+                  </h2>
+                  <p className="text-base md:text-lg mb-6 max-w-2xl mx-auto">
+                    {slide.description}
+                  </p>
+                  <a
+                    href="#"
+                    className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg text-base font-medium hover:bg-blue-700 transition"
+                  >
+                    {slide.buttonText}
+                  </a>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
+
+        {/* Carousel Indicators */}
+        <ol className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+          {slides.map((_, idx) => (
+            <li
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              className={`w-3 h-3 rounded-full cursor-pointer ${
+                idx === activeIndex ? "bg-white" : "bg-gray-400"
+              }`}
+            ></li>
+          ))}
+        </ol>
+
+        {/* Carousel Controls */}
+        <a
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl cursor-pointer z-20 hover:text-gray-300"
+          onClick={() =>
+            setActiveIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
+          }
+        >
+          <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl cursor-pointer z-20 hover:text-gray-300"
+          onClick={() =>
+            setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1))
+          }
+        >
+          <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import { EventTimeline } from '../components/eventTimeline';
 import { EventDetail } from '../components/EventDetail';
 import Teams from '../components/Teams';
 import ClubDetails from '../components/ClubDetails.jsx';
+import Footer from '../components/footer.jsx';
 
 function Home({ cards }) {
   return (
@@ -18,10 +19,11 @@ function Home({ cards }) {
         personImg="https://picsum.photos/300/200?random=2"
         phoneImg="https://picsum.photos/300/200?random=3"
       />
-      <div className="min-h-[600px] bg-gray-900 flex items-center justify-center">
+      <div>
         <AnimatedCards cards={cards} />
       </div>
       <Testimonial cards={cards} />
+      <Footer></Footer>
     </>
   );
 }
