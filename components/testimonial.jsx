@@ -8,7 +8,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'We recently launched a new website for a Vital client and wanted to share some of the cool features we were able...',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+1',
+    imageUrl: 'https://picsum.photos/300/200?random=1',
   },
   {
     id: 2,
@@ -16,7 +16,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'We recently launched a new website for a Vital client and wanted to share some of the cool features we were able...',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+2',
+    imageUrl: 'https://picsum.photos/300/200?random=2',
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'We recently launched a new website for a Vital client and wanted to share some of the cool features we were able...',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+3',
+    imageUrl: 'https://picsum.photos/300/200?random=3',
   },
   {
     id: 4,
@@ -32,7 +32,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'This is the description for the fourth card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+4',
+    imageUrl: 'https://picsum.photos/300/200?random=4',
   },
   {
     id: 5,
@@ -40,7 +40,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'This is the description for the fifth card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+5',
+    imageUrl: 'https://picsum.photos/300/200?random=5',
   },
   {
     id: 6,
@@ -48,7 +48,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'This is the description for the sixth card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+6',
+    imageUrl: 'https://picsum.photos/300/200?random=6',
   },
   {
     id: 7,
@@ -56,7 +56,7 @@ const CARD_DATA = [
     date: 'Jan 03, 2020',
     comment: '05 Comment',
     description: 'This is the description for the seventh card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://placehold.co/400x250/1e293b/d1d5db?text=Image+7',
+    imageUrl: 'https://picsum.photos/300/200?random=7',
   },
 ];
 
@@ -183,10 +183,10 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#11082c] text-gray-300 font-inter p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white text-white font-inter p-4">
       <div className="max-w-7xl mx-auto text-center py-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">STARTUP INSIGHTS</h1>
-        <div className="w-16 h-1 bg-[#472c91] mx-auto mb-10"></div>
+        <h1 className="text-4xl md:text-5xl font-bold text-blue-500 mb-6">STARTUP INSIGHTS</h1>
+        <div className="w-16 h-1 bg-blue-500 mx-auto mb-10"></div>
       </div>
 
       <div
@@ -215,10 +215,10 @@ export default function App() {
                 group
                 flex-shrink-0
                 w-80
-                bg-[#180a37]
+                bg-blue-400
                 rounded-xl
                 shadow-xl
-                border-2
+                border-4
                 border-white/5
                 transition-all
                 duration-500
@@ -228,7 +228,7 @@ export default function App() {
                 ${index === activeCardIndex ? 'z-10' : 'z-0'}
               `}
               style={{
-                height: index === activeCardIndex ? '30.8rem' : '28rem', // 1.1 * 28rem = 30.8rem
+                height: index === activeCardIndex ? '30.8rem' : '28rem', 
                 transform: `scale(${index === activeCardIndex ? '1.1' : '1.0'})`,
                 transitionProperty: 'transform, height, z-index',
                 transitionDuration: '500ms',
@@ -254,16 +254,16 @@ export default function App() {
                 <div className="p-6 flex flex-col items-start text-left h-full justify-between">
                   <div>
                     <h3 className="text-xl font-semibold mb-2 leading-snug">{card.title}</h3>
-                    <p className="text-sm text-white/50 mb-4 flex items-center">
+                    <p className="text-sm text-white/7=-1 ` jh mb-4 flex items-center">
                       <span>{card.date}</span>
                       <span className="mx-2">/</span>
                       <span>{card.comment}</span>
                     </p>
-                    <p className="text-base text-gray-400 mb-6">{card.description}</p>
+                    <p className="text-base text-white mb-6">{card.description}</p>
                   </div>
                   <a
                     href="#"
-                    className="text-gray-200 hover:text-white transition-colors duration-200"
+                    className="text-white hover:text-white transition-colors duration-200"
                   >
                     <span className="flex items-center">
                       Read more
@@ -296,7 +296,7 @@ export default function App() {
               rounded-full
               transition-colors
               duration-300
-              ${index === activeCardIndex ? 'bg-[#472c91]' : 'bg-gray-700'}
+              ${index === activeCardIndex ? 'bg-blue-400' : 'bg-gray-700'}
             `}
           ></div>
         ))}
