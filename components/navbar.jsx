@@ -64,9 +64,9 @@ export default function Navbar() {
 					<span className="text-white text-opacity-30 px-2 text-xl select-none">|</span>
 					<Link
 						to="/signup"
-						className="px-6 py-2 rounded-full font-medium bg-[#2CEFE3] text-[#101926] shadow transition hover:bg-[#2CEFE3]/90"
+						className="px-6 py-2 rounded-full font-medium bg-blue-500 text-white shadow transition hover:bg-blue-500/80"
 					>
-						Sign up
+						Register Now
 					</Link>
 				</div>
 			</div>

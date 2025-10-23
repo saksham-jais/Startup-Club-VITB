@@ -72,26 +72,28 @@ export default function TeamSection() {
       : teamMembers.filter((m) => m.category === selectedFilter);
 
   return (
-    <section className="py-12 px-4 max-w-6xl mx-auto my-15">
-      <h2 className="text-3xl text-center font-serif font-light">
-        Meet the team that makes the <span className="italic">magic</span> happen
-      </h2>
-      <p className="text-center mt-2 text-gray-500">
-        Meet our diverse team of world-class creators, designers, and problem solvers.
-      </p>
+    <section className="py-12 px-4 max-w-6xl mx-auto mt-10 font-montserrat bg-gray-50">
+      <div className="text-center mb-8">
+        <h3 className="text-3xl font-medium text-gray-800 mb-3">
+          Experienced & Professional Team
+        </h3>
+        <p className="text-gray-500 text-sm max-w-xl mx-auto">
+          You can rely on our amazing features list and also our customer services
+          will be a great experience for you without doubt and in no-time.
+        </p>
+      </div>
+
       {/* Filter Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mt-6">
+      <div className="flex flex-wrap justify-center gap-2 mb-10">
         {filters.map((f) => (
           <button
             key={f}
             onClick={() => setSelectedFilter(f)}
-            className={`px-3 py-1 rounded border text-sm min-w-24
-              ${
-                selectedFilter === f
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-black border-gray-300"
-              }
-              transition duration-150`}
+            className={`px-4 py-2 rounded text-sm font-medium transition-all duration-150 ${
+              selectedFilter === f
+                ? "bg-blue-600 text-white"
+                : "bg-white text-gray-600 border border-gray-300 hover:bg-gray-100"
+            }`}
           >
             {f}
           </button>
@@ -99,51 +101,60 @@ export default function TeamSection() {
       </div>
 
       {/* Team grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mt-12">
-        {filteredMembers.map((member, idx) => (
-<div
-  key={member.name}
-  className={`relative flex items-end
-
-    rounded-[18px] shadow-[0_6px_22px_0_rgba(40,40,40,0.10)]
-    overflow-hidden transition-transform duration-300 hover:scale-105`}
-  style={{
-    width: "270px",
-    height: "330px",
-    margin: "auto",
-    background: "#ddd",
-    cursor: "pointer",
-  }}
->
-  {/* Full-card background image */}
-  <img
-    src={member.image}
-    alt={member.name}
-    className="absolute inset-0 w-full h-full object-cover"
-    style={{
-      zIndex: 1
-    }}
-  />
-  {/* Bottom glassmorphism title block */}
-  <div
-    className="relative z-10 w-[95%] mx-2 mb-2 py-2 px-1 flex flex-col items-center"
-    style={{
-      background: "rgba(255,255,255,0.65)",
-      backdropFilter: "blur(7px)",
-      borderRadius: "14px",
-      boxShadow: "0 2.5px 10px 0 rgba(80,80,80,0.13)",
-    }}
-  >
-    <div className="font-bold text-base text-gray-900 text-center leading-snug">
-      {member.name}
-    </div>
-    <div className="text-gray-700 text-sm text-center font-medium" style={{marginTop: 2}}>
-      {member.title}
-    </div>
-  </div>
-</div>
-
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredMembers.map((member) => (
+          <div
+            key={member.name}
+            className="flex flex-col items-center text-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+          >
+            <img
+              src={member.image}
+              alt={member.name}
+              className="w-32 h-32 rounded-full object-cover mb-4"
+            />
+            <h5 className="text-lg font-medium text-gray-800 mb-1">
+              {member.name}
+            </h5>
+            <h6 className="text-sm text-gray-500 mb-3">{member.title}</h6>
+            <p className="text-xs text-gray-500 mb-4">
+              You can rely on our amazing features list and also our customer
+              services will be a great experience.
+            </p>
+            <ul className="flex space-x-4">
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
+                >
+                  <i className="icon-social-facebook"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
+                >
+                  <i className="icon-social-twitter"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
+                >
+                  <i className="icon-social-instagram"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
+                >
+                  <i className="icon-social-behance"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
         ))}
       </div>
     </section>
