@@ -60,8 +60,8 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
         `}
       </style>
 
-      <section className="bg-gradient-to-b from-white to-gray-50 py-20 overflow-hidden top-10 relative">
-        <div className="container mx-auto px-4">
+      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden">
+        <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex flex-col md:flex-row items-center justify-between">
             {/* Left side: Details with animation */}
             <div
@@ -79,7 +79,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
                 solutions. Safe, fast, and designed for your everyday needs.
               </p>
               <div className="mt-8 flex items-center space-x-4">
-                <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-blue-500 hover:border-3  transition duration-300">
+                <button className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-blue-500 hover:border-2 hover:border-blue-500 transition duration-300">
                   Join Us
                 </button>
                 <a
@@ -101,14 +101,14 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
 
             {/* Right side: Image collage with animation */}
             <div
-              className={`md:w-1/2 relative h-80 md:h-96 ${
+              className={`md:w-1/2 relative h-80 md:h-[32rem] ${
                 zoomOut ? "animate-zoom-out" : "opacity-0"
               }`}
             >
               <img
                 src={buildingImg || defaultBuildingImg}
                 alt="Building"
-                className="absolute top-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg"
+                className="absolute top-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg object-cover"
               />
               <img
                 src={personImg || defaultPersonImg}
@@ -118,7 +118,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
               <img
                 src={phoneImg || defaultPhoneImg}
                 alt="Phone"
-                className="absolute bottom-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg"
+                className="absolute bottom-0 left-0 w-2/3 md:w-1/2 rounded-lg shadow-lg object-cover"
               />
               <div className="absolute bottom-0 right-0 bg-blue-200/75 text-blue-800 p-4 rounded-lg shadow-lg font-bold text-lg">
                 WE PROVIDE
@@ -129,11 +129,11 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
           </div>
           {/* Bottom collaboration note */}
           <div
-            className={`text-center text-gray-500 text-sm mt-10 ${
+            className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-gray-500 text-sm ${
               zoomOut ? "animate-zoom-out" : "opacity-0"
             }`}
           >
-            We collaborate with 1000+ company
+            We collaborate with 1000+ companies
           </div>
         </div>
       </section>
