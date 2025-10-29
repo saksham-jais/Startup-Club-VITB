@@ -3,13 +3,15 @@ import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "../components/MainLayout";
 import HeroSection from "../components/herosection";
-import AnimatedCards from "../components/event";
+import AnimatedCards from "../components/FullscreenCarousel.jsx";
 import Testimonial from "../components/testimonial";
 import { EventTimeline } from '../components/eventTimeline';
 import { EventDetail } from '../components/EventDetail';
 import Teams from '../components/Teams';
 import ClubDetails from '../components/ClubDetails.jsx';
 import Footer from '../components/footer.jsx';
+import FullscreenCarousel from '../components/FullscreenCarousel'; // Adjust path as needed
+import RegistrationPage from '../components/registration'; // Adjust path as needed
 
 function Home({ cards }) {
   return (
@@ -33,11 +35,13 @@ function App({ cards }) {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home cards={cards} />} />
-        <Route path="/events" element={<EventTimeline />} />
-        <Route path="/events/:id" element={<EventDetail />} />
+        <Route path="/events" element={<FullscreenCarousel />} />
+        <Route path="/eventstimeline" element={<EventTimeline />} />
+        <Route path="/eventstimeline/:id" element={<EventDetail />} />
         <Route path="/teams" element={<Teams />} />
         <Route path="/ClubDetails" element={<ClubDetails />} />
         <Route path="/testimonials" element={<Testimonial />} />
+        <Route path="/registration" element={<RegistrationPage />} />
         {/* Add other routes here */}
       </Route>
     </Routes>

@@ -22,7 +22,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Teams", path: "/teams" },
     { name: "About Us", path: "/ClubDetails" },
-    { name: "Event Timeline", path: "/events" },
+    { name: "Event Timeline", path: "/eventstimeline" },
   ];
 
   return (
