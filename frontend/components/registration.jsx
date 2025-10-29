@@ -101,7 +101,7 @@ function RegistrationPage({ title, description, bgImage }) {
   const qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI://pay?pa=yourpaymentid@upi';
 
   return (
-    <div className="pt-28 min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 md:py-8 px-3 md:px-6 lg:px-8 max-w-[1500px] mx-auto">
+    <div className="pt-28 min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 md:py-20 px-3 md:px-6 lg:px-8 max-w-[1500px] mx-auto">
       {/* Header Banner */}
       <div className="relative w-full max-w-5xl mx-auto mb-6 md:mb-10">
         <div

@@ -4,40 +4,62 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
   const defaultBuildingImg = "https://via.placeholder.com/300x200?text=Building";
   const defaultPersonImg = "https://via.placeholder.com/300x400?text=Person";
   const defaultPhoneImg = "https://via.placeholder.com/300x200?text=Phone";
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [glowEffect, setGlowEffect] = useState(false);
   const [zoomOut, setZoomOut] = useState(false);
 
   useEffect(() => {
-    // Start flash immediately for loading screen
-    setGlowEffect(true);
+    // Check if the loading screen has already been shown in this session
+    const hasSeenLoadingScreen = sessionStorage.getItem("hasSeenLoadingScreen");
 
-    // Hide loading screen and trigger zoom-out after 2 seconds
-    const loadingTimer = setTimeout(() => {
-      setIsLoading(false);
+    if (!hasSeenLoadingScreen) {
+      // Prevent scrolling during loading screen
+      document.body.style.overflow = "hidden";
+
+      // Show loading screen only if it hasn't been shown before
+      setIsLoading(true);
+      setGlowEffect(true);
+
+      // Hide loading screen and trigger zoom-out after 7 seconds (video duration)
+      const loadingTimer = setTimeout(() => {
+        setIsLoading(false);
+        setZoomOut(true);
+        // Mark the loading screen as seen in session storage
+        sessionStorage.setItem("hasSeenLoadingScreen", "true");
+        // Restore scrolling after loading screen
+        document.body.style.overflow = "";
+      }, 7000);
+
+      return () => {
+        clearTimeout(loadingTimer);
+        // Ensure scrolling is restored on component unmount
+        document.body.style.overflow = "";
+      };
+    } else {
+      // If loading screen was already shown, skip it and show content immediately
       setZoomOut(true);
-    }, 2000);
-
-    return () => clearTimeout(loadingTimer);
+    }
   }, []);
 
   return (
     <>
       {/* Loading Screen */}
       {isLoading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
-          <div className="flex items-center justify-center w-full h-full">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden">
+          <div className="relative w-full h-full">
+            <video
+              src="/src/assets/Video.mp4" // Replace with your video file name
+              autoPlay
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+              alt="Startup Club Loading Video"
+            />
             <div
-              className={`relative transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
-                glowEffect ? "animate-pulse" : ""
+              className={`absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
+                glowEffect ? "animate-pulse bg-black/20" : ""
               }`}
-            >
-              <img
-                src="/src/assets/sc.png"
-                alt="Startup Club"
-                className="w-[250px] h-auto"
-              />
-            </div>
+            />
           </div>
         </div>
       )}
