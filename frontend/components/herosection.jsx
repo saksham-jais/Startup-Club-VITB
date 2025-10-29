@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
+const HeroSection = ({ buildingImg, personImg, phoneImg,  }) => {
   const defaultBuildingImg = "https://via.placeholder.com/300x200?text=Building";
   const defaultPersonImg = "https://via.placeholder.com/300x400?text=Person";
   const defaultPhoneImg = "https://via.placeholder.com/300x200?text=Phone";
+   
+  const mobileVideo = "/src/assets/Video0.mp4"; // Fallback video
+  const desktopVideo = "/src/assets/Video.mp4"; // Fallback video
   const [isLoading, setIsLoading] = useState(false);
   const [glowEffect, setGlowEffect] = useState(false);
   const [zoomOut, setZoomOut] = useState(false);
@@ -47,14 +50,38 @@ const HeroSection = ({ buildingImg, personImg, phoneImg }) => {
       {isLoading && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden">
           <div className="relative w-full h-full">
-            <video
-              src="/src/assets/Video.mp4" // Replace with your video file name
-              autoPlay
-              muted
-              playsInline
-              className="w-full h-full object-cover"
-              alt="Startup Club Loading Video"
-            />
+            {(mobileVideo || desktopVideo) ? (
+              <>
+                {/* Mobile Video: Visible on screens smaller than sm (640px) */}
+                <video
+                  src={mobileVideo}
+                  autoPlay
+                  muted
+                  playsInline
+                  className="block sm:hidden w-full h-full object-cover"
+                  alt="Startup Club Mobile Loading Video"
+                />
+                {/* Desktop Video: Visible on screens sm (640px) and larger */}
+                <video
+                  src={desktopVideo}
+                  autoPlay
+                  muted
+                  playsInline
+                  className="hidden sm:block w-full h-full object-cover"
+                  alt="Startup Club Desktop Loading Video"
+                />
+              </>
+            ) : (
+              /* Fallback to default video if no videos are provided */
+              <video
+                src={defaultVideo}
+                autoPlay
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+                alt="Startup Club Loading Video"
+              />
+            )}
             <div
               className={`absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
                 glowEffect ? "animate-pulse bg-black/20" : ""
