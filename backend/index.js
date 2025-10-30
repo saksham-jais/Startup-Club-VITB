@@ -1,5 +1,5 @@
 // api/index.js (corrected export for Vercel detection)
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+// require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const express = require('express');
 const mongoose = require('mongoose');
