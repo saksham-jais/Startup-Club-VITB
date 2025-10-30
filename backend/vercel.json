@@ -1,17 +1,19 @@
 {
+  "functions": {
+    "api/index.js": {
+      "runtime": "nodejs18.x",  
+      "handler": "handler",     
+      "maxDuration": 30         
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/.netlify/functions/server/main"
+      "destination": "/api/index.js"  
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/index.html"   
     }
-  ],
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
