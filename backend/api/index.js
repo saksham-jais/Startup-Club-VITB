@@ -1,16 +1,14 @@
-// api/index.js (updated for Vercel serverless)
+// api/index.js (full, with correct export)
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-// Remove these logs after fixing
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
-const serverless = require('serverless-http');  // NEW: Install & require this
-const registrationRoutes = require('../routes/registration');  // Adjust path if needed
+const serverless = require('serverless-http');  // Ensure installed: npm i serverless-http
+const registrationRoutes = require('../routes/registration');
 
 const app = express();
-const PORT = process.env.PORT || 5000;  // PORT is set by Vercel, but unused here
 
 // Configure Cloudinary
 cloudinary.config({
@@ -21,24 +19,16 @@ cloudinary.config({
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));  // Handle large payloads (files)
 
-// MongoDB Connection (connects on each invocation; use connection pooling if high traffic)
+// MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('MongoDB connection error:', err));
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB error:', err));
 
 // Routes
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello from Express on Vercel!' });
-});
+app.get('/', (req, res) => res.json({ message: 'Hello from Express on Vercel!' }));
+app.use('/registration', registrationRoutes);  // Note: No /api prefix here—add in vercel.json below
 
-app.use('/api/registration', registrationRoutes);
-
-// NEW: Export as serverless handler (Vercel calls this automatically)
-module.exports.handler = serverless(app);  // Wraps your app for serverless runtime
-
-// For local dev only (comment out or remove for prod):
-// if (require.main === module) {
-//   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// }
+// CRITICAL: Export the handler (Vercel invokes this)
+module.exports.handler = serverless(app);
