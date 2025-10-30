@@ -1,12 +1,12 @@
-// api/index.js (corrected export for Vercel detection)
+// api/index.js
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
-const serverless = require('serverless-http');
-const registrationRoutes = require('../routes/registration');
+const serverless = require('serverless-http'); // Optional: Keep for Vercel
+const registrationRoutes = require('./routes/registration');
 
 const app = express();
 
@@ -28,9 +28,18 @@ if (mongoose.connection.readyState !== 1) {
     .catch(err => console.error('MongoDB error:', err));
 }
 
-// Routes (mount without /api prefix—Vercel adds it)
-app.get('/', (req, res) => res.json({ message: 'Hello from Express on Vercel!' }));
+// Routes
+app.get('/', (req, res) => res.json({ message: 'Hello from Express on Render!' })); // Updated message for clarity
 app.use('/registration', registrationRoutes);
 
-// CRITICAL: Default export (Vercel auto-detects this as the handler)
-module.exports = serverless(app);  // No .handler—default export
+// For serverless platforms (e.g., Vercel) – export the handler
+if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  module.exports = serverless(app);
+} else {
+  // For traditional hosts (e.g., Render, local dev) – start the server
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+  module.exports = app; // Still export for potential imports
+}
