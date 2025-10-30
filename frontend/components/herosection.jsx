@@ -31,7 +31,7 @@ const HeroSection = ({ buildingImg, personImg, phoneImg,  }) => {
         sessionStorage.setItem("hasSeenLoadingScreen", "true");
         // Restore scrolling after loading screen
         document.body.style.overflow = "";
-      }, 7000);
+      }, 4000);
 
       return () => {
         clearTimeout(loadingTimer);
