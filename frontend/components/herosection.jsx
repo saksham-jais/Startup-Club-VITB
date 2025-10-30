@@ -5,8 +5,8 @@ const HeroSection = ({ buildingImg, personImg, phoneImg,  }) => {
   const defaultPersonImg = "https://via.placeholder.com/300x400?text=Person";
   const defaultPhoneImg = "https://via.placeholder.com/300x200?text=Phone";
    
-  const mobileVideo = "/src/assets/Video0.mp4";
-  const desktopVideo = "/src/assets/Video.mp4";
+  const mobileVideo = "/Video0.mp4";
+  const desktopVideo = "/Video.mp4";
   const [isLoading, setIsLoading] = useState(false);
   const [glowEffect, setGlowEffect] = useState(false);
   const [zoomOut, setZoomOut] = useState(false);
