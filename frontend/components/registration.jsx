@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function RegistrationPage({ title, description, bgImage }) {
   const navigate = useNavigate();
+  const qrCode = "/qr.jpg";
   const [eventData, setEventData] = useState({
     title: title || 'Event Registration',
     description: description || '',
@@ -98,52 +99,50 @@ function RegistrationPage({ title, description, bgImage }) {
     }
   };
 
-  const qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=UPI://pay?pa=yourpaymentid@upi';
-
   return (
-    <div className="pt-28 min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 md:py-20 px-3 md:px-6 lg:px-8 max-w-[1500px] mx-auto">
+    <div className="pt-28 min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 py-4 md:py-20 px-3 md:px-6 lg:px-8 max-w-[1500px] mx-auto">
       {/* Header Banner */}
-      <div className="relative w-full max-w-5xl mx-auto mb-6 md:mb-10">
+      <div className="relative w-full max-w-6xl mx-auto mb-8 lg:mb-12">
         <div
-          className="bg-cover bg-center h-48 sm:h-56 md:h-72 lg:h-96 rounded-lg shadow-2xl overflow-hidden relative w-full"
+          className="bg-cover bg-center h-48 sm:h-56 md:h-80 lg:h-96 xl:h-[28rem] rounded-xl shadow-2xl overflow-hidden relative w-full"
           style={{
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("${eventData.bgImage}")`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.3)), url("${eventData.bgImage}")`,
             backgroundColor: '#e5e7eb',
           }}
         >
           <div className="absolute inset-0 flex flex-col items-center justify-center px-4 py-4 sm:py-6">
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center drop-shadow-2xl mb-2 md:mb-4 leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white text-center drop-shadow-2xl mb-2 md:mb-4 leading-tight">
               {eventData.title}
             </h1>
             {eventData.description && (
-              <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-white text-center max-w-3xl mx-auto drop-shadow-lg opacity-95 leading-relaxed px-2">
+              <p className="text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl text-white text-center max-w-3xl mx-auto drop-shadow-lg opacity-95 leading-relaxed px-2">
                 {eventData.description}
               </p>
             )}
           </div>
         </div>
         
-        {/* Decorative banner strip - now relative for better alignment */}
-        <div className="flex justify-center -mt-6 md:-mt-8">
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-500 px-6 md:px-8 py-2 md:py-3 rounded-full shadow-lg z-10">
-            <span className="text-sm md:text-base font-semibold text-white whitespace-nowrap">🎉 EVENT REGISTRATION 🎉</span>
+        {/* Decorative banner strip - enhanced for desktop */}
+        <div className="flex justify-center -mt-6 md:-mt-8 lg:-mt-10">
+          <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 px-6 md:px-10 lg:px-12 py-2 md:py-3 lg:py-4 rounded-full shadow-xl z-10 transform hover:scale-105 transition-transform duration-200">
+            <span className="text-sm md:text-base lg:text-lg font-bold text-white whitespace-nowrap">🎉 EVENT REGISTRATION 🎉</span>
           </div>
         </div>
       </div>
 
-      {/* Form Container - matched width to banner for desktop alignment */}
-      <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+      {/* Form Container - wider for desktop, enhanced shadows */}
+      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden ring-1 ring-gray-200/50">
         {/* Athlete Information Section */}
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-6 md:py-10 border-b border-gray-200">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-6 md:mb-8 text-center">
-            Athlete Information
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 md:py-12 lg:py-16 border-b border-gray-200/50">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-800 mb-8 lg:mb-10 text-center tracking-tight">
+            Registration Form
           </h2>
           
-          {/* Grid layout for better desktop alignment: 1-col mobile, 2-col desktop */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 space-y-4 md:space-y-0">
+          {/* Enhanced Grid: 1-col mobile, 2-col tablet+, 2-col desktop with better spacing */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 space-y-4 md:space-y-0">
             {/* Name Field */}
             <div>
-              <label htmlFor="name" className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-sm md:text-base lg:text-lg font-semibold text-gray-700 mb-3 lg:mb-4">
                 Full Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -153,14 +152,14 @@ function RegistrationPage({ title, description, bgImage }) {
                 required
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 md:py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm md:text-base bg-white"
+                className="w-full px-4 py-4 md:py-4.5 lg:py-5 border-2 border-gray-200 rounded-xl   transition-all duration-200 text-sm md:text-base lg:text-lg bg-white/80 hover:bg-white shadow-sm hover:shadow-md"
                 placeholder="Enter your full name"
               />
             </div>
 
             {/* Registration Number */}
             <div>
-              <label htmlFor="registrationNumber" className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
+              <label htmlFor="registrationNumber" className="block text-sm md:text-base lg:text-lg font-semibold text-gray-700 mb-3 lg:mb-4">
                 Registration Number <span className="text-red-500">*</span>
               </label>
               <input
@@ -170,14 +169,14 @@ function RegistrationPage({ title, description, bgImage }) {
                 required
                 value={formData.registrationNumber}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 md:py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm md:text-base bg-white"
+                className="w-full px-4 py-4 md:py-4.5 lg:py-5 border-2 border-gray-200 rounded-xl   transition-all duration-200 text-sm md:text-base lg:text-lg bg-white/80 hover:bg-white shadow-sm hover:shadow-md"
                 placeholder="Enter registration number"
               />
             </div>
 
             {/* Email ID */}
             <div>
-              <label htmlFor="email" className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm md:text-base lg:text-lg font-semibold text-gray-700 mb-3 lg:mb-4">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
@@ -187,14 +186,14 @@ function RegistrationPage({ title, description, bgImage }) {
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 md:py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm md:text-base bg-white"
+                className="w-full px-4 py-4 md:py-4.5 lg:py-5 border-2 border-gray-200 rounded-xl   transition-all duration-200 text-sm md:text-base lg:text-lg bg-white/80 hover:bg-white shadow-sm hover:shadow-md"
                 placeholder="your.email@example.com"
               />
             </div>
 
             {/* UTR ID */}
             <div>
-              <label htmlFor="utrId" className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
+              <label htmlFor="utrId" className="block text-sm md:text-base lg:text-lg font-semibold text-gray-700 mb-3 lg:mb-4">
                 UTR ID <span className="text-red-500">*</span>
               </label>
               <input
@@ -204,32 +203,36 @@ function RegistrationPage({ title, description, bgImage }) {
                 required
                 value={formData.utrId}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 md:py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm md:text-base bg-white"
+                className="w-full px-4 py-4 md:py-4.5 lg:py-5 border-2 border-gray-200 rounded-xl   transition-all duration-200 text-sm md:text-base lg:text-lg bg-white/80 hover:bg-white shadow-sm hover:shadow-md"
                 placeholder="Enter UTR transaction ID"
               />
             </div>
           </div>
 
-          {/* QR Code for Payment - full width */}
-          <div className="pt-6 pb-4 bg-gray-50 rounded-lg p-4 md:p-6 mt-6 md:mt-8">
-            <label className="block text-sm md:text-base font-semibold text-gray-700 mb-3 md:mb-4 text-center">
+          {/* QR Code for Payment - enhanced: full width, larger on desktop, neutral border */}
+          <div className="pt-8 pb-6 lg:pt-10 lg:pb-8 bg-gradient-to-br from-gray-50 to-indigo-50/30 rounded-2xl p-6 md:p-8 lg:p-10 mt-8 lg:mt-12 ring-1 ring-gray-200/50">
+            <label className="block text-sm md:text-base lg:text-lg font-semibold text-gray-700 mb-4 lg:mb-6 text-center">
               Scan QR Code for Payment
             </label>
             <div className="flex justify-center">
-              <img
-                src={qrCodeUrl}
-                alt="Payment QR Code"
-                className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 border-4 border-green-500 rounded-lg shadow-lg"
-              />
+              <div className="relative">
+                <img
+                  src={qrCode}
+                  alt="Payment QR Code"
+                  className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-64 lg:h-64 xl:w-72 xl:h-72 border-2 border-gray-300 rounded-2xl shadow-xl bg-white p-2"
+                />
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-200/20 to-purple-200/20 blur opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+              </div>
             </div>
-            <p className="text-xs sm:text-sm text-gray-600 text-center mt-3 md:mt-4">
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 text-center mt-4 lg:mt-6 leading-relaxed">
               📱 Scan the QR code to complete payment before submission
             </p>
           </div>
 
-          {/* Screenshot Upload - full width */}
-          <div className="mt-6 md:mt-8">
-            <label htmlFor="screenshot" className="block text-sm md:text-base font-semibold text-gray-700 mb-2">
+          {/* Screenshot Upload - full width, enhanced styling */}
+          <div className="mt-8 lg:mt-10">
+            <label htmlFor="screenshot" className="block text-sm md:text-base lg:text-lg font-semibold text-gray-700 mb-3 lg:mb-4">
               Upload Payment Screenshot <span className="text-red-500">*</span>
             </label>
             <input
@@ -239,28 +242,28 @@ function RegistrationPage({ title, description, bgImage }) {
               required
               onChange={handleFileChange}
               accept="image/*"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm md:text-base file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs md:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer"
+              className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl   transition-all duration-200 text-sm md:text-base lg:text-lg file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm lg:file:text-base file:font-semibold file:bg-gradient-to-r file:from-blue-500 file:to-indigo-500 file:text-white hover:file:from-blue-600 hover:file:to-indigo-600 file:cursor-pointer file:shadow-md hover:file:shadow-lg"
             />
             {formData.screenshot && (
-              <p className="text-xs md:text-sm text-green-600 mt-2 flex items-center gap-1">
-                ✓ File selected: <span className="font-semibold">{formData.screenshot.name}</span>
+              <p className="text-xs md:text-sm lg:text-base text-green-600 mt-3 lg:mt-4 flex items-center gap-2 bg-green-50/50 p-3 rounded-lg">
+                <span className="text-green-500">✓</span> File selected: <span className="font-semibold">{formData.screenshot.name}</span>
               </p>
             )}
           </div>
         </div>
 
-        {/* Confirmation Section */}
-        <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-6 md:py-10 bg-gradient-to-br from-gray-50 to-blue-50">
-          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-3 md:mb-4">
+        {/* Confirmation Section - enhanced gradient and button */}
+        <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 md:py-12 lg:py-16 bg-gradient-to-br from-emerald-50 via-green-50 to-blue-50/30 ring-1 ring-gray-200/50">
+          <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-800 mb-4 lg:mb-6 tracking-tight">
             Confirmation
           </h3>
-          <p className="text-xs sm:text-sm text-gray-600 mb-5 md:mb-6 leading-relaxed">
+          <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-6 lg:mb-8 leading-relaxed max-w-2xl">
             By submitting this form, I confirm that the information provided is accurate and that payment has been completed via the QR code above. The uploaded screenshot serves as proof of payment.
           </p>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed disabled:transform-none text-white font-bold py-3 md:py-4 px-6 rounded-lg transition duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 shadow-lg text-sm md:text-base"
+            className="w-full bg-gradient-to-r from-emerald-500 via-green-500 to-teal-600 hover:from-emerald-600 hover:via-green-600 hover:to-teal-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed disabled:transform-none text-white font-bold py-4 md:py-5 lg:py-6 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300 shadow-xl hover:shadow-2xl text-base md:text-lg lg:text-xl"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Registration ✓'}
           </button>
