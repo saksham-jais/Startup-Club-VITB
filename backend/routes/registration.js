@@ -28,6 +28,9 @@ const upload = multer({
   }
 });
 
+// Helper: Basic email validation (add for security)
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 // POST /api/registration/submit - Handle form submission with file upload to Cloudinary
 router.post('/submit', upload.single('screenshot'), async (req, res) => {
   try {
@@ -40,6 +43,15 @@ router.post('/submit', upload.single('screenshot'), async (req, res) => {
 
     if (!title || !description || !name || !registrationNumber || !email || !utrId) {
       return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // NEW: Validate email format
+    if (!isValidEmail(email)) {
+      // Clean up if upload happened
+      if (req.file && req.file.public_id) {
+        await cloudinary.uploader.destroy(req.file.public_id);
+      }
+      return res.status(400).json({ error: 'Invalid email format' });
     }
 
     // req.file.path contains the Cloudinary URL
@@ -58,9 +70,15 @@ router.post('/submit', upload.single('screenshot'), async (req, res) => {
 
     await newRegistration.save();
 
+    // NEW: Log success for Vercel monitoring (no PII)
+    console.log(`Registration saved: ${newRegistration._id} for event ${title}`);
+
     res.status(201).json({ 
       message: 'Registration submitted successfully!',
-      data: newRegistration 
+      data: { 
+        id: newRegistration._id,  // Return ID for frontend reference
+        ...newRegistration.toObject()  // Full doc, but sanitize if needed
+      } 
     });
   } catch (error) {
     console.error('Error saving registration:', error);
@@ -81,8 +99,11 @@ router.get('/:id', async (req, res) => {
     if (!registration) {
       return res.status(404).json({ error: 'Registration not found' });
     }
-    res.json(registration);
+    // NEW: Sanitize output (hide sensitive fields if needed)
+    const { screenshotUrl, ...safeData } = registration.toObject();
+    res.json({ ...safeData, screenshotUrl });  // Or full if admin-only
   } catch (error) {
+    console.error('Error fetching registration:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

@@ -6,6 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
+const serverless = require('serverless-http');  // NEW: Install & require this
 const registrationRoutes = require('../routes/registration');  // Adjust path if needed
 
 const app = express();
@@ -34,5 +35,10 @@ app.get('/', (req, res) => {
 
 app.use('/api/registration', registrationRoutes);
 
-// Export for Vercel serverless (do NOT call app.listen())
-module.exports = app;
+// NEW: Export as serverless handler (Vercel calls this automatically)
+module.exports.handler = serverless(app);  // Wraps your app for serverless runtime
+
+// For local dev only (comment out or remove for prod):
+// if (require.main === module) {
+//   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// }
