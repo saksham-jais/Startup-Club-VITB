@@ -1,11 +1,11 @@
-// api/index.js (full, with correct export)
+// api/index.js (corrected export for Vercel detection)
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cloudinary = require('cloudinary').v2;
-const serverless = require('serverless-http');  // Ensure installed: npm i serverless-http
+const serverless = require('serverless-http');
 const registrationRoutes = require('../routes/registration');
 
 const app = express();
@@ -19,16 +19,18 @@ cloudinary.config({
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));  // Handle large payloads (files)
+app.use(express.json({ limit: '10mb' }));
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB error:', err));
+// MongoDB Connection (with global check to avoid reconnects)
+if (mongoose.connection.readyState !== 1) {
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB error:', err));
+}
 
-// Routes
+// Routes (mount without /api prefix—Vercel adds it)
 app.get('/', (req, res) => res.json({ message: 'Hello from Express on Vercel!' }));
-app.use('/registration', registrationRoutes);  // Note: No /api prefix here—add in vercel.json below
+app.use('/registration', registrationRoutes);
 
-// CRITICAL: Export the handler (Vercel invokes this)
-module.exports.handler = serverless(app);
+// CRITICAL: Default export (Vercel auto-detects this as the handler)
+module.exports = serverless(app);  // No .handler—default export
