@@ -66,7 +66,7 @@ function RegistrationPage({ title, description, bgImage }) {
     formDataToSend.append('screenshot', formData.screenshot);
 
     try {
-      const response = await fetch('http://localhost:5000/api/registration/submit', {
+      const response = await fetch('https://startup-club-vitb-uzab.vercel.app/api/registration/submit', {
         method: 'POST',
         body: formDataToSend, // Use FormData for file upload
       });
