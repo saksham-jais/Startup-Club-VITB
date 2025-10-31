@@ -69,7 +69,7 @@ function RegistrationPage({ title, description, bgImage }) {
     formDataToSend.append('screenshot', formData.screenshot);
 
     try {
-      const response = await fetch('http://localhost:5000/registration/submit', {
+      const response = await fetch('https://startup-club-dczt.onrender.com/registration/submit', {
         method: 'POST',
         body: formDataToSend,
       });
