@@ -28,7 +28,7 @@ function AdminDashboard() {
       setError('');
 
       try {
-        const response = await axios.get('http://localhost:5000/registration/all', {
+        const response = await axios.get('https://startup-club-dczt.onrender.com/registration/all', {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('Fetch registrations response:', response.data);
