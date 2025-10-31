@@ -17,7 +17,7 @@ cloudinary.config({
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://your-frontend-domain.vercel.app'], // Update with your frontend domain
+  origin: ['http://localhost:5173', 'https://startup-club-vitb.vercel.app'], // Update with your frontend domain
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // If cookies or credentials are needed
