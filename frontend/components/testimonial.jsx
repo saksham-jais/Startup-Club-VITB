@@ -1,62 +1,24 @@
 import { useState, useRef, useEffect } from 'react';
 
-// Use this mock data for the cards. In a real app, you would fetch this from an API.
+// Updated card data with Core Pillars content
 const CARD_DATA = [
   {
     id: 1,
-    title: 'What Makes Users Want to Share a Video on Social Media?',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'We recently launched a new website for a Vital client and wanted to share some of the cool features we were able...',
-    imageUrl: 'https://picsum.photos/300/200?random=1',
+    title: 'Innovate & Create',
+    icon: '💡',
+    description: 'We host hackathons, idea-storming sessions, and design sprints that challenge you to build practical solutions for real problems.',
   },
   {
     id: 2,
-    title: 'What Makes Users Want to Share a Video on Social Media?',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'We recently launched a new website for a Vital client and wanted to share some of the cool features we were able...',
-    imageUrl: 'https://picsum.photos/300/200?random=2',
+    title: 'Learn & Grow',
+    icon: '📚',
+    description: 'Gain hands-on skills through workshops on everything from business modeling and pitching to prototyping and digital marketing.',
   },
   {
     id: 3,
-    title: 'Bumper Ads: How to Tell a Story in 6 Seconds',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'We recently launched a new website for a Vital client and wanted to share some of the cool features we were able...',
-    imageUrl: 'https://picsum.photos/300/200?random=3',
-  },
-  {
-    id: 4,
-    title: 'A title for the Fourth Card',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'This is the description for the fourth card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://picsum.photos/300/200?random=4',
-  },
-  {
-    id: 5,
-    title: 'Fifth Card Title',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'This is the description for the fifth card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://picsum.photos/300/200?random=5',
-  },
-  {
-    id: 6,
-    title: 'Sixth Card Title',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'This is the description for the sixth card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://picsum.photos/300/200?random=6',
-  },
-  {
-    id: 7,
-    title: 'Seventh Card Title',
-    date: 'Jan 03, 2020',
-    comment: '05 Comment',
-    description: 'This is the description for the seventh card, which is also a blog post. Feel free to add more content here.',
-    imageUrl: 'https://picsum.photos/300/200?random=7',
+    title: 'Connect & Network',
+    icon: '🌐',
+    description: 'Meet your co-founders, connect with industry leaders, and get one-on-one mentorship from experienced entrepreneurs and faculty.',
   },
 ];
 
@@ -185,8 +147,11 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white text-white font-inter p-4">
       <div className="max-w-7xl mx-auto text-center py-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-blue-500 mb-6">STARTUP INSIGHTS</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Our Core Pillars</h1>
         <div className="w-16 h-1 bg-blue-500 mx-auto mb-10"></div>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Three fundamental pillars that drive our mission to empower student entrepreneurs
+        </p>
       </div>
 
       <div
@@ -237,48 +202,19 @@ export default function App() {
               }}
             >
               <div className="relative w-full h-full rounded-xl overflow-hidden">
-                <div
-                  className={`
-                    absolute
-                    inset-0
-                    bg-cover
-                    bg-center
-                    transition-opacity
-                    duration-500
-                    ease-in-out
-                    opacity-0
-                    group-hover:opacity-100
-                  `}
-                  style={{ backgroundImage: `url(${card.imageUrl})` }}
-                ></div>
-                <div className="p-6 flex flex-col items-start text-left h-full justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2 leading-snug">{card.title}</h3>
-                    <p className="text-sm text-white/7=-1 ` jh mb-4 flex items-center">
-                      <span>{card.date}</span>
-                      <span className="mx-2">/</span>
-                      <span>{card.comment}</span>
-                    </p>
-                    <p className="text-base text-white mb-6">{card.description}</p>
+                <div className="p-8 flex flex-col items-center text-center h-full justify-between">
+                  <div className="flex flex-col items-center">
+                    {/* Icon */}
+                    <div className="text-6xl mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                      {card.icon}
+                    </div>
+                    
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold mb-4 leading-snug">{card.title}</h3>
+                    
+                    {/* Description */}
+                    <p className="text-base text-white/90 leading-relaxed">{card.description}</p>
                   </div>
-                  <a
-                    href="#"
-                    className="text-white hover:text-white transition-colors duration-200"
-                  >
-                    <span className="flex items-center">
-                      Read more
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-200"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                      </svg>
-                    </span>
-                  </a>
                 </div>
               </div>
             </div>

@@ -226,9 +226,9 @@ const ClubDetails = () => {
                             <AnimatedSection isVisible={aboutVisible} direction="right" delay={0.3}>
                                 <div className="relative">
                                     <img 
-                                        src="/abtus/abtus.jpeg" 
+                                        src="/abtus/abtus.jpg" 
                                         alt="Startup Team Collaboration" 
-                                        className="relative rounded-3xl shadow-2xl w-full border-4 border-white/20 backdrop-blur-sm"
+                                        className="relative rounded-3xl shadow-2xl w-3/3 border-4 border-white/20 backdrop-blur-sm"
                                     />
                                 </div>
                             </AnimatedSection>

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export function EventDetail() {
     const location = useLocation();
     const navigate = useNavigate();
     const { event } = location.state || {};
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     if (!event) {
         return (
@@ -12,7 +13,7 @@ export function EventDetail() {
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-900">Event Not Found</h1>
                     <button 
-                        onClick={() => navigate("/events")}
+                        onClick={() => navigate("/eventstimeline")}
                         className="mt-4 text-blue-600 hover:underline"
                     >
                         ← Back to Events
@@ -21,6 +22,38 @@ export function EventDetail() {
             </div>
         );
     }
+
+    // Use bannerImages if available, otherwise use single image in array
+    const images = event.bannerImages || [event.img];
+    
+    // Auto-rotate carousel
+    useEffect(() => {
+        if (images.length > 1) {
+            const interval = setInterval(() => {
+                setCurrentImageIndex((prevIndex) => 
+                    prevIndex === images.length - 1 ? 0 : prevIndex + 1
+                );
+            }, 3000); // Change image every 5 seconds
+
+            return () => clearInterval(interval);
+        }
+    }, [images.length]);
+
+    const nextImage = () => {
+        setCurrentImageIndex((prevIndex) => 
+            prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+    };
+
+    const prevImage = () => {
+        setCurrentImageIndex((prevIndex) => 
+            prevIndex === 0 ? images.length - 1 : prevIndex - 1
+        );
+    };
+
+    const goToImage = (index) => {
+        setCurrentImageIndex(index);
+    };
 
     const getMonthDay = (dateString) => {
         if (typeof dateString !== "string") return ["", ""];
@@ -40,24 +73,84 @@ export function EventDetail() {
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Back Button */}
                 <button
-                    onClick={() => navigate("/events")}
+                    onClick={() => navigate("/eventstimeline")}
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors duration-200"
                 >
                     <span className="text-xl">←</span>
                     <span className="font-medium">Back to Events</span>
                 </button>
 
-                {/* Event Header - Better handling for different aspect ratios */}
-                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8">
-                    <div className="relative h-64 md:h-96 bg-gray-100">
-                        <img
-                            src={event.img}
-                            alt={event.title}
-                            className="w-full h-full object-contain bg-white"
-                            onError={handleImageError}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                        <div className="absolute bottom-6 left-6 right-6">
+                {/* Carousel Banner - Shows complete images without stretching */}
+                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8 relative">
+                    <div className="relative bg-gray-100 overflow-hidden flex items-center justify-center min-h-[400px]">
+                        {/* Carousel Images - Show complete images as they are */}
+                        {images.map((image, index) => (
+                            <div
+                                key={index}
+                                className={`absolute inset-0 transition-opacity duration-500 ease-in-out flex items-center justify-center ${
+                                    index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                                }`}
+                            >
+                                <div className="relative flex items-center justify-center w-full h-full p-4">
+                                    <img
+                                        src={image}
+                                        alt={`${event.title} - Image ${index + 1}`}
+                                        className="mx-auto"
+                                        style={{ 
+                                            maxWidth: '100%',
+                                            maxHeight: '100%',
+                                            width: 'auto',
+                                            height: 'auto',
+                                            objectFit: 'contain'
+                                        }}
+                                        onError={handleImageError}
+                                    />
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            </div>
+                        ))}
+                        
+                        {/* Carousel Navigation Arrows */}
+                        {images.length > 1 && (
+                            <>
+                                <button
+                                    onClick={prevImage}
+                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm rounded-full p-3 hover:bg-white/30 transition-all duration-200 z-10"
+                                >
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={nextImage}
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm rounded-full p-3 hover:bg-white/30 transition-all duration-200 z-10"
+                                >
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </>
+                        )}
+
+                        {/* Image Indicators */}
+                        {images.length > 1 && (
+                            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+                                {images.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => goToImage(index)}
+                                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                                            index === currentImageIndex 
+                                                ? 'bg-white scale-125' 
+                                                : 'bg-white/50 hover:bg-white/70'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Event Info Overlay */}
+                        <div className="absolute bottom-6 left-6 right-6 z-10">
                             <div className="flex items-center gap-4 mb-4">
                                 <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-2">
                                     <span className="text-white text-sm font-medium">{event.type}</span>
@@ -71,11 +164,21 @@ export function EventDetail() {
                                 )}
                             </div>
                             <h1 className="text-3xl md:text-5xl font-bold text-white mb-2">{event.title}</h1>
+                            <p className="text-white/90 text-lg">{event.time} • {event.venue}</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Rest of your EventDetail.jsx code remains the same... */}
+                {/* Event Overview Section */}
+                {event.detailedDescription && (
+                    <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-6">Event Overview</h2>
+                        <div className="whitespace-pre-line text-gray-700 leading-relaxed text-lg">
+                            {event.detailedDescription}
+                        </div>
+                    </div>
+                )}
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Left Side - Event Details */}
                     <div className="space-y-6">
@@ -127,6 +230,62 @@ export function EventDetail() {
                                 )}
                             </div>
                         </div>
+
+                        {/* Day 1 Schedule */}
+                        {event.day1 && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">{event.day1.title}</h2>
+                                <p className="text-gray-700 mb-6">{event.day1.description}</p>
+                                
+                                <div className="space-y-4">
+                                    {event.day1.events.map((session, index) => (
+                                        <div key={index} className="border-l-4 border-blue-500 pl-4 py-3 bg-blue-50 rounded-r-lg">
+                                            <div className="flex flex-wrap items-center gap-3 mb-2">
+                                                <span className="font-semibold text-blue-600 bg-white px-2 py-1 rounded text-sm">{session.time}</span>
+                                                <span className="font-bold text-gray-800 text-lg">{session.name}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-gray-600 text-sm mb-2">
+                                                <span>📍</span>
+                                                <span>{session.venue}</span>
+                                            </div>
+                                            <p className="text-gray-700">{session.description}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Day 2 Schedule */}
+                        {event.day2 && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">{event.day2.title}</h2>
+                                <p className="text-gray-700 mb-6">{event.day2.description}</p>
+                                
+                                <div className="space-y-4">
+                                    {event.day2.events.map((session, index) => (
+                                        <div key={index} className="border-l-4 border-green-500 pl-4 py-3 bg-green-50 rounded-r-lg">
+                                            <div className="flex flex-wrap items-center gap-3 mb-2">
+                                                <span className="font-semibold text-green-600 bg-white px-2 py-1 rounded text-sm">{session.time}</span>
+                                                <span className="font-bold text-gray-800 text-lg">{session.name}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-gray-600 text-sm mb-2">
+                                                <span>📍</span>
+                                                <span>{session.venue}</span>
+                                            </div>
+                                            <p className="text-gray-700">{session.description}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Conclusion */}
+                        {event.conclusion && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">Conclusion</h2>
+                                <p className="text-gray-700 leading-relaxed">{event.conclusion}</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Right Side - Event Information */}
@@ -184,6 +343,60 @@ export function EventDetail() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Competition Highlights */}
+                        {(event.day1 || event.day2) && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4">Competition Highlights</h3>
+                                <div className="space-y-3">
+                                    {event.day1 && event.day1.events.filter(e => 
+                                        e.name === "Paper Presentation" || 
+                                        e.name === "Reverse Coding" || 
+                                        e.name === "Ideathon" ||
+                                        e.name === "E-Sports Tournament"
+                                    ).map((competition, index) => (
+                                        <div key={index} className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+                                            <span className="text-blue-600 text-lg">
+                                                {competition.name === "Paper Presentation" && "📄"}
+                                                {competition.name === "Reverse Coding" && "💻"}
+                                                {competition.name === "Ideathon" && "💡"}
+                                                {competition.name === "E-Sports Tournament" && "🎮"}
+                                            </span>
+                                            <div>
+                                                <p className="font-semibold text-gray-900">{competition.name}</p>
+                                                <p className="text-gray-600 text-sm">{competition.time}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Entertainment Highlights */}
+                        {event.day2 && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6">
+                                <h3 className="text-xl font-bold text-gray-900 mb-4">Entertainment Highlights</h3>
+                                <div className="space-y-3">
+                                    {event.day2.events.filter(e => 
+                                        e.name === "Stand-Up Comedy" || 
+                                        e.name === "Meme War" || 
+                                        e.name === "Cultural Performances"
+                                    ).map((entertainment, index) => (
+                                        <div key={index} className="flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-yellow-50 rounded-xl border border-green-200">
+                                            <span className="text-green-600 text-lg">
+                                                {entertainment.name === "Stand-Up Comedy" && "😂"}
+                                                {entertainment.name === "Meme War" && "🖼️"}
+                                                {entertainment.name === "Cultural Performances" && "💃"}
+                                            </span>
+                                            <div>
+                                                <p className="font-semibold text-gray-900">{entertainment.name}</p>
+                                                <p className="text-gray-600 text-sm">{entertainment.time}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Back to All Events Button */}
                         <button 
