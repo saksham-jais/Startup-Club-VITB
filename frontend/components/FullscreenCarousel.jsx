@@ -1,6 +1,6 @@
 // FullscreenCarousel.js
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const event = {
   title: "S²-25 - StartUp Synergy",
