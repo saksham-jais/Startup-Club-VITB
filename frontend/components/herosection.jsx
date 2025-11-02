@@ -7,11 +7,12 @@ const HeroSection = () => {
   const personImg = "/homepage/pic3.JPG"; 
    
   const mobileVideo = "/Video0.mp4";
-  const desktopVideo = "/Video.mp4";
+  const desktopVideo = "/Video0.mp4";
   const [isLoading, setIsLoading] = useState(false);
   const [glowEffect, setGlowEffect] = useState(false);
   const [zoomOut, setZoomOut] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [videoError, setVideoError] = useState(false);
   
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ const HeroSection = () => {
       setIsLoading(true);
       setGlowEffect(true);
 
-      // Hide loading screen and trigger zoom-out after 7 seconds (video duration)
+      // Hide loading screen and trigger zoom-out after 5 seconds
       const loadingTimer = setTimeout(() => {
         setIsLoading(false);
         setZoomOut(true);
@@ -72,13 +73,29 @@ const HeroSection = () => {
     navigate('/ClubDetails');
   };
 
+  // Handle video error
+  const handleVideoError = () => {
+    console.error("Video failed to load. Check file paths: mobileVideo or desktopVideo");
+    setVideoError(true);
+  };
+
+  // Fallback component if video fails
+  const FallbackLoader = () => (
+    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 to-purple-900">
+      <div className="text-center text-white">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
+        <p className="text-xl font-semibold">Loading Startup Synergy...</p>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {/* Loading Screen */}
       {isLoading && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black overflow-hidden">
           <div className="relative w-full h-full">
-            {(mobileVideo || desktopVideo) ? (
+            {!videoError ? (
               <>
                 {/* Mobile Video: Visible on screens smaller than sm (640px) */}
                 <video
@@ -86,6 +103,8 @@ const HeroSection = () => {
                   autoPlay
                   muted
                   playsInline
+                  preload="auto"
+                  onError={handleVideoError}
                   className="block sm:hidden w-full h-full object-cover"
                   alt="Startup Club Mobile Loading Video"
                 />
@@ -95,20 +114,14 @@ const HeroSection = () => {
                   autoPlay
                   muted
                   playsInline
+                  preload="auto"
+                  onError={handleVideoError}
                   className="hidden sm:block w-full h-full object-cover"
                   alt="Startup Club Desktop Loading Video"
                 />
               </>
             ) : (
-              /* Fallback to default video if no videos are provided */
-              <video
-                src={defaultVideo}
-                autoPlay
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-                alt="Startup Club Loading Video"
-              />
+              <FallbackLoader />
             )}
             <div
               className={`absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${
@@ -146,7 +159,7 @@ const HeroSection = () => {
       </style>
 
       {/* Main Hero Section with proper spacing from navbar */}
-      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden pt-0">
+      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden pt-20">
         <div className="container mx-auto px-4 max-w-6xl relative">
           <div className="flex flex-col md:flex-row items-center justify-between">
             {/* Left side: Details with animation */}
