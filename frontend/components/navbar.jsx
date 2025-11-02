@@ -28,7 +28,7 @@ const Navbar = () => {
             </li>
             <li className="mx-[35px]">
               <Link
-                to="/team"
+                to="/teams"
                 className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(212,175,55,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-amber-600 hover:[text-shadow:_0_0_10px_rgba(212,175,55,0.3)]"
               >
                 Team
@@ -44,7 +44,7 @@ const Navbar = () => {
             </li>
             <li className="mx-[35px]">
               <Link
-                to="/about-us"
+                to="/ClubDetails"
                 className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(212,175,55,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-amber-600 hover:[text-shadow:_0_0_10px_rgba(212,175,55,0.3)]"
               >
                 About Us

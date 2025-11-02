@@ -3,6 +3,18 @@ import React, { useState } from "react";
 // Team member data
 const teamMembers = [
   {
+    name: "DR LOKESH MALVIYA",
+    title: "FACULTY COORDINATOR",
+    category: "Faculty Coordinators",
+    image: "/team/LokeshSir.jpg",
+  },
+  {
+    name: "DR BHUPENDRA PANCHAL",
+    title: "FACULTY COORDINATOR",
+    category: "Faculty Coordinators",
+    image: "/team/BhupendraSir.jpg",
+  },
+  {
     name: "LAKSHAY KHTOUR",
     title: "PRESIDENT",
     category: "Panel Members",
@@ -30,24 +42,14 @@ const teamMembers = [
     batch: "23", 
     image: "/team/Veedushi Jain.jpg",
   },
-  {
-    name: "DR LOKESH MALVIYA",
-    title: "FACULTY COORDINATOR",
-    category: "Faculty Coordinators",
-    image: "/team/LokeshSir.jpg",
-  },
-  {
-    name: "DR BHUPENDRA PANCHAL",
-    title: "FACULTY COORDINATOR",
-    category: "Faculty Coordinators",
-    image: "/team/BhupendraSir.jpg",
-  },
+  
 ];
 
 const filters = [
   "View all",
-  "Panel Members",
   "Faculty Coordinators",
+  "Panel Members",
+  
 ];
 
 export default function TeamSection() {
