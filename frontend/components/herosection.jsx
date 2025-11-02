@@ -6,8 +6,8 @@ const HeroSection = () => {
   const buildingImg = "/homepage/pic1.JPG";
   const personImg = "/homepage/pic3.JPG"; 
    
-  const mobileVideo = "/Video0.mp4";
-  const desktopVideo = "/Video0.mp4";
+  const mobileVideo = "/SC_Video.mp4";
+  const desktopVideo = "/SC_Video.mp4";
   const [isLoading, setIsLoading] = useState(false);
   const [glowEffect, setGlowEffect] = useState(false);
   const [zoomOut, setZoomOut] = useState(false);
