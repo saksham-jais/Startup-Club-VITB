@@ -1,6 +1,5 @@
 // App.jsx
-import { Routes, Route } from "react-router-dom";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import HeroSection from "../components/herosection";
 import Testimonial from "../components/testimonial";
@@ -13,6 +12,7 @@ import FullscreenCarousel from '../components/FullscreenCarousel'; // Single imp
 import RegistrationPage from '../components/registration';
 import AdminLogin from '../components/AdminLogin';
 import AdminDashboard from '../components/AdminDashboard';
+// import Login_SignUp from '../components/login_signup';
 
 function Home({ cards = [] }) {  // Add default [] to avoid undefined errors
   return (
@@ -45,6 +45,7 @@ function App({ cards = [] }) {  // Add default [] here too
         <Route path="ClubDetails" element={<ClubDetails />} />  {/* Consider lowercase for consistency */}
         <Route path="testimonials" element={<Testimonial />} />
         <Route path="registration" element={<RegistrationPage />} />
+        {/* <Route path="login_signup" element={<Login_SignUp />} /> */}
         {/* 404 Fallback */}
         <Route path="*" element={<div className="p-8 text-center">404 - Page Not Found</div>} />
       </Route>

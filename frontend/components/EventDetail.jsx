@@ -68,6 +68,16 @@ export function EventDetail() {
         e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87";
     };
 
+    const handleRegisterClick = () => {
+        const params = new URLSearchParams({
+            title: event.title,
+            description: event.description,
+            bgImage: event.img || (event.bannerImages && event.bannerImages[0]),
+        }).toString();
+        
+        window.open(`/registration?${params}`, '_blank');
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -341,6 +351,16 @@ export function EventDetail() {
                                         <p className="font-semibold text-gray-900">{event.teamSize}</p>
                                     </div>
                                 </div>
+
+                                {/* Register Now Button - Inside Event Info Card, after Team Size */}
+                                <div className="flex justify-center pt-4">
+                                    <button 
+                                        onClick={handleRegisterClick}
+                                        className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 px-8 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2 max-w-md"
+                                    >
+                                        🚀 Register Now
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -398,7 +418,7 @@ export function EventDetail() {
                             </div>
                         )}
 
-                        {/* Back to All Events Button */}
+                        {/* Back to All Events Button - Restored to full width */}
                         <button 
                             onClick={() => navigate("/eventstimeline")}
                             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-6 rounded-2xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
