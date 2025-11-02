@@ -146,7 +146,7 @@ const HeroSection = () => {
       </style>
 
       {/* Main Hero Section with proper spacing from navbar */}
-      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden pt-0">
         <div className="container mx-auto px-4 max-w-6xl relative">
           <div className="flex flex-col md:flex-row items-center justify-between">
             {/* Left side: Details with animation */}
