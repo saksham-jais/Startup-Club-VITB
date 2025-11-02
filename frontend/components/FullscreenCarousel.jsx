@@ -1,12 +1,84 @@
 // FullscreenCarousel.js
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const event = {
   title: "S²-25 - StartUp Synergy",
   subtitle: "29 - 30 November 2025",
   description: "This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.",
-  bgPosition: "center center",
+  img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+  bannerImages: [
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1516321310764-9f3c2499b0b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+  ],
+  type: "Startup Summit",
+  collaboration: "With Tech Innovators Inc.",
+  time: "9:00 AM - 6:00 PM",
+  venue: "VIT Bhopal University, Auditorium Hall",
+  date: "November 29",
+  year: "2025",
+  detailedDescription: "Join us for an immersive experience where ideas turn into realities. From pitch sessions to networking galas, S²-25 is your gateway to the startup world.",
+  speaker: "Dr. Elena Vasquez",
+  designation: "CEO, InnovateX Ventures",
+  judges: ["Prof. Rajesh Kumar", "Ms. Priya Singh", "Dr. Amit Patel"],
+  mentors: ["John Doe, Startup Advisor", "Jane Smith, Venture Capitalist"],
+  day1: {
+    title: "Day 1: Innovation Ignition",
+    description: "Kickstart with workshops and initial competitions.",
+    events: [
+      {
+        time: "9:00 AM - 10:30 AM",
+        name: "Opening Ceremony",
+        venue: "Main Auditorium",
+        description: "Welcome address and keynote by industry leaders."
+      },
+      {
+        time: "11:00 AM - 1:00 PM",
+        name: "Ideathon",
+        venue: "Workshop Room A",
+        description: "Brainstorm and pitch innovative ideas."
+      },
+      {
+        time: "2:00 PM - 4:00 PM",
+        name: "Paper Presentation",
+        venue: "Conference Hall",
+        description: "Showcase research and get expert feedback."
+      }
+    ]
+  },
+  day2: {
+    title: "Day 2: Synergy Showcase",
+    description: "Final rounds, awards, and celebrations.",
+    events: [
+      {
+        time: "9:00 AM - 11:00 AM",
+        name: "Reverse Coding Challenge",
+        venue: "Lab B",
+        description: "Test your debugging and problem-solving skills."
+      },
+      {
+        time: "12:00 PM - 2:00 PM",
+        name: "E-Sports Tournament",
+        venue: "Gaming Arena",
+        description: "Compete in high-energy gaming battles."
+      },
+      {
+        time: "3:00 PM - 5:00 PM",
+        name: "Stand-Up Comedy",
+        venue: "Main Stage",
+        description: "Unwind with hilarious performances."
+      },
+      {
+        time: "5:30 PM - 7:00 PM",
+        name: "Cultural Performances",
+        venue: "Outdoor Plaza",
+        description: "Celebrate with music and dance."
+      }
+    ]
+  },
+  conclusion: "End the summit with lasting connections and actionable insights. See you at S²-25!",
+  registrationFee: "₹500 per team",
+  teamSize: "2-4 members"
 };
 
 const FullscreenCarousel = () => {
@@ -54,7 +126,7 @@ const FullscreenCarousel = () => {
     const params = new URLSearchParams({
       title: event.title,
       description: event.description,
-      bgImage: event.bgImage,
+      bgImage: event.img,
     }).toString();
     
     window.open(`/registration?${params}`, '_blank');
@@ -84,6 +156,7 @@ const FullscreenCarousel = () => {
         description: "The event begins with an Opening Ceremony, featuring a keynote speaker who will set the stage with insights into emerging trends and industry advancements. This session aims to inspire participants and provide direction for the competitions and discussions that follow.",
         events: [
           {
+          
             time: "10 AM - 1 PM",
             name: "Opening Ceremony & Keynote Session",
             venue: "Auditorium 1",
@@ -175,15 +248,14 @@ const FullscreenCarousel = () => {
           {/* Event Content */}
           <div className="text-center">
             
-            {/* Event Title - Now clickable */}
-            
-            <h2 
-              className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent !cursor-pointer hover:from-cyan-300 hover:to-blue-300 transition-all duration-300"
-              onClick={handleEventTitleClick}
-              title="Click to view event details"
+            {/* Event Title - As Link */}
+            <Link
+              to="/eventstimeline/:id"
+              state={{ event }}
+              className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent block hover:opacity-80 transition-opacity duration-200 select-none"
             >
               {event.title}
-            </h2>
+            </Link>
             
             {/* Date Badge */}
             <div className="flex justify-center mb-6">
