@@ -9,6 +9,89 @@ export function EventTimeline() {
     
     const events = [
         {
+            date: "Nov 29 - 30",
+            year: "2025",
+            img: "/event_timeline/Nov 29-30.jpg",
+            title: "S²-25 - StartUp Synergy",
+            venue: "AUDITORIUM 1",
+            time: "29th - 30th Nov 2025",
+            description: "A two-day event fostering innovation, collaboration, and intellectual engagement through competitions, speaker sessions, and entertainment activities.",
+            registrationFee: "NA as of now",
+            teamSize: "Individual & Team Events",
+            type: "Multi-Event Competition",
+            isUpcoming: true,
+            bannerImages: [
+                "/event_timeline/Nov 29-30.1.jpg",
+                "/event_timeline/Nov 29-30.2.jpg"
+            ],
+            day1: {
+                title: "Day 1: 29th Nov 2025 - Knowledge, Innovation, and Competition",
+                description: "The event begins with an Opening Ceremony, featuring a keynote speaker who will set the stage with insights into emerging trends and industry advancements. This session aims to inspire participants and provide direction for the competitions and discussions that follow.",
+                events: [
+                    {
+                        time: "10 AM - 1 PM",
+                        name: "Opening Ceremony & Keynote Session",
+                        venue: "Auditorium 1",
+                        description: "Setting the stage with insights into emerging trends and industry advancements"
+                    },
+                    {
+                        time: "1 PM - 5 PM",
+                        name: "Paper Presentation",
+                        venue: "Auditorium 1",
+                        description: "Showcase research papers, patents, and innovative ideas on cutting-edge topics. Connect with faculty and industry experts for publication support and idea refinement."
+                    },
+                    {
+                        time: "1 PM - 5 PM",
+                        name: "Reverse Coding",
+                        venue: "AB1 307",
+                        description: "A unique coding challenge where participants decipher logic from given outputs. Tests analytical thinking, debugging skills, and algorithmic problem-solving."
+                    },
+                    {
+                        time: "1 PM - 5 PM",
+                        name: "Ideathon",
+                        venue: "Coding Studio AB1",
+                        description: "Fast-paced brainstorming competition to develop innovative solutions to real-world problems. Teams pitch ideas to judges assessing creativity and feasibility."
+                    },
+                    {
+                        time: "1 PM - 5 PM",
+                        name: "E-Sports Tournament",
+                        venue: "Arch 103",
+                        description: "Competitive gaming event featuring popular e-sports titles. Fosters teamwork, strategy, and sportsmanship in a structured tournament format."
+                    }
+                ]
+            },
+            day2: {
+                title: "Day 2: 30th Nov 2025 - Inspiration, Engagement, and Entertainment",
+                description: "The second day of the event shifts the focus toward thought-provoking discussions, creative expression, and entertainment.",
+                events: [
+                    {
+                        time: "10 AM - 12 PM",
+                        name: "Podcast Session with Guest Speaker",
+                        venue: "Auditorium 1",
+                        description: "A live podcast discussion with an expert guest, offering an in-depth conversation on Entrepreneurship and relevant topics. This session is designed to be interactive, with an opportunity for the audience to engage with the speaker through questions and discussions."
+                    },
+                    {
+                        time: "2 PM - 3 PM",
+                        name: "Stand-Up Comedy",
+                        venue: "Auditorium 1",
+                        description: "A dedicated segment featuring a professional well known comedian, bringing a refreshing break with humor and light-hearted entertainment. This segment aims to create a lively atmosphere and provide a space for relaxation and enjoyment."
+                    },
+                    {
+                        time: "3 PM - 5 PM",
+                        name: "Meme War",
+                        venue: "Auditorium 1",
+                        description: "A unique competition where participants create and submit memes based on given themes. The memes will be judged based on creativity, humor, and relevance. The audience will participate in voting, and the winner will receive a special prize. This event encourages digital creativity and provides a fun and engaging experience."
+                    },
+                    {
+                        time: "3 PM - 5 PM",
+                        name: "Cultural Performances",
+                        venue: "Auditorium 1",
+                        description: "A showcase of talent, including dance, music, and other artistic performances. This segment highlights the creative and cultural diversity of the participants and provides a platform for artistic expression."
+                    }
+                ]
+            },
+        },
+        {
             date: "Apr 18",
             year: "2024",
             img: "/event_timeline/Apr 18.jpg",
@@ -21,7 +104,11 @@ export function EventTimeline() {
             type: "Ideathon",
             speaker: "Yash Kulshrestha",
             designation: "CEO, Feedbox",
-            isUpcoming: false
+            isUpcoming: false,
+            bannerImages: [
+                "/event_timeline/Apr 18.1.JPG",
+                "/event_timeline/Apr 18.2.JPG"
+            ]
         },
         {
             date: "Sep 28",
@@ -35,7 +122,11 @@ export function EventTimeline() {
             teamSize: "2–4 participants",
             type: "Pitch Competition",
             judges: ["Mr. Piyush Nagar", "Ms. Tamosi Moitra Sarkar", "Mr. Utkarsh Jyotishi", "Mr. Amitesh"],
-            isUpcoming: false
+            isUpcoming: false,
+            bannerImages: [
+                "/event_timeline/Sep 28.1.JPG",
+                "/event_timeline/Sep 28.2.JPG"
+            ]
         },
         {
             date: "Oct 23",
@@ -50,7 +141,11 @@ export function EventTimeline() {
             type: "Workshop",
             speaker: "Piyush Nagar",
             designation: "Founder & CEO of Fayda Ecosystem",
-            isUpcoming: false
+            isUpcoming: false,
+            bannerImages: [
+                "/event_timeline/Oct 23.1.JPG",
+                "/event_timeline/Oct 23.2.JPG"
+            ]
         },
         {
             date: "Dec 14",
@@ -64,7 +159,11 @@ export function EventTimeline() {
             teamSize: "One-to-One",
             type: "Mentorship",
             mentors: ["Rahul Bhargava", "Rakshit Khandelwal", "Narendra Govil", "Prashant Patel", "Shawez Shaikh"],
-            isUpcoming: false
+            isUpcoming: false,
+            bannerImages: [
+                "/event_timeline/Dec 14.jpg",
+                "/event_timeline/Dec 14.jpg"
+            ]
         },
         {
             date: "Feb 21",
@@ -77,7 +176,11 @@ export function EventTimeline() {
             registrationFee: "₹66",
             teamSize: "1–3 members",
             type: "Startup Challenge",
-            isUpcoming: false
+            isUpcoming: false,
+            bannerImages: [
+                "/event_timeline/Feb 21.1.JPG",
+                "/event_timeline/Feb 21.2.JPG"
+            ]
         },
         {
             date: "Aug 02",
@@ -93,7 +196,11 @@ export function EventTimeline() {
             collaboration: "HitBullseye",
             speaker: "Rajeev Markanday",
             designation: "Verbal Wizard",
-            isUpcoming: false
+            isUpcoming: false,
+            bannerImages: [
+                "/event_timeline/Aug 02.1.jpg",
+                "/event_timeline/Aug 02.2.jpg"
+            ]
         }
     ];
 
@@ -202,7 +309,7 @@ export function EventTimeline() {
                                 }`}
                                 onClick={() => setActiveTab("upcoming")}
                             >
-                                Upcoming Events
+                                Upcoming Events {upcomingEventsCount > 0 && `(${upcomingEventsCount})`}
                             </button>
                         </div>
                         

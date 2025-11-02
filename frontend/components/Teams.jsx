@@ -3,64 +3,51 @@ import React, { useState } from "react";
 // Team member data
 const teamMembers = [
   {
-    name: "Emmy Rosum",
-    title: "Co-Founder and CEO",
-    category: "Management",
-    image: "https://randomuser.me/api/portraits/women/11.jpg",
+    name: "LAKSHAY KHTOUR",
+    title: "PRESIDENT",
+    category: "Panel Members",
+    batch: "23",
+    image: "/team/Lakshay Khtour.jpg",
   },
   {
-    name: "Orlando Diggs",
-    title: "Co-Founder and COO",
-    category: "Management",
-    image: "https://randomuser.me/api/portraits/men/12.jpg",
+    name: "CHAITANYA GUPTA",
+    title: "VICE PRESIDENT", 
+    category: "Panel Members",
+    batch: "23",
+    image: "/team/Chaitanya Gupta.jpg",
   },
   {
-    name: "Sophie Chamberlain",
-    title: "Head of Sales",
-    category: "Sales",
-    image: "https://randomuser.me/api/portraits/women/13.jpg",
+    name: "FAROOQUE AZAM",
+    title: "SECRETARY GENERAL",
+    category: "Panel Members", 
+    batch: "23",
+    image: "/team/Farooque Azam.jpg",
   },
   {
-    name: "Lana Steiner",
-    title: "VP of Customer Success",
-    category: "Customer Success",
-    image: "https://randomuser.me/api/portraits/women/14.jpg",
+    name: "VEEDUSHI JAIN",
+    title: "CHAIRPERSON",
+    category: "Panel Members",
+    batch: "23", 
+    image: "/team/Veedushi Jain.jpg",
   },
   {
-    name: "Emily Donnavan",
-    title: "Product Lead",
-    category: "Product",
-    image: "https://randomuser.me/api/portraits/women/15.jpg",
+    name: "DR LOKESH MALVIYA",
+    title: "FACULTY COORDINATOR",
+    category: "Faculty Coordinators",
+    image: "/team/LokeshSir.jpg",
   },
   {
-    name: "Sasha Kindred",
-    title: "VP of Marketing",
-    category: "Marketing",
-    image: "https://randomuser.me/api/portraits/women/16.jpg",
-  },
-  {
-    name: "Jessica Dobrev",
-    title: "Backend Lead",
-    category: "Operations",
-    image: "https://randomuser.me/api/portraits/women/17.jpg",
-  },
-  {
-    name: "Drew Cano",
-    title: "Head of UX",
-    category: "Design",
-    image: "https://randomuser.me/api/portraits/men/18.jpg",
+    name: "DR BHUPENDRA PANCHAL",
+    title: "FACULTY COORDINATOR",
+    category: "Faculty Coordinators",
+    image: "/team/BhupendraSir.jpg",
   },
 ];
 
 const filters = [
   "View all",
-  "Management",
-  "Product",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Customer Success",
-  "Operations",
+  "Panel Members",
+  "Faculty Coordinators",
 ];
 
 export default function TeamSection() {
@@ -75,11 +62,10 @@ export default function TeamSection() {
     <section className="py-12 px-4 max-w-6xl mx-auto mt-10 font-montserrat bg-gray-50">
       <div className="text-center mb-8">
         <h3 className="text-3xl font-medium text-gray-800 mb-3">
-          Experienced & Professional Team
+          Our Team
         </h3>
         <p className="text-gray-500 text-sm max-w-xl mx-auto">
-          You can rely on our amazing features list and also our customer services
-          will be a great experience for you without doubt and in no-time.
+          Meet the dedicated leaders driving innovation and entrepreneurship at our StartUp Club.
         </p>
       </div>
 
@@ -101,32 +87,34 @@ export default function TeamSection() {
       </div>
 
       {/* Team grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {filteredMembers.map((member) => (
           <div
             key={member.name}
-            className="flex flex-col items-center text-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
           >
             <img
               src={member.image}
               alt={member.name}
-              className="w-32 h-32 rounded-full object-cover mb-4"
+              className="w-32 h-32 rounded-full object-cover mb-4 border-4 border-blue-100"
             />
-            <h5 className="text-lg font-medium text-gray-800 mb-1">
+            <h5 className="text-lg font-bold text-gray-800 mb-1">
               {member.name}
             </h5>
-            <h6 className="text-sm text-gray-500 mb-3">{member.title}</h6>
-            <p className="text-xs text-gray-500 mb-4">
-              You can rely on our amazing features list and also our customer
-              services will be a great experience.
-            </p>
+            <h6 className="text-sm text-blue-600 font-semibold mb-1">{member.title}</h6>
+            
+            {/* Conditionally render batch only for Panel Members */}
+            {member.category === "Panel Members" && (
+              <p className="text-xs text-gray-500 mb-3">Batch - {member.batch}</p>
+            )}
+            
             <ul className="flex space-x-4">
               <li>
                 <a
                   href="#"
                   className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
                 >
-                  <i className="icon-social-facebook"></i>
+                  <i className="icon-social-linkedin"></i>
                 </a>
               </li>
               <li>
@@ -143,14 +131,6 @@ export default function TeamSection() {
                   className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
                 >
                   <i className="icon-social-instagram"></i>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-500 hover:text-blue-500 transition-transform duration-150 hover:-translate-y-1"
-                >
-                  <i className="icon-social-behance"></i>
                 </a>
               </li>
             </ul>
