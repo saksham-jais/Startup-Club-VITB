@@ -26,7 +26,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 ease-in-out hover:text-blue-600"
               >
                 Home
               </Link>
@@ -34,7 +34,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/teams"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 ease-in-out hover:text-blue-600"
               >
                 Team
               </Link>
@@ -42,7 +42,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/eventstimeline"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 ease-in-out hover:text-blue-600"
               >
                 Events Timeline
               </Link>
@@ -50,7 +50,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/ClubDetails"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 ease-in-out hover:text-blue-600"
               >
                 About Us
               </Link>
@@ -61,7 +61,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 md:space-x-4">
             <button
               onClick={handleSignup}
-              className="relative px-4 py-2 md:px-6 md:py-3 bg-blue-400 text-white no-underline text-sm md:text-[16px] font-semibold transition-all duration-300 ease-in-out overflow-hidden rounded-md md:rounded-lg shadow-md hover:shadow-lg before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-[rgba(96,165,250,0.3)] before:to-[rgba(96,165,250,0.3)] before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:[text-shadow:_0_0_5px_rgba(255,255,255,0.5)] hover:bg-blue-500 active:scale-95 active:shadow-inner"
+              className="px-4 py-2 md:px-6 md:py-3 bg-blue-400 text-white no-underline text-sm md:text-[16px] font-semibold transition-all duration-300 ease-in-out rounded-md md:rounded-lg shadow-md hover:shadow-lg hover:bg-blue-500 active:scale-95 active:shadow-inner"
             >
               Register Now
             </button>
@@ -111,7 +111,7 @@ const Navbar = () => {
             <Link
               to="/"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               Home
             </Link>
@@ -122,7 +122,7 @@ const Navbar = () => {
             <Link
               to="/teams"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               Team
             </Link>
@@ -133,7 +133,7 @@ const Navbar = () => {
             <Link
               to="/eventstimeline"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               Events Timeline
             </Link>
@@ -144,7 +144,7 @@ const Navbar = () => {
             <Link
               to="/ClubDetails"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               About Us
             </Link>
