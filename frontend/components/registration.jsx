@@ -3,6 +3,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
 
+// const API_BASE = 'http://localhost:5000'
 const API_BASE = 'https://startup-club-dczt.onrender.com'
 
 function RegistrationPage({ title, description, bgImage }) {
@@ -223,7 +224,6 @@ function RegistrationPage({ title, description, bgImage }) {
     setIsSubmitting(true);
     const fd = new FormData();
     fd.append('title', eventData.title);
-    fd.append('description', eventData.description);
     fd.append('name', formData.name);
     fd.append('registrationNumber', formData.registrationNumber);
     fd.append('email', formData.email);
