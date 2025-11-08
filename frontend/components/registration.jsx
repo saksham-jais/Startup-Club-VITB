@@ -6,15 +6,13 @@ import clsx from 'clsx';
 // const API_BASE = 'http://localhost:5000'
 const API_BASE = 'https://startup-club-dczt.onrender.com'
 
-function RegistrationPage({ title, description, bgImage }) {
+function RegistrationPage({ title }) {
   const qrCode = "/qr.jpg";
 
   /* ----------  EVENT DATA  ---------- */
   const [eventData, setEventData] = useState({
     title: title || 'Event Registration',
-    description: description || '',
     bgImage:
-      bgImage ||
       'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&h=600&fit=crop',
   });
 
@@ -144,19 +142,15 @@ function RegistrationPage({ title, description, bgImage }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlTitle = params.get('title');
-    const urlDesc = params.get('description');
-    const urlBg = params.get('bgImage');
 
-    if ((urlTitle || urlDesc || urlBg) && !title && !description && !bgImage) {
+    if ((urlTitle) && !title) {
       setEventData({
         title: urlTitle || 'Event Registration',
-        description: urlDesc || '',
         bgImage:
-          urlBg ||
           'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&h=600&fit=crop',
       });
     }
-  }, [title, description, bgImage]);
+  }, [title]);
 
   useEffect(() => {
     if (!eventData.title) return;
@@ -165,13 +159,16 @@ function RegistrationPage({ title, description, bgImage }) {
         eventData.title
       )}`
     )
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then((data) => {
         const set = new Set();
         data.forEach((s) => set.add(`${s.row}-${s.col}`));
         setBookedSeats(set);
       })
-      .catch(() => {
+      .catch((err) => {
         if (!errorShownRef.current.has(eventData.title)) {
           toast.error('Could not load booked seats');
           errorShownRef.current.add(eventData.title);
