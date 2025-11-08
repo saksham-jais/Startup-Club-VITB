@@ -8,7 +8,10 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleSignup = () => {
-    navigate('/registration');
+        const params = new URLSearchParams({
+      title: 'S²-25 - StartUp Synergy',
+    }).toString();
+    navigate(`/registration?${params}`);
   };
 
   return (
