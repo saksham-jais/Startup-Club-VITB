@@ -125,8 +125,6 @@ const FullscreenCarousel = () => {
   const handleRegisterClick = () => {
     const params = new URLSearchParams({
       title: event.title,
-      description: event.description,
-      bgImage: event.img,
     }).toString();
     
     window.open(`/registration?${params}`, '_blank');

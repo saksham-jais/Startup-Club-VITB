@@ -98,13 +98,13 @@ router.post('/submit', upload.single('screenshot'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'Payment screenshot required' });
 
     const {
-      title, description, name, registrationNumber,
+      title, name, registrationNumber,
       email, utrId, seatRow, seatColumn
     } = req.body;
 
     // ---- VALIDATION ----
     const missing = [];
-    ['title','description','name','registrationNumber','email','utrId','seatRow','seatColumn']
+    ['title','name','registrationNumber','email','utrId','seatRow','seatColumn']
       .forEach(f => !req.body[f] && missing.push(f));
     if (missing.length) {
       await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
@@ -129,7 +129,6 @@ router.post('/submit', upload.single('screenshot'), async (req, res) => {
 
     const newReg = new Registration({
       title: title.trim(),
-      description: description.trim(),
       name: name.trim(),
       registrationNumber: registrationNumber.trim(),
       email: email.trim().toLowerCase(),
