@@ -12,7 +12,6 @@ const registrationSchema = new mongoose.Schema({
   },
   registrationNumber: {
     type: String,
-    required: true,
     unique: true
   },
   email: {
@@ -33,14 +32,12 @@ const registrationSchema = new mongoose.Schema({
     required: true
   },
   seatRow: {
-    type: String,        // Changed from Number to String
-    required: true,
+    type: String,        // Optional for non-seated events
     uppercase: true,
     trim: true
   },
   seatColumn: {
-    type: Number,
-    required: true,
+    type: Number,        // Optional for non-seated events
     min: 1
   },
   createdAt: {
@@ -49,7 +46,7 @@ const registrationSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Ensure seat is unique per event
-registrationSchema.index({ title: 1, seatRow: 1, seatColumn: 1 }, { unique: true });
+// Ensure seat is unique per event (sparse allows docs without seats)
+registrationSchema.index({ title: 1, seatRow: 1, seatColumn: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('Registration', registrationSchema);
