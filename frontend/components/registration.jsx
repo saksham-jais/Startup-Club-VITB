@@ -3,11 +3,16 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
 
-// const API_BASE = 'http://localhost:5000'
-const API_BASE = 'https://startup-club-dczt.onrender.com'
+const API_BASE = 'http://localhost:5000'
+// const API_BASE = 'https://startup-club-dczt.onrender.com'
 
 function RegistrationPage({ title }) {
   const qrCode = "/qr.jpg";
+
+  /* ----------  SEATED EVENTS CONFIG (SYNC WITH BACKEND)  ---------- */
+  const seatedTitles = new Set([
+    'S²-25 - StartUp Synergy'  // Add more seated event titles here
+  ]);
 
   /* ----------  EVENT DATA  ---------- */
   const [eventData, setEventData] = useState({
@@ -15,6 +20,9 @@ function RegistrationPage({ title }) {
     bgImage:
       'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&h=600&fit=crop',
   });
+
+  /* ----------  SEATING FLAG (DETERMINED BY TITLE)  ---------- */
+  const [hasSeating, setHasSeating] = useState(false);
 
   /* ----------  FORM DATA  ---------- */
   const [formData, setFormData] = useState({
@@ -138,54 +146,60 @@ function RegistrationPage({ title }) {
     setInitialPinchDistance(0);
   };
 
-  /* ----------  FETCH BOOKED SEATS  ---------- */
+  /* ----------  FETCH EVENT PARAMS & BOOKED SEATS  ---------- */
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlTitle = params.get('title');
 
-    if ((urlTitle) && !title) {
+    if (urlTitle && !title) {
       setEventData({
-        title: urlTitle || 'Event Registration',
+        title: decodeURIComponent(urlTitle) || 'Event Registration',
         bgImage:
           'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&h=600&fit=crop',
       });
     }
+
+    // Determine seating based on title (no URL param needed)
+    const finalTitle = title || decodeURIComponent(urlTitle || '');
+    setHasSeating(seatedTitles.has(finalTitle));
+
+    // Fetch booked seats only if seating enabled
+    if (seatedTitles.has(finalTitle)) {
+      fetch(
+        `${API_BASE}/registration/booked/${encodeURIComponent(finalTitle)}`
+      )
+        .then((r) => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
+        .then((data) => {
+          const set = new Set();
+          data.forEach((s) => set.add(`${s.row}-${s.col}`));
+          setBookedSeats(set);
+        })
+        .catch((err) => {
+          if (!errorShownRef.current.has(finalTitle)) {
+            toast.error('Could not load booked seats');
+            errorShownRef.current.add(finalTitle);
+          }
+        });
+    }
   }, [title]);
 
-  useEffect(() => {
-    if (!eventData.title) return;
-    fetch(
-      `${API_BASE}/registration/booked/${encodeURIComponent(
-        eventData.title
-      )}`
-    )
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((data) => {
-        const set = new Set();
-        data.forEach((s) => set.add(`${s.row}-${s.col}`));
-        setBookedSeats(set);
-      })
-      .catch((err) => {
-        if (!errorShownRef.current.has(eventData.title)) {
-          toast.error('Could not load booked seats');
-          errorShownRef.current.add(eventData.title);
-        }
-      });
-  }, [eventData.title]);
-
   /* ----------  PRICE LOGIC  ---------- */
-  const priceMap = {
-    N: 230, M: 230, L: 230,
-    K: 230, J: 230, H: 230, G: 230, F: 230, E: 230, D: 230,
+  const getPrice = (row) => {
+    const priceMap = {
+      N: 230, M: 230, L: 230,
+      K: 230, J: 230, H: 230, G: 230, F: 230, E: 230, D: 230,
+    };
+    return priceMap[row] || 230;  // Default 230 for non-seated or invalid row
   };
 
-  const getPrice = (row) => priceMap[row] || 0;
+  const currentPrice = hasSeating && selectedSeat ? getPrice(selectedSeat.row) : 230;
 
   /* ----------  SEAT CLICK  ---------- */
   const handleSeatClick = (row, col) => {
+    if (!hasSeating) return;
     const key = `${row}-${col}`;
     if (bookedSeats.has(key)) return;
     setSelectedSeat({ row, col });
@@ -202,15 +216,14 @@ function RegistrationPage({ title }) {
   };
 
   const handleSubmit = async () => {
-    if (
-      !formData.name ||
-      !formData.registrationNumber ||
-      !formData.email ||
-      !formData.utrId ||
-      !formData.screenshot ||
-      !selectedSeat
-    ) {
-      toast.error('All fields + seat selection are required');
+    const requiredFieldsCheck = ['name', 'registrationNumber', 'email', 'utrId', 'screenshot'].filter(field => !formData[field]);
+    let missing = requiredFieldsCheck.length > 0 ? requiredFieldsCheck : [];
+    if (hasSeating && !selectedSeat) {
+      missing.push('seat selection');
+    }
+
+    if (missing.length) {
+      toast.error(`All fields ${hasSeating ? '+ seat selection' : ''} are required`);
       return;
     }
     if (!formData.email.includes('@')) {
@@ -226,8 +239,11 @@ function RegistrationPage({ title }) {
     fd.append('email', formData.email);
     fd.append('utrId', formData.utrId);
     fd.append('screenshot', formData.screenshot);
-    fd.append('seatRow', selectedSeat.row); // Send as string (letter)
-    fd.append('seatColumn', String(selectedSeat.col)); // Send as string number
+    // No 'seating' appended - backend determines from title
+    if (hasSeating && selectedSeat) {
+      fd.append('seatRow', selectedSeat.row); // Send as string (letter)
+      fd.append('seatColumn', String(selectedSeat.col)); // Send as string number
+    }
 
     try {
       const r = await fetch(`${API_BASE}/registration/submit`, {
@@ -243,16 +259,18 @@ function RegistrationPage({ title }) {
       
       toast.success('Registration successful!');
       
-      // Refresh booked seats
-      const bookedResponse = await fetch(
-        `${API_BASE}/registration/booked/${encodeURIComponent(
-          eventData.title
-        )}`
-      );
-      const bookedData = await bookedResponse.json();
-      const set = new Set();
-      bookedData.forEach((s) => set.add(`${s.row}-${s.col}`));
-      setBookedSeats(set);
+      // Refresh booked seats only if seating
+      if (hasSeating) {
+        const bookedResponse = await fetch(
+          `${API_BASE}/registration/booked/${encodeURIComponent(
+            eventData.title
+          )}`
+        );
+        const bookedData = await bookedResponse.json();
+        const set = new Set();
+        bookedData.forEach((s) => set.add(`${s.row}-${s.col}`));
+        setBookedSeats(set);
+      }
       
       // Reset form
       setFormData({
@@ -262,7 +280,7 @@ function RegistrationPage({ title }) {
         utrId: '',
         screenshot: null,
       });
-      setSelectedSeat(null);
+      if (hasSeating) setSelectedSeat(null);
       
       // Reset file input
       const fileInput = document.querySelector('input[type="file"]');
@@ -375,7 +393,9 @@ function RegistrationPage({ title }) {
           </div>
           <div className="flex justify-center -mt-8">
             <div className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 px-8 py-3 rounded-full shadow-xl transform hover:scale-105 transition-transform z-10">
-              <span className="text-base font-bold text-white">EVENT REGISTRATION</span>
+              <span className="text-base font-bold text-white">
+                {hasSeating ? 'SEATED EVENT' : 'NORMAL EVENT'} REGISTRATION
+              </span>
             </div>
           </div>
         </div>
@@ -383,133 +403,135 @@ function RegistrationPage({ title }) {
         {/* MAIN CARD */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           <div className="p-6 md:p-10">
-            {/* SEAT SELECTION */}
-            <section className="mb-10">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-                Select Your Seat
-              </h2>
+            {/* SEAT SELECTION (CONDITIONAL) */}
+            {hasSeating && (
+              <section className="mb-10">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+                  Select Your Seat
+                </h2>
 
-              {/* Legend */}
-              <div className="flex justify-center gap-6 mb-6 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-green-500 rounded"></div>
-                  <span className="text-sm font-medium">Available</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-blue-600 rounded"></div>
-                  <span className="text-sm font-medium">Selected</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-red-500 rounded opacity-60"></div>
-                  <span className="text-sm font-medium">Booked</span>
-                </div>
-              </div>
-
-              {/* Zoom Controls */}
-              <div className="flex justify-center gap-3 mb-4">
-                <button
-                  onClick={handleZoomOut}
-                  className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition font-semibold"
-                >
-                  − Zoom Out
-                </button>
-                <button
-                  onClick={resetView}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold"
-                >
-                  Reset View
-                </button>
-                <button
-                  onClick={handleZoomIn}
-                  className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition font-semibold"
-                >
-                  + Zoom In
-                </button>
-              </div>
-
-              {/* Seat Map */}
-              <div
-                ref={mapContainerRef}
-                className="relative overflow-hidden border-2 border-gray-300 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 shadow-inner"
-                style={{ 
-                  height: '500px',
-                  cursor: isDragging ? 'grabbing' : 'grab',
-                  touchAction: 'none'
-                }}
-                onWheel={handleWheel}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-              >
-                <div
-                  ref={mapContentRef}
-                  className="absolute inset-0 flex items-center justify-center"
-                  style={{
-                    transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`,
-                    transformOrigin: 'center center',
-                    transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-                  }}
-                >
-                  <div className="inline-block p-8">
-                    {/* PREMIUM BLOCK */}
-                    <div className="mb-10">
-                      <div className="text-center font-bold text-xl text-indigo-700 mb-4 bg-indigo-50 py-2 rounded-lg">
-                        ₹230 PREMIUM
-                      </div>
-                      <div className="flex justify-center">
-                        <div>{premiumRows.map(renderRow)}</div>
-                      </div>
-                    </div>
-
-                    {/* EXECUTIVE BLOCK */}
-                    <div className="mb-10">
-                      <div className="text-center font-bold text-xl text-purple-700 mb-4 bg-purple-50 py-2 rounded-lg">
-                        ₹230 EXECUTIVE
-                      </div>
-                      <div className="flex justify-center">
-                        <div>{executiveRows.map(renderRow)}</div>
-                      </div>
-                    </div>
-
-                    {/* STAGE */}
-                    <div className="flex justify-center">
-                      <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t-2xl w-full max-w-md h-16 flex items-center justify-center text-base font-bold text-white shadow-xl">
-                        🎭 STAGE - All Eyes This Way 🎭
-                      </div>
-                    </div>
+                {/* Legend */}
+                <div className="flex justify-center gap-6 mb-6 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-green-500 rounded"></div>
+                    <span className="text-sm font-medium">Available</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-blue-600 rounded"></div>
+                    <span className="text-sm font-medium">Selected</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-red-500 rounded opacity-60"></div>
+                    <span className="text-sm font-medium">Booked</span>
                   </div>
                 </div>
-              </div>
 
-              <p className="text-center text-sm text-gray-600 mt-3">
-                💡 Use mouse wheel to zoom, drag to pan. On mobile: pinch to zoom, drag to pan
-              </p>
-
-              {/* Selected Seat Info */}
-              {selectedSeat && (
-                <div className="mt-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl flex items-center justify-between border-2 border-green-300 shadow-md">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold text-lg">
-                      {selectedSeat.row}{selectedSeat.col}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-800">Selected Seat</div>
-                      <div className="text-green-600 font-bold text-xl">₹{getPrice(selectedSeat.row)}</div>
-                    </div>
-                  </div>
+                {/* Zoom Controls */}
+                <div className="flex justify-center gap-3 mb-4">
                   <button
-                    onClick={() => setSelectedSeat(null)}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold"
+                    onClick={handleZoomOut}
+                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition font-semibold"
                   >
-                    Clear
+                    − Zoom Out
+                  </button>
+                  <button
+                    onClick={resetView}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-semibold"
+                  >
+                    Reset View
+                  </button>
+                  <button
+                    onClick={handleZoomIn}
+                    className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition font-semibold"
+                  >
+                    + Zoom In
                   </button>
                 </div>
-              )}
-            </section>
+
+                {/* Seat Map */}
+                <div
+                  ref={mapContainerRef}
+                  className="relative overflow-hidden border-2 border-gray-300 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 shadow-inner"
+                  style={{ 
+                    height: '500px',
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    touchAction: 'none'
+                  }}
+                  onWheel={handleWheel}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <div
+                    ref={mapContentRef}
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{
+                      transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`,
+                      transformOrigin: 'center center',
+                      transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                    }}
+                  >
+                    <div className="inline-block p-8">
+                      {/* PREMIUM BLOCK */}
+                      <div className="mb-10">
+                        <div className="text-center font-bold text-xl text-indigo-700 mb-4 bg-indigo-50 py-2 rounded-lg">
+                          ₹230 PREMIUM
+                        </div>
+                        <div className="flex justify-center">
+                          <div>{premiumRows.map(renderRow)}</div>
+                        </div>
+                      </div>
+
+                      {/* EXECUTIVE BLOCK */}
+                      <div className="mb-10">
+                        <div className="text-center font-bold text-xl text-purple-700 mb-4 bg-purple-50 py-2 rounded-lg">
+                          ₹230 EXECUTIVE
+                        </div>
+                        <div className="flex justify-center">
+                          <div>{executiveRows.map(renderRow)}</div>
+                        </div>
+                      </div>
+
+                      {/* STAGE */}
+                      <div className="flex justify-center">
+                        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t-2xl w-full max-w-md h-16 flex items-center justify-center text-base font-bold text-white shadow-xl">
+                          🎭 STAGE - All Eyes This Way 🎭
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-center text-sm text-gray-600 mt-3">
+                  💡 Use mouse wheel to zoom, drag to pan. On mobile: pinch to zoom, drag to pan
+                </p>
+
+                {/* Selected Seat Info */}
+                {selectedSeat && (
+                  <div className="mt-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl flex items-center justify-between border-2 border-green-300 shadow-md">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold text-lg">
+                        {selectedSeat.row}{selectedSeat.col}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-800">Selected Seat</div>
+                        <div className="text-green-600 font-bold text-xl">₹{getPrice(selectedSeat.row)}</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setSelectedSeat(null)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* PERSONAL INFO */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -570,11 +592,9 @@ function RegistrationPage({ title }) {
             {/* QR CODE */}
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 text-center">
               <h3 className="text-xl font-bold text-gray-800 mb-4">Scan QR Code for Payment</h3>
-              {selectedSeat && (
-                <p className="text-2xl font-bold text-green-600 mb-4">
-                  Amount to Pay: ₹{getPrice(selectedSeat.row)}
-                </p>
-              )}
+              <p className="text-2xl font-bold text-green-600 mb-4">
+                Amount to Pay: ₹{currentPrice}
+              </p>
               <div className="flex justify-center mb-4">
                 <img
                   src={qrCode}

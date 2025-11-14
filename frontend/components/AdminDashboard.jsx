@@ -13,25 +13,28 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const hasFetched = useRef(false);
 
-  useEffect(() => {
+  const fetchRegistrations = async () => {
     const token = localStorage.getItem('adminToken');
     if (!token) { toast.error('Login required'); navigate('/admin', { replace: true }); return; }
 
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get(
-          'https://startup-club-dczt.onrender.com/registration/all',
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setRegistrations(data.data || []);
-        if (!hasFetched.current) { toast.success('Loaded'); hasFetched.current = true; }
-      } catch (err) {
-        toast.error(err.response?.data?.error || 'Failed');
-        if (err.response?.status === 401) { localStorage.removeItem('adminToken'); navigate('/admin'); }
-      } finally { setLoading(false); }
-    };
-    fetch();
+    setLoading(true);
+    try {
+      const { data } = await axios.get(
+        'https://startup-club-dczt.onrender.com/registration/all',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setRegistrations(data.data || []);
+      if (!hasFetched.current) { toast.success('Loaded'); hasFetched.current = true; } else {
+        toast.success('Refreshed');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || 'Failed');
+      if (err.response?.status === 401) { localStorage.removeItem('adminToken'); navigate('/admin'); }
+    } finally { setLoading(false); }
+  };
+
+  useEffect(() => {
+    fetchRegistrations();
   }, [navigate]);
 
   const filtered = useMemo(() => {
@@ -75,6 +78,10 @@ function AdminDashboard() {
             Chart Registrations
           </h2>
           <div className="flex gap-3">
+            <button onClick={fetchRegistrations} disabled={loading}
+              className={`px-5 py-2 rounded-lg text-white font-medium ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}>
+              Refresh
+            </button>
             <button onClick={downloadExcel} disabled={loading || filtered.length===0}
               className={`px-5 py-2 rounded-lg text-white font-medium ${loading||filtered.length===0?'bg-gray-400':'bg-green-600 hover:bg-green-700'}`}>
               Download Excel

@@ -10,6 +10,11 @@ const bcrypt = require('bcryptjs');
 
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
+// === SEATED EVENTS CONFIG ===
+const seatedEvents = new Set([
+  'S²-25 - StartUp Synergy'  // Add more seated event titles here as needed
+]);
+
 // === CLOUDINARY CONFIG ===
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -102,46 +107,71 @@ router.post('/submit', upload.single('screenshot'), async (req, res) => {
       email, utrId, seatRow, seatColumn
     } = req.body;
 
+    const trimmedTitle = title ? title.trim() : '';
+
+    // Determine if seated event based solely on title (authoritative for security)
+    const isSeatedEvent = seatedEvents.has(trimmedTitle);
+
+    console.log('Debug: trimmedTitle=', trimmedTitle, 'isSeatedEvent=', isSeatedEvent); // Remove after testing
+
     // ---- VALIDATION ----
+    const requiredFields = ['title','name','registrationNumber','email','utrId'];
     const missing = [];
-    ['title','name','registrationNumber','email','utrId','seatRow','seatColumn']
-      .forEach(f => !req.body[f] && missing.push(f));
+    requiredFields.forEach(f => {
+      const val = req.body[f];
+      if (!val || val.trim() === '') {
+        missing.push(f);
+      }
+    });
+    if (isSeatedEvent) {
+      const rowVal = seatRow || '';
+      const colVal = seatColumn || '';
+      if (!rowVal || rowVal.trim() === '' || !colVal || colVal.trim() === '') {
+        missing.push('seatRow', 'seatColumn');
+      }
+    }
     if (missing.length) {
       await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
       return res.status(400).json({ error: `Missing: ${missing.join(', ')}` });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!isValidEmail(email)) {
       await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
       return res.status(400).json({ error: 'Invalid email' });
     }
 
-    if (!/^[A-Z]$/.test(seatRow)) {
-      await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
-      return res.status(400).json({ error: 'Seat row must be A-Z' });
-    }
+    if (isSeatedEvent) {
+      const trimmedRow = (seatRow || '').trim();
+      if (!isValidSeatRow(trimmedRow)) {
+        await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
+        return res.status(400).json({ error: 'Seat row must be A-Z' });
+      }
 
-    const col = parseInt(seatColumn);
-    if (!Number.isInteger(col) || col < 1 || col > 20) {
-      await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
-      return res.status(400).json({ error: 'Seat column 1-20' });
+      const col = parseInt(seatColumn);
+      if (!isValidSeatColumn(col)) {
+        await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
+        return res.status(400).json({ error: 'Seat column 1-20' });
+      }
     }
 
     const newReg = new Registration({
-      title: title.trim(),
+      title: trimmedTitle,
       name: name.trim(),
       registrationNumber: registrationNumber.trim(),
       email: email.trim().toLowerCase(),
       utrId: utrId.trim(),
       screenshotUrl: req.file.path,
-      seatRow: seatRow.trim().toUpperCase(),
-      seatColumn: col
+      ...(isSeatedEvent && { 
+        seatRow: (seatRow || '').trim().toUpperCase(), 
+        seatColumn: parseInt(seatColumn) 
+      })
     });
 
     await newReg.save();
     res.status(201).json({ message: 'Success', data: { id: newReg._id } });
 
   } catch (error) {
+    console.error('Submit error:', error); // For debugging
     if (req.file?.public_id) await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
@@ -155,23 +185,6 @@ router.post('/submit', upload.single('screenshot'), async (req, res) => {
 router.get('/booked/:title', async (req, res) => {
   try {
     const { title } = req.params;
-    const regs = await Registration.find(
-      { title: decodeURIComponent(title) },
-      { seatRow: 1, seatColumn: 1, _id: 0 }
-    );
-    res.json(regs.map(r => ({ row: r.seatRow, col: r.seatColumn })));
-  } catch (e) {
-    res.status(500).json({ error: 'Failed to fetch booked seats' });
-  }
-});
-
-// POST /registration/login (admin)
-router.post('/login', adminAuth);
-
-// GET booked seats by event title
-router.get('/booked/:title', async (req, res) => {
-  try {
-    const { title } = req.params;
     if (!title) return res.status(400).json({ error: 'Event title is required' });
 
     const registrations = await Registration.find(
@@ -179,13 +192,18 @@ router.get('/booked/:title', async (req, res) => {
       { seatRow: 1, seatColumn: 1, _id: 0 }
     );
 
-    const booked = registrations.map(r => ({ row: r.seatRow, col: r.seatColumn }));
+    const booked = registrations
+      .filter(r => r.seatRow && r.seatColumn) // Only seated registrations
+      .map(r => ({ row: r.seatRow, col: r.seatColumn }));
     res.json(booked);
   } catch (error) {
     console.error('Error fetching booked seats:', error);
     res.status(500).json({ error: 'Failed to fetch booked seats' });
   }
 });
+
+// POST /registration/login (admin)
+router.post('/login', adminAuth);
 
 // GET all (admin)
 router.get('/all', adminAuth, async (req, res) => {
