@@ -2,89 +2,202 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const event = {
-  title: "S²-25 - StartUp Synergy",
-  subtitle: "29 - 30 November 2025",
-  description: "This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.",
-  img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-  bannerImages: [
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1516321310764-9f3c2499b0b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-  ],
-  type: "Startup Summit",
-  collaboration: "With Tech Innovators Inc.",
-  time: "9:00 AM - 6:00 PM",
-  venue: "VIT Bhopal University, Auditorium Hall",
-  date: "November 29",
-  year: "2025",
-  detailedDescription: "Join us for an immersive experience where ideas turn into realities. From pitch sessions to networking galas, S²-25 is your gateway to the startup world.",
-  speaker: "Dr. Elena Vasquez",
-  designation: "CEO, InnovateX Ventures",
-  judges: ["Prof. Rajesh Kumar", "Ms. Priya Singh", "Dr. Amit Patel"],
-  mentors: ["John Doe, Startup Advisor", "Jane Smith, Venture Capitalist"],
-  day1: {
-    title: "Day 1: Innovation Ignition",
-    description: "Kickstart with workshops and initial competitions.",
-    events: [
-      {
-        time: "9:00 AM - 10:30 AM",
-        name: "Opening Ceremony",
-        venue: "Main Auditorium",
-        description: "Welcome address and keynote by industry leaders."
-      },
-      {
-        time: "11:00 AM - 1:00 PM",
-        name: "Ideathon",
-        venue: "Workshop Room A",
-        description: "Brainstorm and pitch innovative ideas."
-      },
-      {
-        time: "2:00 PM - 4:00 PM",
-        name: "Paper Presentation",
-        venue: "Conference Hall",
-        description: "Showcase research and get expert feedback."
-      }
-    ]
+const events = [
+  {
+    title: "S²-25 - StartUp Synergy",
+    subtitle: "29 - 30 November 2025",
+    description: "This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.",
+    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    bannerImages: [
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      "https://images.unsplash.com/photo-1516321310764-9f3c2499b0b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+    ],
+    type: "Startup Summit",
+    collaboration: "With Tech Innovators Inc.",
+    time: "9:00 AM - 6:00 PM",
+    venue: "VIT Bhopal University, Auditorium Hall",
+    date: "November 29",
+    year: "2025",
+    detailedDescription: "Join us for an immersive experience where ideas turn into realities. From pitch sessions to networking galas, S²-25 is your gateway to the startup world.",
+    speaker: "Dr. Elena Vasquez",
+    designation: "CEO, InnovateX Ventures",
+    judges: ["Prof. Rajesh Kumar", "Ms. Priya Singh", "Dr. Amit Patel"],
+    mentors: ["John Doe, Startup Advisor", "Jane Smith, Venture Capitalist"],
+    day1: {
+      title: "Day 1: Innovation Ignition",
+      description: "Kickstart with workshops and initial competitions.",
+      events: [
+        {
+          time: "9:00 AM - 10:30 AM",
+          name: "Opening Ceremony",
+          venue: "Main Auditorium",
+          description: "Welcome address and keynote by industry leaders."
+        },
+        {
+          time: "11:00 AM - 1:00 PM",
+          name: "Ideathon",
+          venue: "Workshop Room A",
+          description: "Brainstorm and pitch innovative ideas."
+        },
+        {
+          time: "2:00 PM - 4:00 PM",
+          name: "Paper Presentation",
+          venue: "Conference Hall",
+          description: "Showcase research and get expert feedback."
+        }
+      ]
+    },
+    day2: {
+      title: "Day 2: Synergy Showcase",
+      description: "Final rounds, awards, and celebrations.",
+      events: [
+        {
+          time: "9:00 AM - 11:00 AM",
+          name: "Reverse Coding Challenge",
+          venue: "Lab B",
+          description: "Test your debugging and problem-solving skills."
+        },
+        {
+          time: "12:00 PM - 2:00 PM",
+          name: "E-Sports Tournament",
+          venue: "Gaming Arena",
+          description: "Compete in high-energy gaming battles."
+        },
+        {
+          time: "3:00 PM - 5:00 PM",
+          name: "Stand-Up Comedy",
+          venue: "Main Stage",
+          description: "Unwind with hilarious performances."
+        },
+        {
+          time: "5:30 PM - 7:00 PM",
+          name: "Cultural Performances",
+          venue: "Outdoor Plaza",
+          description: "Celebrate with music and dance."
+        }
+      ]
+    },
+    conclusion: "End the summit with lasting connections and actionable insights. See you at S²-25!",
+    registrationFee: "₹500 per team",
+    teamSize: "2-4 members"
   },
-  day2: {
-    title: "Day 2: Synergy Showcase",
-    description: "Final rounds, awards, and celebrations.",
-    events: [
-      {
-        time: "9:00 AM - 11:00 AM",
-        name: "Reverse Coding Challenge",
-        venue: "Lab B",
-        description: "Test your debugging and problem-solving skills."
-      },
-      {
-        time: "12:00 PM - 2:00 PM",
-        name: "E-Sports Tournament",
-        venue: "Gaming Arena",
-        description: "Compete in high-energy gaming battles."
-      },
-      {
-        time: "3:00 PM - 5:00 PM",
-        name: "Stand-Up Comedy",
-        venue: "Main Stage",
-        description: "Unwind with hilarious performances."
-      },
-      {
-        time: "5:30 PM - 7:00 PM",
-        name: "Cultural Performances",
-        venue: "Outdoor Plaza",
-        description: "Celebrate with music and dance."
-      }
-    ]
+  {
+    title: "TechFest 2025",
+    subtitle: "5 December 2025",
+    description: "A one-day extravaganza of cutting-edge technology workshops, demos, and interactive sessions to ignite your passion for tech innovation.",
+    img: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    bannerImages: [
+      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    ],
+    type: "Tech Workshop Series",
+    collaboration: "With Google Developer Group",
+    time: "10:00 AM - 5:00 PM",
+    venue: "VIT Bhopal University, Tech Labs",
+    date: "December 5",
+    year: "2025",
+    detailedDescription: "Dive deep into emerging technologies with hands-on sessions on AI, blockchain, and cloud computing. Perfect for students and professionals alike.",
+    speaker: "Rahul Sharma",
+    designation: "Lead Developer, Google Cloud",
+    judges: ["Dr. Priya Mehta", "Mr. Vikram Singh"],
+    mentors: ["Alice Johnson, AI Specialist", "Bob Lee, Blockchain Expert"],
+    day1: {
+      title: "Full Day: Tech Immersion",
+      description: "Non-stop learning and networking throughout the day.",
+      events: [
+        {
+          time: "10:00 AM - 12:00 PM",
+          name: "AI Workshop",
+          venue: "Lab A",
+          description: "Build your first neural network with TensorFlow."
+        },
+        {
+          time: "1:00 PM - 3:00 PM",
+          name: "Blockchain Basics",
+          venue: "Lab B",
+          description: "Explore smart contracts and decentralized apps."
+        },
+        {
+          time: "3:30 PM - 5:00 PM",
+          name: "Cloud Computing Demo",
+          venue: "Auditorium",
+          description: "Hands-on with AWS and Google Cloud services."
+        }
+      ]
+    },
+    conclusion: "Leave with new skills and connections that propel your career forward. Join TechFest 2025!",
+    registrationFee: "₹200 per person",
+    teamSize: "Individual"
   },
-  conclusion: "End the summit with lasting connections and actionable insights. See you at S²-25!",
-  registrationFee: "₹500 per team",
-  teamSize: "2-4 members"
-};
+  {
+    title: "Hackathon Winter Edition",
+    subtitle: "15 - 16 December 2025",
+    description: "24-hour coding marathon where teams tackle real-world problems and compete for prizes and glory in the startup ecosystem.",
+    img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    bannerImages: [
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    ],
+    type: "Coding Hackathon",
+    collaboration: "With Microsoft Azure",
+    time: "9:00 AM - 9:00 AM (Next Day)",
+    venue: "VIT Bhopal University, Innovation Hub",
+    date: "December 15",
+    year: "2025",
+    detailedDescription: "Code, collaborate, and create solutions that matter. Mentorship from industry pros and judging by venture capitalists.",
+    speaker: "Lisa Chen",
+    designation: "CTO, Azure Innovations",
+    judges: ["Dr. Sanjay Gupta", "Ms. Neha Rao", "Prof. Arjun Patel"],
+    mentors: ["Mike Davis, Full-Stack Dev", "Sara Kim, Product Manager"],
+    day1: {
+      title: "Day 1: Kickoff & Building",
+      description: "Launch into the challenge with ideation and development.",
+      events: [
+        {
+          time: "9:00 AM - 10:00 AM",
+          name: "Opening & Problem Statement",
+          venue: "Main Hall",
+          description: "Get the challenges and form teams."
+        },
+        {
+          time: "10:00 AM - 12:00 AM",
+          name: "Hacking Session",
+          venue: "Coding Labs",
+          description: "Build prototypes with mentor support."
+        }
+      ]
+    },
+    day2: {
+      title: "Day 2: Pitches & Winners",
+      description: "Present your solutions and celebrate the victors.",
+      events: [
+        {
+          time: "9:00 AM - 12:00 PM",
+          name: "Demo & Pitch Rounds",
+          venue: "Auditorium",
+          description: "Showcase your hack to judges."
+        },
+        {
+          time: "12:00 PM - 2:00 PM",
+          name: "Awards Ceremony",
+          venue: "Main Stage",
+          description: "Announce winners and distribute prizes."
+        }
+      ]
+    },
+    conclusion: "Push your limits and emerge as the next big innovator. Winter Hackathon awaits!",
+    registrationFee: "₹300 per team",
+    teamSize: "3-5 members"
+  }
+];
 
 const FullscreenCarousel = () => {
   const navigate = useNavigate();
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const currentEvent = events[currentEventIndex];
 
   const whoWeAreText = [
     "The StartUp Club is more than just a club; it's an ecosystem.",
@@ -124,7 +237,8 @@ const FullscreenCarousel = () => {
 
   const handleRegisterClick = () => {
     const params = new URLSearchParams({
-      title: event.title,
+      title: currentEvent.title
+      // No seating param - determined by title in RegistrationPage
     }).toString();
     
     window.open(`/registration?${params}`, '_blank');
@@ -133,95 +247,36 @@ const FullscreenCarousel = () => {
   // Function to handle event title click
   const handleEventTitleClick = () => {
     // Create the event object that matches your EventDetail component structure
+    // Note: For dummy events, adjust paths and details as needed
     const eventDetails = {
-      date: "Nov 29 - 30",
-      year: "2025",
-      img: "/event_timeline/Nov 29-30.jpg",
-      title: "S²-25 - StartUp Synergy",
-      venue: "VIT Bhopal University",
-      time: "29th - 30th Nov 2025",
-      description: "A two-day event fostering innovation, collaboration, and intellectual engagement through competitions, speaker sessions, and entertainment activities.",
-      registrationFee: "NA as of now",
-      teamSize: "Individual & Team Events",
-      type: "Multi-Event Competition",
+      date: currentEvent.subtitle.includes('-') ? `${currentEvent.subtitle.split(' - ')[0]} - ${currentEvent.subtitle.split(' - ')[1]}` : currentEvent.subtitle,
+      year: currentEvent.year,
+      img: `/event_timeline/${currentEvent.date.replace(' ', '')}.jpg`, // Dummy path
+      title: currentEvent.title,
+      venue: currentEvent.venue,
+      time: currentEvent.time,
+      description: currentEvent.description,
+      registrationFee: currentEvent.registrationFee,
+      teamSize: currentEvent.teamSize,
+      type: currentEvent.type,
       isUpcoming: true,
-      bannerImages: [
-        "/event_timeline/Nov 29-30.1.jpg",
-        "/event_timeline/Nov 29-30.2.jpg"
-      ],
-      day1: {
-        title: "Day 1: 29th Nov 2025 - Knowledge, Innovation, and Competition",
-        description: "The event begins with an Opening Ceremony, featuring a keynote speaker who will set the stage with insights into emerging trends and industry advancements. This session aims to inspire participants and provide direction for the competitions and discussions that follow.",
-        events: [
-          {
-          
-            time: "10 AM - 1 PM",
-            name: "Opening Ceremony & Keynote Session",
-            venue: "Auditorium 1",
-            description: "Setting the stage with insights into emerging trends and industry advancements"
-          },
-          {
-            time: "1 PM - 5 PM",
-            name: "Paper Presentation",
-            venue: "Auditorium 1",
-            description: "Showcase research papers, patents, and innovative ideas on cutting-edge topics. Connect with faculty and industry experts for publication support and idea refinement."
-          },
-          {
-            time: "1 PM - 5 PM",
-            name: "Reverse Coding",
-            venue: "AB1 307",
-            description: "A unique coding challenge where participants decipher logic from given outputs. Tests analytical thinking, debugging skills, and algorithmic problem-solving."
-          },
-          {
-            time: "1 PM - 5 PM",
-            name: "Ideathon",
-            venue: "Coding Studio AB1",
-            description: "Fast-paced brainstorming competition to develop innovative solutions to real-world problems. Teams pitch ideas to judges assessing creativity and feasibility."
-          },
-          {
-            time: "1 PM - 5 PM",
-            name: "E-Sports Tournament",
-            venue: "Arch 103",
-            description: "Competitive gaming event featuring popular e-sports titles. Fosters teamwork, strategy, and sportsmanship in a structured tournament format."
-          }
-        ]
-      },
-      day2: {
-        title: "Day 2: 30th Nov 2025 - Inspiration, Engagement, and Entertainment",
-        description: "The second day of the event shifts the focus toward thought-provoking discussions, creative expression, and entertainment.",
-        events: [
-          {
-            time: "10 AM - 12 PM",
-            name: "Podcast Session with Guest Speaker",
-            venue: "Auditorium 1",
-            description: "A live podcast discussion with an expert guest, offering an in-depth conversation on Entrepreneurship and relevant topics. This session is designed to be interactive, with an opportunity for the audience to engage with the speaker through questions and discussions."
-          },
-          {
-            time: "2 PM - 3 PM",
-            name: "Stand-Up Comedy",
-            venue: "Auditorium 1",
-            description: "A dedicated segment featuring a professional well known comedian, bringing a refreshing break with humor and light-hearted entertainment. This segment aims to create a lively atmosphere and provide a space for relaxation and enjoyment."
-          },
-          {
-            time: "3 PM - 5 PM",
-            name: "Meme War",
-            venue: "Auditorium 1",
-            description: "A unique competition where participants create and submit memes based on given themes. The memes will be judged based on creativity, humor, and relevance. The audience will participate in voting, and the winner will receive a special prize. This event encourages digital creativity and provides a fun and engaging experience."
-          },
-          {
-            time: "3 PM - 5 PM",
-            name: "Cultural Performances",
-            venue: "Auditorium 1",
-            description: "A showcase of talent, including dance, music, and other artistic performances. This segment highlights the creative and cultural diversity of the participants and provides a platform for artistic expression."
-          }
-        ]
-      },
+      bannerImages: currentEvent.bannerImages.map((img, idx) => `/event_timeline/${currentEvent.date.replace(' ', '')}.${idx + 1}.jpg`), // Dummy paths
+      day1: currentEvent.day1,
+      ...(currentEvent.day2 && { day2: currentEvent.day2 }), // Only if exists
     };
 
     // Navigate to event details page with the event data
-    navigate(`/eventstimeline/${event.title.replace(/\s+/g, '-')}`, { 
+    navigate(`/eventstimeline/${currentEvent.title.replace(/\s+/g, '-')}`, { 
       state: { event: eventDetails } 
     });
+  };
+
+  const nextEvent = () => {
+    setCurrentEventIndex((prev) => (prev + 1) % events.length);
+  };
+
+  const prevEvent = () => {
+    setCurrentEventIndex((prev) => (prev - 1 + events.length) % events.length);
   };
 
   return (
@@ -240,6 +295,21 @@ const FullscreenCarousel = () => {
           </p>
         </div>
 
+        {/* Navigation Dots */}
+        <div className="flex justify-center mb-4 space-x-2">
+          {events.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentEventIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentEventIndex 
+                  ? 'bg-yellow-400 scale-125' 
+                  : 'bg-white/30 hover:bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+
         {/* Event Content Box */}
         <div className="w-full max-w-3xl bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8 transform hover:scale-[1.02] transition-all duration-300">
           
@@ -248,25 +318,26 @@ const FullscreenCarousel = () => {
             
             {/* Event Title - As Link */}
             <Link
-              to="/eventstimeline/:id"
-              state={{ event }}
-              className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent block hover:opacity-80 transition-opacity duration-200 select-none"
+              to={`/eventstimeline/${currentEvent.title.replace(/\s+/g, '-')}`}
+              state={{ event: currentEvent }}
+              className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent block hover:opacity-80 transition-opacity duration-200 select-none cursor-pointer"
+              onClick={handleEventTitleClick}
             >
-              {event.title}
+              {currentEvent.title}
             </Link>
             
             {/* Date Badge */}
             <div className="flex justify-center mb-6">
               <div className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full text-base font-bold shadow-md">
                 <span className="mr-2">📅</span>
-                {event.subtitle}
+                {currentEvent.subtitle}
               </div>
             </div>
             
             {/* Description */}
             <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 mb-6 border border-white/10">
               <p className="text-sm md:text-base text-white leading-relaxed">
-                {event.description}
+                {currentEvent.description}
               </p>
             </div>
             
@@ -291,10 +362,28 @@ const FullscreenCarousel = () => {
             
             {/* Additional Info */}
             <div className="mt-4 text-white/70 text-xs">
-              <p>📍 VIT Bhopal University</p>
+              <p>📍 {currentEvent.venue}</p>
               <p className="mt-1 text-white/50">Click the event title or "View Details" to see full schedule</p>
             </div>
           </div>
+        </div>
+
+        {/* Navigation Arrows */}
+        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl">
+          <button
+            onClick={prevEvent}
+            className="bg-black/20 hover:bg-black/40 rounded-full p-2 transition"
+          >
+            ‹
+          </button>
+        </div>
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl">
+          <button
+            onClick={nextEvent}
+            className="bg-black/20 hover:bg-black/40 rounded-full p-2 transition"
+          >
+            ›
+          </button>
         </div>
       </div>
 
