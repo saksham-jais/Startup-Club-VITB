@@ -15,7 +15,6 @@ const standupSchema = new mongoose.Schema({
 
 // Unique seat per event
 standupSchema.index({ title: 1, seatRow: 1, seatColumn: 1 }, { unique: true, sparse: true });
-standupSchema.index({ email: 1 });
-standupSchema.index({ utrId: 1 });
+// Removed: standupSchema.index({ email: 1 }); standupSchema.index({ utrId: 1 });  // Duplicates
 
 export default mongoose.model('StandupRegistration', standupSchema);
