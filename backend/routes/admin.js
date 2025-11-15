@@ -107,4 +107,7 @@ router.get('/all', authenticate, async (req, res) => {
   }
 });
 
+// === ADMIN ROUTES ===
+router.post('/login', adminAuth);
+
 export default router;
