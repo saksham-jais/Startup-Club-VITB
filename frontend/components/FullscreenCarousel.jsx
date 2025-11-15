@@ -268,7 +268,7 @@ const FullscreenCarousel = () => {
   return (
     <>
       {/* Events Section - Fullscreen Carousel */}
-      <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden p-4">
+      <div id="events-section" className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden p-4">
         
         {/* Slides Container */}
         <div className="absolute inset-0">
