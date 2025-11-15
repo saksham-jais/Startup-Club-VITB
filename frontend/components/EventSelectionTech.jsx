@@ -1,56 +1,45 @@
-// EventSelectionTech.jsx (New component for the second event - route to '/event-selection-tech')
+// EventSelectionEntertainment.jsx (New component for entertainment events - route to '/event-selection-entertainment')
 import React from "react";
 
-const EventSelectionTech = () => {
-  // Define 3 sub-events for Day 2 of Tech Innovate Fest (based on event2 data)
-  const subEvents = [
-    {
-      id: 1,
-      title: "Innovation Pitch",
-      description: "Pitch your groundbreaking tech ideas to a panel of industry experts. Get feedback and potential funding opportunities.",
-      img: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      venue: "Main Stage",
-      time: "10 AM - 12 PM, Dec 6",
-      registrationFee: "₹150 per team",
-      teamSize: "1-3 members"
-    },
-    {
-      id: 2,
-      title: "Hackathon Finals",
-      description: "Present your hackathon projects from Day 1. Compete for top prizes in categories like AI, Web Dev, and IoT.",
-      img: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      venue: "Coding Labs",
-      time: "2 PM - 4 PM, Dec 6",
-      registrationFee: "Included in main fee",
-      teamSize: "2-4 members"
-    },
-    {
-      id: 3,
-      title: "Tech Trivia Night",
-      description: "Test your knowledge in a lively trivia competition covering tech history, trends, and fun facts. Prizes for winners!",
-      img: "https://images.unsplash.com/photo-1570549717069-72e9c7fc9b61?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      venue: "Auditorium",
-      time: "4:30 PM - 6 PM, Dec 6",
-      registrationFee: "₹50 per individual",
-      teamSize: "Individual or Team"
-    }
-  ];
+const subEvents = [
+  {
+    id: 1,
+    title: "Esports Tournament",
+    description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
+    img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    venue: "Gaming Arena",
+    time: "6:00 PM - 10:00 PM, Dec 7",
+    registrationFee: "₹299 per player",
+    teamSize: "Individual",
+    route: "/register-esports"
+  },
+  {
+    id: 2,
+    title: "Comedy Standup Night",
+    description: "Enjoy uproarious standup comedy from talented performers. Secure your seat for an evening of non-stop laughter.",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    venue: "Main Auditorium",
+    time: "8:00 PM - 10:00 PM, Dec 8",
+    registrationFee: "₹199 per person (payment proof required)",
+    teamSize: "Individual",
+    route: "/register-standup"
+  },
+  {
+    id: 3,
+    title: "Cultural Performance Showcase",
+    description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
+    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    venue: "Cultural Hall",
+    time: "2:00 PM - 6:00 PM, Dec 9",
+    registrationFee: "Free for performers",
+    teamSize: "1-5 members",
+    route: "/register-cultural"
+  }
+];
 
-  const handleRegisterClick = (subEvent) => {
-    // Create params specific to this sub-event for the registration form
-    const params = new URLSearchParams({
-      title: subEvent.title,
-      description: subEvent.description,
-      bgImage: subEvent.img,
-      venue: subEvent.venue,
-      time: subEvent.time,
-      registrationFee: subEvent.registrationFee,
-      teamSize: subEvent.teamSize,
-      parentEvent: "Tech Innovate Fest" // To link back to parent event
-    }).toString();
-    
-    // Open specific registration form in a new tab
-    window.open(`/registration?${params}`, '_blank');
+const EventSelectionEntertainment = () => {
+  const handleRegisterClick = (route) => {
+    window.open(route, "_blank");
   };
 
   return (
@@ -58,10 +47,10 @@ const EventSelectionTech = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Day 2 Events: Select Your Challenge
+            Entertainment Events: Select Your Fun
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Dive into the exciting Day 2 lineup at Tech Innovate Fest. Each event has its own dedicated registration.
+            Unwind and showcase your talents in our entertainment lineup at S²-25 - StartUp Synergy. From gaming battles to cultural celebrations and comedy nights. Each event has its own dedicated registration.
           </p>
           <div className="w-24 h-1 bg-blue-500 mx-auto mt-6 rounded-full"></div>
         </div>
@@ -87,7 +76,7 @@ const EventSelectionTech = () => {
                   <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p>
                 </div>
                 <button
-                  onClick={() => handleRegisterClick(subEvent)}
+                  onClick={() => handleRegisterClick(subEvent.route)}
                   className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-md"
                 >
                   🚀 Register Now for {subEvent.title}
@@ -101,4 +90,4 @@ const EventSelectionTech = () => {
   );
 };
 
-export default EventSelectionTech;
+export default EventSelectionEntertainment;
