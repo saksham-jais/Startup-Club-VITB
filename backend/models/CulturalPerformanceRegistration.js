@@ -1,14 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const culturalSchema = new mongoose.Schema({
-  title: { type: String, required: true }, // e.g., "Dance Performance - Group A"
-  teamName: { type: String, required: true },
-  leaderName: { type: String, required: true },
-  registrationNumber: { type: String, unique: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  utrId: { type: String, required: true, unique: true, trim: true },
-  screenshotUrl: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-}, { timestamps: true });
+const schema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  name: { type: String, required: true, trim: true },
+  registrationNumber: { type: String, required: true, unique: true, trim: true, uppercase: true },
+  email: { type: String, required: true, lowercase: true, trim: true, match: [/^\S+@\S+\.\S+$/] },
+  registeredAt: { type: Date, default: Date.now }
+}, { timestamps: true, collection: 'culturalperformance_registrations' });
 
-module.exports = mongoose.model('CulturalPerformanceRegistration', culturalSchema, 'culturalperformance_registrations');
+export default mongoose.model('CulturalPerformanceRegistration', schema);
