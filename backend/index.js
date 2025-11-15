@@ -1,5 +1,4 @@
-// server.js - Pure ESM, fully working
-
+// server.js - Updated to include admin routes
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -25,6 +24,7 @@ import podcastRoutes from './routes/podcast.js';
 import culturalRoutes from './routes/cultural.js';
 import esportsRoutes from './routes/esports.js';
 import standupRoutes from './routes/standup.js';
+import adminRoutes from './routes/admin.js'; // New import
 
 const app = express();
 
@@ -50,6 +50,7 @@ app.use('/podcast', podcastRoutes);
 app.use('/cultural', culturalRoutes);
 app.use('/esports', esportsRoutes);
 app.use('/standup', standupRoutes);
+app.use('/admin', adminRoutes); // New route
 
 const handler = serverless(app);
 
