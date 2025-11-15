@@ -1,14 +1,17 @@
-const mongoose = require('mongoose');
+// models/EsportsRegistration.js
+import mongoose from 'mongoose';
 
 const esportsSchema = new mongoose.Schema({
-  title: { type: String, required: true }, // e.g., "Valorant Tournament"
-  teamName: { type: String, required: true },
-  leaderName: { type: String, required: true },
-  registrationNumber: { type: String, unique: true },
+  title: { type: String, required: true, trim: true },
+  name: { type: String, required: true, trim: true },
+  registrationNumber: { type: String, unique: true, sparse: true },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   utrId: { type: String, required: true, unique: true, trim: true },
   screenshotUrl: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-}, { timestamps: true });
+  registeredAt: { type: Date, default: Date.now }
+}, { timestamps: true, collection: 'esports_registrations' });
 
-module.exports = mongoose.model('EsportsRegistration', esportsSchema, 'esports_registrations');
+esportsSchema.index({ email: 1 });
+esportsSchema.index({ utrId: 1 });
+
+export default mongoose.model('EsportsRegistration', esportsSchema);

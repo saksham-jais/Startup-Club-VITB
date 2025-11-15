@@ -1,13 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const podcastSchema = new mongoose.Schema({
-  title: { type: String, required: true }, // e.g., "Podcast Episode 1"
+const schema = new mongoose.Schema({
+  title: { type: String, required: true },
   name: { type: String, required: true },
-  registrationNumber: { type: String, unique: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  utrId: { type: String, required: true, unique: true, trim: true },
-  screenshotUrl: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
-}, { timestamps: true });
+  registrationNumber: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
+  registeredAt: { type: Date, default: Date.now }
+}, { collection: 'podcast_registrations' });
 
-module.exports = mongoose.model('PodcastRegistration', podcastSchema, 'podcast_registrations');
+export default mongoose.model('PodcastRegistration', schema);

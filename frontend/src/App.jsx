@@ -13,6 +13,14 @@ import RegistrationPage from '../components/registration';
 import AdminLogin from '../components/AdminLogin';
 import AdminDashboard from '../components/AdminDashboard';
 import EventSelection from '../components/EventSelection';
+import EventSelectionTech from '../components/EventSelectionTech.jsx';
+import PodcastRegistration from '../components/PodcastRegistration';
+import HackathonRegistration from '../components/HackathonRegistration';
+import MemeWarRegistration from '../components/MemeWarRegistration';
+import IdeathonRegistration from '../components/IdeathonRegistration';
+import EsportsRegistration from '../components/EsportsRegistration';
+import CulturalPerformanceRegistration from '../components/CulturalPerformanceRegistration';
+import StandupRegistration from '../components/StandupRegistration';
 // import Login_SignUp from '../components/login_signup';
 
 function Home({ cards = [] }) {  // Add default [] to avoid undefined errors
@@ -47,6 +55,14 @@ function App({ cards = [] }) {  // Add default [] here too
         <Route path="testimonials" element={<Testimonial />} />
         <Route path="registration" element={<RegistrationPage />} />
         <Route path="/event-selection" element={<EventSelection />} />
+        <Route path="/event-selection-tech" element={<EventSelectionTech />} />
+        <Route path="/register-podcast" element={<PodcastRegistration />} />
+<Route path="/register-hackathon" element={<HackathonRegistration />} />
+<Route path="/register-memewar" element={<MemeWarRegistration />} />
+<Route path="/register-ideathon" element={<IdeathonRegistration />} />
+<Route path="/register-esports" element={<EsportsRegistration />} />
+<Route path="/register-cultural" element={<CulturalPerformanceRegistration />} />
+<Route path="/register-standup" element={<StandupRegistration />} />
         {/* <Route path="login_signup" element={<Login_SignUp />} /> */}
         {/* 404 Fallback */}
         <Route path="*" element={<div className="p-8 text-center">404 - Page Not Found</div>} />

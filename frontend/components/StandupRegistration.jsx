@@ -1,28 +1,22 @@
+// components/StandupRegistration.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import clsx from 'clsx';
 
-// const API_BASE = 'http://localhost:5000'
-const API_BASE = 'https://startup-club-dczt.onrender.com'
+const API_BASE = 'http://localhost:5000'||'https://startup-club-dczt.onrender.com';
 
-function RegistrationPage({ title }) {
+function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
-
-  /* ----------  SEATED EVENTS CONFIG (SYNC WITH BACKEND)  ---------- */
-  const seatedTitles = new Set([
-    'S²-25 - StartUp Synergy'  // Add more seated event titles here
-  ]);
 
   /* ----------  EVENT DATA  ---------- */
   const [eventData, setEventData] = useState({
-    title: title || 'Event Registration',
-    bgImage:
-      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&h=600&fit=crop',
+    title: title,
+    bgImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
   });
 
-  /* ----------  SEATING FLAG (DETERMINED BY TITLE)  ---------- */
-  const [hasSeating, setHasSeating] = useState(false);
+  /* ----------  SEATING FLAG  ---------- */
+  const [hasSeating, setHasSeating] = useState(true); // Always true for standup
 
   /* ----------  FORM DATA  ---------- */
   const [formData, setFormData] = useState({
@@ -146,56 +140,42 @@ function RegistrationPage({ title }) {
     setInitialPinchDistance(0);
   };
 
-  /* ----------  FETCH EVENT PARAMS & BOOKED SEATS  ---------- */
+  /* ----------  FETCH BOOKED SEATS  ---------- */
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const urlTitle = params.get('title');
+    fetchBookedSeats();
+  }, []);
 
-    if (urlTitle && !title) {
-      setEventData({
-        title: decodeURIComponent(urlTitle) || 'Event Registration',
-        bgImage:
-          'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1920&h=600&fit=crop',
-      });
+  const fetchBookedSeats = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/standup/booked/${encodeURIComponent(eventData.title)}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const set = new Set();
+      data.forEach((s) => set.add(`${s.row}-${s.col}`));
+      setBookedSeats(set);
+    } catch (err) {
+      if (!errorShownRef.current.has(eventData.title)) {
+        toast.error('Could not load booked seats');
+        errorShownRef.current.add(eventData.title);
+      }
     }
-
-    // Determine seating based on title (no URL param needed)
-    const finalTitle = title || decodeURIComponent(urlTitle || '');
-    setHasSeating(seatedTitles.has(finalTitle));
-
-    // Fetch booked seats only if seating enabled
-    if (seatedTitles.has(finalTitle)) {
-      fetch(
-        `${API_BASE}/registration/booked/${encodeURIComponent(finalTitle)}`
-      )
-        .then((r) => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.json();
-        })
-        .then((data) => {
-          const set = new Set();
-          data.forEach((s) => set.add(`${s.row}-${s.col}`));
-          setBookedSeats(set);
-        })
-        .catch((err) => {
-          if (!errorShownRef.current.has(finalTitle)) {
-            toast.error('Could not load booked seats');
-            errorShownRef.current.add(finalTitle);
-          }
-        });
-    }
-  }, [title]);
-
-  /* ----------  PRICE LOGIC  ---------- */
-  const getPrice = (row) => {
-    const priceMap = {
-      N: 230, M: 230, L: 230,
-      K: 230, J: 230, H: 230, G: 230, F: 230, E: 230, D: 230,
-    };
-    return priceMap[row] || 230;  // Default 230 for non-seated or invalid row
   };
 
-  const currentPrice = hasSeating && selectedSeat ? getPrice(selectedSeat.row) : 230;
+  /* ----------  PRICE LOGIC  ---------- */
+  const frontRows = ['A', 'B', 'C'];
+  const normalRows = ['D', 'E', 'F', 'G'];
+  const backRows = ['H', 'I', 'J'];
+  const firstFloorRows = ['K', 'L', 'M', 'N', 'O'];
+
+  const getPrice = (row) => {
+    if (frontRows.includes(row)) return 699;
+    if (normalRows.includes(row)) return 549;
+    if (backRows.includes(row)) return 399;
+    if (firstFloorRows.includes(row)) return 499;
+    return 0; // Fallback
+  };
+
+  const currentPrice = selectedSeat ? getPrice(selectedSeat.row) : 0;
 
   /* ----------  SEAT CLICK  ---------- */
   const handleSeatClick = (row, col) => {
@@ -216,7 +196,7 @@ function RegistrationPage({ title }) {
   };
 
   const handleSubmit = async () => {
-    const requiredFieldsCheck = ['name', 'registrationNumber', 'email', 'utrId', 'screenshot'].filter(field => !formData[field]);
+    const requiredFieldsCheck = ['name', 'email', 'utrId', 'screenshot'].filter(field => !formData[field]);
     let missing = requiredFieldsCheck.length > 0 ? requiredFieldsCheck : [];
     if (hasSeating && !selectedSeat) {
       missing.push('seat selection');
@@ -234,19 +214,18 @@ function RegistrationPage({ title }) {
     setIsSubmitting(true);
     const fd = new FormData();
     fd.append('title', eventData.title);
-    fd.append('name', formData.name);
-    fd.append('registrationNumber', formData.registrationNumber);
-    fd.append('email', formData.email);
-    fd.append('utrId', formData.utrId);
+    fd.append('name', formData.name.trim());
+    fd.append('registrationNumber', formData.registrationNumber.trim() || null);
+    fd.append('email', formData.email.trim().toLowerCase());
+    fd.append('utrId', formData.utrId.trim());
     fd.append('screenshot', formData.screenshot);
-    // No 'seating' appended - backend determines from title
     if (hasSeating && selectedSeat) {
-      fd.append('seatRow', selectedSeat.row); // Send as string (letter)
-      fd.append('seatColumn', String(selectedSeat.col)); // Send as string number
+      fd.append('seatRow', selectedSeat.row);
+      fd.append('seatColumn', String(selectedSeat.col));
     }
 
     try {
-      const r = await fetch(`${API_BASE}/registration/submit`, {
+      const r = await fetch(`${API_BASE}/standup/register`, {
         method: 'POST',
         body: fd,
       });
@@ -257,20 +236,10 @@ function RegistrationPage({ title }) {
         throw new Error(data.error || 'Submission failed');
       }
       
-      toast.success('Registration successful!');
+      toast.success(`Registration successful! Seat: ${selectedSeat ? `${selectedSeat.row}${selectedSeat.col}` : 'General'}`);
       
-      // Refresh booked seats only if seating
-      if (hasSeating) {
-        const bookedResponse = await fetch(
-          `${API_BASE}/registration/booked/${encodeURIComponent(
-            eventData.title
-          )}`
-        );
-        const bookedData = await bookedResponse.json();
-        const set = new Set();
-        bookedData.forEach((s) => set.add(`${s.row}-${s.col}`));
-        setBookedSeats(set);
-      }
+      // Refresh booked seats
+      fetchBookedSeats();
       
       // Reset form
       setFormData({
@@ -295,17 +264,10 @@ function RegistrationPage({ title }) {
   };
 
   /* ----------  SEAT MAP DATA  ---------- */
-  const premiumRows = ['N', 'M', 'L'];
-  const executiveRows = ['K', 'J', 'H', 'G', 'F', 'E', 'D'];
-
-  const seatsInRow = (row) => {
-    if (premiumRows.includes(row)) return { left: 8, right: 6 };
-    return { left: 8, right: 8 };
-  };
+  const seatsInRow = () => ({ left: 15, right: 0 });
 
   const renderRow = (rowLabel) => {
-    const { left, right } = seatsInRow(rowLabel);
-    const isPremium = premiumRows.includes(rowLabel);
+    const { left } = seatsInRow(rowLabel);
 
     return (
       <div key={rowLabel} className="flex items-center gap-2 my-1">
@@ -321,32 +283,7 @@ function RegistrationPage({ title }) {
                 onClick={() => handleSeatClick(rowLabel, col)}
                 disabled={booked}
                 className={clsx(
-                  'w-10 h-10 rounded-lg text-xs font-bold text-white transition-all duration-200 shadow-sm',
-                  booked
-                    ? 'bg-red-500 cursor-not-allowed opacity-60'
-                    : selected
-                    ? 'bg-blue-600 scale-110 shadow-lg ring-2 ring-blue-300'
-                    : 'bg-green-500 hover:bg-green-600 hover:scale-105 hover:shadow-md'
-                )}
-              >
-                {col}
-              </button>
-            );
-          })}
-        </div>
-        {isPremium && <div className="w-16" />}
-        <div className="flex gap-1">
-          {Array.from({ length: right }, (_, i) => i + 1 + left).map((col) => {
-            const key = `${rowLabel}-${col}`;
-            const booked = bookedSeats.has(key);
-            const selected = selectedSeat?.row === rowLabel && selectedSeat?.col === col;
-            return (
-              <button
-                key={col}
-                onClick={() => handleSeatClick(rowLabel, col)}
-                disabled={booked}
-                className={clsx(
-                  'w-10 h-10 rounded-lg text-xs font-bold text-white transition-all duration-200 shadow-sm',
+                  'w-8 h-8 rounded-lg text-xs font-bold text-white transition-all duration-200 shadow-sm',
                   booked
                     ? 'bg-red-500 cursor-not-allowed opacity-60'
                     : selected
@@ -382,7 +319,7 @@ function RegistrationPage({ title }) {
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 py-6">
               <h1 className="text-4xl md:text-6xl font-bold text-white text-center drop-shadow-2xl mb-4">
-                Registration Form
+                Stand-Up Comedy Registration
               </h1>
               {eventData.description && (
                 <p className="text-lg md:text-2xl text-white text-center max-w-3xl drop-shadow-lg">
@@ -476,29 +413,49 @@ function RegistrationPage({ title }) {
                     }}
                   >
                     <div className="inline-block p-8">
-                      {/* PREMIUM BLOCK */}
+                      {/* FIRST FLOOR BLOCK */}
                       <div className="mb-10">
-                        <div className="text-center font-bold text-xl text-indigo-700 mb-4 bg-indigo-50 py-2 rounded-lg">
-                          ₹230 PREMIUM
+                        <div className="text-center font-bold text-xl text-orange-700 mb-4 bg-orange-50 py-2 rounded-lg">
+                          FIRST FLOOR ₹499
                         </div>
                         <div className="flex justify-center">
-                          <div>{premiumRows.map(renderRow)}</div>
+                          <div>{firstFloorRows.map(renderRow)}</div>
                         </div>
                       </div>
 
-                      {/* EXECUTIVE BLOCK */}
+                      {/* BACK BLOCK */}
                       <div className="mb-10">
-                        <div className="text-center font-bold text-xl text-purple-700 mb-4 bg-purple-50 py-2 rounded-lg">
-                          ₹230 EXECUTIVE
+                        <div className="text-center font-bold text-xl text-red-700 mb-4 bg-red-50 py-2 rounded-lg">
+                          BACK SEATS ₹399
                         </div>
                         <div className="flex justify-center">
-                          <div>{executiveRows.map(renderRow)}</div>
+                          <div>{backRows.map(renderRow)}</div>
+                        </div>
+                      </div>
+
+                      {/* NORMAL BLOCK */}
+                      <div className="mb-10">
+                        <div className="text-center font-bold text-xl text-gray-700 mb-4 bg-gray-50 py-2 rounded-lg">
+                          NORMAL SEATS ₹549
+                        </div>
+                        <div className="flex justify-center">
+                          <div>{normalRows.map(renderRow)}</div>
+                        </div>
+                      </div>
+
+                      {/* FRONT PREMIUM BLOCK */}
+                      <div className="mb-10">
+                        <div className="text-center font-bold text-xl text-indigo-700 mb-4 bg-indigo-50 py-2 rounded-lg">
+                          FRONT PREMIUM ₹699
+                        </div>
+                        <div className="flex justify-center">
+                          <div>{frontRows.map(renderRow)}</div>
                         </div>
                       </div>
 
                       {/* STAGE */}
                       <div className="flex justify-center">
-                        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t-2xl w-full max-w-md h-16 flex items-center justify-center text-base font-bold text-white shadow-xl">
+                        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 rounded-t-2xl w-full max-w-2xl h-16 flex items-center justify-center text-base font-bold text-white shadow-xl">
                           🎭 STAGE - All Eyes This Way 🎭
                         </div>
                       </div>
@@ -550,7 +507,7 @@ function RegistrationPage({ title }) {
               </div>
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-2">
-                  Registration Number <span className="text-red-500">*</span>
+                  Registration Number (Optional)
                 </label>
                 <input
                   type="text"
@@ -558,7 +515,7 @@ function RegistrationPage({ title }) {
                   value={formData.registrationNumber}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                  placeholder="Enter registration number"
+                  placeholder="Enter registration number (optional)"
                 />
               </div>
               <div>
@@ -648,4 +605,4 @@ function RegistrationPage({ title }) {
   );
 }
 
-export default RegistrationPage;
+export default StandupRegistration;
