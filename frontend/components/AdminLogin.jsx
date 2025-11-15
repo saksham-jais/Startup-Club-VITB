@@ -24,7 +24,7 @@ function AdminLogin() {
     }
 
     try {
-      const response = await axios.post('https://startup-club-dczt.onrender.com/registration/login', {
+      const response = await axios.post('https://startup-club-dczt.onrender.com/admin/login', {
         username,
         password,
       });
