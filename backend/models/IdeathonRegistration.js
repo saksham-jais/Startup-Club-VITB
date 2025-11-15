@@ -30,6 +30,6 @@ const ideathonSchema = new mongoose.Schema({
 
 ideathonSchema.index({ "leader.registrationNumber": 1 });
 ideathonSchema.index({ "members.registrationNumber": 1 });
-ideathonSchema.index({ utrId: 1 }, { unique: true });
+// Removed: ideathonSchema.index({ utrId: 1 }, { unique: true });  // Duplicate
 
 export default mongoose.model('IdeathonRegistration', ideathonSchema);
