@@ -210,7 +210,7 @@ const FullscreenCarousel = () => {
 
   const handleRegisterClick = () => {
     if (currentSlide === 0) {
-      window.open("/event-selection-s2", "_blank");
+      window.open("/event-selection", "_blank");
     } else {
       window.open("/event-selection-tech", "_blank");
     }
