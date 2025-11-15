@@ -1,0 +1,93 @@
+// EventSelectionEntertainment.jsx (New component for entertainment events - route to '/event-selection-entertainment')
+import React from "react";
+
+const subEvents = [
+  {
+    id: 1,
+    title: "Esports Tournament",
+    description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
+    img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    venue: "Gaming Arena",
+    time: "6:00 PM - 10:00 PM, Dec 7",
+    registrationFee: "₹299 per player",
+    teamSize: "Individual",
+    route: "/register-esports"
+  },
+  {
+    id: 2,
+    title: "Comedy Standup Night",
+    description: "Enjoy uproarious standup comedy from talented performers. Secure your seat for an evening of non-stop laughter.",
+    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    venue: "Main Auditorium",
+    time: "8:00 PM - 10:00 PM, Dec 8",
+    registrationFee: "₹199 per person (payment proof required)",
+    teamSize: "Individual",
+    route: "/register-standup"
+  },
+  {
+    id: 3,
+    title: "Cultural Performance Showcase",
+    description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
+    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    venue: "Cultural Hall",
+    time: "2:00 PM - 6:00 PM, Dec 9",
+    registrationFee: "Free for performers",
+    teamSize: "1-5 members",
+    route: "/register-cultural"
+  }
+];
+
+const EventSelectionEntertainment = () => {
+  const handleRegisterClick = (route) => {
+    window.open(route, "_blank");
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12 px-4">
+      <div className="container mx-auto max-w-6xl">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            Entertainment Events: Select Your Fun
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Unwind and showcase your talents in our entertainment lineup at S²-25 - StartUp Synergy. From gaming battles to cultural celebrations and comedy nights. Each event has its own dedicated registration.
+          </p>
+          <div className="w-24 h-1 bg-blue-500 mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {subEvents.map((subEvent) => (
+            <div
+              key={subEvent.id}
+              className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 border border-gray-200"
+            >
+              <img
+                src={subEvent.img}
+                alt={subEvent.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">{subEvent.title}</h2>
+                <p className="text-gray-600 mb-4 leading-relaxed">{subEvent.description}</p>
+                <div className="space-y-2 text-sm text-gray-500 mb-4">
+                  <p><span className="font-semibold">📍 Venue:</span> {subEvent.venue}</p>
+                  <p><span className="font-semibold">⏰ Time:</span> {subEvent.time}</p>
+                  <p><span className="font-semibold">💰 Fee:</span> {subEvent.registrationFee}</p>
+                  <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p>
+                </div>
+                <button
+                  onClick={() => handleRegisterClick(subEvent.route)}
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-md"
+                >
+                  🚀 Register Now for {subEvent.title}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EventSelectionEntertainment;
