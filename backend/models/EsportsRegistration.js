@@ -11,7 +11,6 @@ const esportsSchema = new mongoose.Schema({
   registeredAt: { type: Date, default: Date.now }
 }, { timestamps: true, collection: 'esports_registrations' });
 
-esportsSchema.index({ email: 1 });
-esportsSchema.index({ utrId: 1 });
+// Removed: esportsSchema.index({ email: 1 }); esportsSchema.index({ utrId: 1 });  // Duplicates
 
 export default mongoose.model('EsportsRegistration', esportsSchema);

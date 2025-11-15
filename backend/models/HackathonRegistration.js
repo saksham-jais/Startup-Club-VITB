@@ -24,6 +24,6 @@ const hackathonSchema = new mongoose.Schema({
 
 hackathonSchema.index({ "leader.registrationNumber": 1 });
 hackathonSchema.index({ "members.registrationNumber": 1 });
-hackathonSchema.index({ utrId: 1 }); // Added for faster unique lookups
+// Removed: hackathonSchema.index({ utrId: 1 });  // Duplicate
 
 export default mongoose.model('HackathonRegistration', hackathonSchema);

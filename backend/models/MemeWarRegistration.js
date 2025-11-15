@@ -22,8 +22,8 @@ const memeWarSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true, collection: 'memewar_registrations' });
 
-memeWarSchema.index({ registrationNumber: 1 }, { unique: true });
-memeWarSchema.index({ email: 1 }, { unique: true });
-memeWarSchema.index({ utrId: 1 }, { unique: true });
+// Removed all: memeWarSchema.index({ registrationNumber: 1 }, { unique: true });
+// memeWarSchema.index({ email: 1 }, { unique: true });
+// memeWarSchema.index({ utrId: 1 }, { unique: true });
 
 export default mongoose.model('MemeWarRegistration', memeWarSchema);
