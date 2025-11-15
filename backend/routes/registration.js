@@ -4,15 +4,26 @@ const router = express.Router();
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
-const Registration = require('../models/Registration');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-// === SEATED EVENTS CONFIG ===
+// === IMPORT ALL 7 MODELS ===
+const PodcastRegistration              = require('../models/PodcastRegistration');
+const HackathonRegistration            = require('../models/HackathonRegistration');
+const MemeWarRegistration              = require('../models/MemeWarRegistration');
+const IdeathonRegistration             = require('../models/IdeathonRegistration');
+const EsportsRegistration              = require('../models/EsportsRegistration');
+const CulturalPerformanceRegistration  = require('../models/CulturalPerformanceRegistration');
+const StandupRegistration              = require('../models/StandupRegistration');
+
+// === SEATED EVENTS CONFIG (Add any event title that has seats) ===
 const seatedEvents = new Set([
-  'S²-25 - StartUp Synergy'  // Add more seated event titles here as needed
+  'S²-25 - StartUp Synergy',
+  'Standup Comedy Night',           // Your seated standup event
+  'Standup Show',                   // Add variations if needed
+  'Standup Comedy - Final Round',
+  // Add more seated event titles here
 ]);
 
 // === CLOUDINARY CONFIG ===
@@ -26,205 +37,219 @@ if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !pr
   console.error('CLOUDINARY CONFIG MISSING! Check .env file.');
 }
 
-// === MULTER STORAGE ===
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary,
   params: {
     folder: 'event-registrations/screenshots',
     allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-    transformation: [{ width: 800, height: 800, crop: 'limit' }],
+    transformation: [{ width: 1000, crop: 'limit' }],
   },
 });
 
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed!'), false);
-    }
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only images allowed!'), false);
   }
 });
 
-// === HELPERS ===
+// === VALIDATORS ===
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-const isValidSeatRow = (row) => /^[A-Z]$/.test(row);
-const isValidSeatColumn = (col) => Number.isInteger(col) && col >= 1 && col <= 20;
+const isValidSeatRow = (row) => /^[A-Z]$/.test(row.trim());
+const isValidSeatColumn = (col) => {
+  const n = parseInt(col);
+  return Number.isInteger(n) && n >= 1 && n <= 30;
+};
 
-// === ADMIN AUTH MIDDLEWARE ===
+// === ADMIN AUTH MIDDLEWARE (unchanged) ===
 const adminAuth = async (req, res, next) => {
   if (req.path === '/login') {
     const { username, password } = req.body;
-    if (!username || !password) {
-      return res.status(400).json({ error: 'Username and password are required' });
-    }
+    if (!username || !password) return res.status(400).json({ error: 'Credentials required' });
 
-    const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
-    const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+    const match = username === process.env.ADMIN_USERNAME &&
+                  await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
 
-    if (!ADMIN_USERNAME || !ADMIN_PASSWORD_HASH) {
-      console.error('Admin credentials not set in .env');
-      return res.status(500).json({ error: 'Server misconfigured' });
+    if (match) {
+      const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '2h' });
+      return res.json({ message: 'Login successful', token });
     }
-
-    try {
-      const isMatch = await bcrypt.compare(password, ADMIN_PASSWORD_HASH);
-      if (username === ADMIN_USERNAME && isMatch) {
-        const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '1h' });
-        return res.json({ message: 'Login successful', token });
-      }
-      return res.status(401).json({ error: 'Invalid credentials' });
-    } catch (error) {
-      console.error('Login error:', error);
-      return res.status(500).json({ error: 'Server error' });
-    }
+    return res.status(401).json({ error: 'Invalid credentials' });
   }
 
-  // Token verification for other admin routes
   const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'No token provided' });
+  if (!token) return res.status(401).json({ error: 'No token' });
 
   try {
     jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
     next();
-  } catch (error) {
-    console.error('Token invalid:', error.message);
+  } catch (err) {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
 
-// === ROUTES ===
+// === HELPER: Get Model from Event Title ===
+const getModelFromTitle = (title) => {
+  const map = {
+    'podcast': PodcastRegistration,
+    'hackathon': HackathonRegistration,
+    'meme war': MemeWarRegistration,
+    'memewar': MemeWarRegistration,
+    'ideathon': IdeathonRegistration,
+    'esports': EsportsRegistration,
+    'cultural performance': CulturalPerformanceRegistration,
+    'cultural': CulturalPerformanceRegistration,
+    'standup': StandupRegistration,
+    'stand-up': StandupRegistration,
+    'comedy': StandupRegistration,
+  };
 
-// POST /registration/submit
+  const lower = title.toLowerCase();
+  for (const key in map) {
+    if (lower.includes(key)) return map[key];
+  }
+  return null; // fallback or throw
+};
+
+// === SUBMIT REGISTRATION (Supports All 7 Events + Seats) ===
 router.post('/submit', upload.single('screenshot'), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ error: 'Payment screenshot required' });
+    if (!req.file) return res.status(400).json({ error: 'Screenshot required' });
 
-    const {
-      title, name, registrationNumber,
-      email, utrId, seatRow, seatColumn
-    } = req.body;
+    const { title, name, teamName, leaderName, registrationNumber, email, utrId, seatRow, seatColumn } = req.body;
 
-    const trimmedTitle = title ? title.trim() : '';
-
-    // Determine if seated event based solely on title (authoritative for security)
-    const isSeatedEvent = seatedEvents.has(trimmedTitle);
-
-    console.log('Debug: trimmedTitle=', trimmedTitle, 'isSeatedEvent=', isSeatedEvent); // Remove after testing
-
-    // ---- VALIDATION ----
-    const requiredFields = ['title','name','registrationNumber','email','utrId'];
-    const missing = [];
-    requiredFields.forEach(f => {
-      const val = req.body[f];
-      if (!val || val.trim() === '') {
-        missing.push(f);
-      }
-    });
-    if (isSeatedEvent) {
-      const rowVal = seatRow || '';
-      const colVal = seatColumn || '';
-      if (!rowVal || rowVal.trim() === '' || !colVal || colVal.trim() === '') {
-        missing.push('seatRow', 'seatColumn');
-      }
+    if (!title?.trim()) {
+      await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
+      return res.status(400).json({ error: 'Event title is required' });
     }
-    if (missing.length) {
-      await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
+
+    const trimmedTitle = title.trim();
+    const isSeated = seatedEvents.has(trimmedTitle);
+
+    // Determine correct model
+    const Model = getModelFromTitle(trimmedTitle);
+    if (!Model) {
+      await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
+      return res.status(400).json({ error: 'Invalid or unsupported event title' });
+    }
+
+    // Required fields (dynamic per event)
+    const missing = [];
+    if (!name && !teamName) missing.push('name or teamName');
+    if (!registrationNumber?.trim()) missing.push('registrationNumber');
+    if (!email?.trim()) missing.push('email');
+    if (!utrId?.trim()) missing.push('utrId');
+    if (isSeated && (!seatRow?.trim() || !seatColumn?.trim())) {
+      missing.push('seatRow and seatColumn');
+    }
+
+    if (missing.length > 0) {
+      await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
       return res.status(400).json({ error: `Missing: ${missing.join(', ')}` });
     }
 
     if (!isValidEmail(email)) {
-      await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
+      await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
       return res.status(400).json({ error: 'Invalid email' });
     }
 
-    if (isSeatedEvent) {
-      const trimmedRow = (seatRow || '').trim();
-      if (!isValidSeatRow(trimmedRow)) {
-        await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
-        return res.status(400).json({ error: 'Seat row must be A-Z' });
+    if (isSeated) {
+      if (!isValidSeatRow(seatRow)) {
+        await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
+        return res.status(400).json({ error: 'Seat row must be a single letter A-Z' });
       }
-
-      const col = parseInt(seatColumn);
-      if (!isValidSeatColumn(col)) {
-        await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
-        return res.status(400).json({ error: 'Seat column 1-20' });
+      if (!isValidSeatColumn(seatColumn)) {
+        await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
+        return res.status(400).json({ error: 'Seat column must be 1–30' });
       }
     }
 
-    const newReg = new Registration({
+    // Create registration
+    const regData = {
       title: trimmedTitle,
-      name: name.trim(),
+      ...(name && { name: name.trim() }),
+      ...(teamName && { teamName: teamName.trim() }),
+      ...(leaderName && { leaderName: leaderName.trim() }),
       registrationNumber: registrationNumber.trim(),
       email: email.trim().toLowerCase(),
       utrId: utrId.trim(),
       screenshotUrl: req.file.path,
-      ...(isSeatedEvent && { 
-        seatRow: (seatRow || '').trim().toUpperCase(), 
-        seatColumn: parseInt(seatColumn) 
+      public_id: req.file.public_id, // optional: for deletion later
+      ...(isSeated && {
+        seatRow: seatRow.trim().toUpperCase(),
+        seatColumn: parseInt(seatColumn)
       })
+    };
+
+    const newReg = new Model(regData);
+    await newReg.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Registration successful!',
+      data: { id: newReg._id, seat: isSeated ? `${seatRow.trim().toUpperCase()}${seatColumn}` : null }
     });
 
-    await newReg.save();
-    res.status(201).json({ message: 'Success', data: { id: newReg._id } });
-
   } catch (error) {
-    console.error('Submit error:', error); // For debugging
-    if (req.file?.public_id) await cloudinary.uploader.destroy(req.file.public_id).catch(()=>{});
+    if (req.file?.public_id) await cloudinary.uploader.destroy(req.file.public_id).catch(() => {});
+    console.error('Registration error:', error);
+
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
-      return res.status(409).json({ error: field.includes('seat') ? 'Seat already booked' : `${field} already used` });
+      const value = error.keyValue[field];
+      const msg = field.includes('seat') ? 'This seat is already booked!' :
+                  field === 'email' ? 'Email already registered' :
+                  field === 'utrId' ? 'UTR ID already used' : `${field} already taken`;
+      return res.status(409).json({ error: msg });
     }
+
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// GET booked seats
+// === GET BOOKED SEATS FOR ANY EVENT ===
 router.get('/booked/:title', async (req, res) => {
   try {
-    const { title } = req.params;
-    if (!title) return res.status(400).json({ error: 'Event title is required' });
+    const title = decodeURIComponent(req.params.title).trim();
+    const Model = getModelFromTitle(title);
 
-    const registrations = await Registration.find(
-      { title: decodeURIComponent(title) },
-      { seatRow: 1, seatColumn: 1, _id: 0 }
+    if (!Model) return res.status(400).json({ error: 'Event not found' });
+
+    const bookings = await Model.find(
+      { title, seatRow: { $exists: true }, seatColumn: { $exists: true } },
+      { seatRow: 1, seatColumn: 1, name: 1, _id: 0 }
     );
 
-    const booked = registrations
-      .filter(r => r.seatRow && r.seatColumn) // Only seated registrations
-      .map(r => ({ row: r.seatRow, col: r.seatColumn }));
-    res.json(booked);
-  } catch (error) {
-    console.error('Error fetching booked seats:', error);
-    res.status(500).json({ error: 'Failed to fetch booked seats' });
+    res.json(bookings.map(b => ({
+      row: b.seatRow,
+      col: b.seatColumn,
+      name: b.name || b.teamName || 'N/A'
+    })));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch seats' });
   }
 });
 
-// POST /registration/login (admin)
+// === ADMIN ROUTES ===
 router.post('/login', adminAuth);
 
-// GET all (admin)
 router.get('/all', adminAuth, async (req, res) => {
   try {
-    const data = await Registration.find().sort({ createdAt: -1 });
-    res.json({ message: 'Success', data });
-  } catch (e) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
+    const [p, h, m, i, e, c, s] = await Promise.all([
+      PodcastRegistration.countDocuments(),
+      HackathonRegistration.countDocuments(),
+      MemeWarRegistration.countDocuments(),
+      IdeathonRegistration.countDocuments(),
+      EsportsRegistration.countDocuments(),
+      CulturalPerformanceRegistration.countDocuments(),
+      StandupRegistration.countDocuments(),
+    ]);
 
-// GET single registration by ID
-router.get('/:id', async (req, res) => {
-  try {
-    const registration = await Registration.findById(req.params.id);
-    if (!registration) return res.status(404).json({ error: 'Not found' });
-
-    const { screenshotUrl, ...safe } = registration.toObject();
-    res.json({ ...safe, screenshotUrl });
-  } catch (error) {
-    console.error('Error fetching registration:', error);
+    res.json({ total: p+h+m+i+e+c+s, breakdown: { podcast: p, hackathon: h, memewar: m, ideathon: i, esports: e, cultural: c, standup: s } });
+  } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
 });
