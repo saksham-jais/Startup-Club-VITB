@@ -66,7 +66,7 @@ const PodcastRegistration = () => {
           <div className="h-64 md:h-80 rounded-3xl shadow-2xl overflow-hidden relative" style={bannerStyle}>
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 py-6">
               <h1 className="text-4xl md:text-6xl font-bold text-white text-center drop-shadow-2xl mb-4">
-                Podcast Recording Session
+                Opening Ceremony+Live Podcast Session
               </h1>
             </div>
           </div>

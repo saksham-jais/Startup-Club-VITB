@@ -26,6 +26,38 @@ const checkCloudinaryConfig = () => {
   return true;
 };
 
+// NEW: Helper to upload a single file via stream (reduces duplication)
+const uploadFileToCloudinary = (file, folder, isScreenshot = false) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: 'image',
+        quality: 'auto',
+        use_filename: true,        // Preserve original filename
+        unique_filename: true,     // Append suffix if duplicate
+        filename: file.originalname  // Explicitly pass original filename for stream uploads
+      },
+      (error, result) => {
+        if (error) {
+          console.error(`${isScreenshot ? 'Screenshot' : 'Meme'} upload callback error:`, error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+
+    const timeout = setTimeout(() => {
+      stream.destroy(new Error('Upload timeout'));
+      reject(new Error('Upload timeout after 30s'));
+    }, 30000);
+
+    stream.on('finish', () => clearTimeout(timeout));
+    stream.end(file.buffer);
+  });
+};
+
 router.post('/register', upload.fields([
   { name: 'screenshot', maxCount: 1 },
   { name: 'memeFile', maxCount: 3 } // Enforce 3 max
@@ -78,39 +110,17 @@ router.post('/register', upload.fields([
       return res.status(409).json({ error: 'Already registered with this email, UTR ID, or registration number' });
     }
 
-    // Upload screenshot with timeout (removed format: 'auto')
+    // Upload screenshot
     let screenshotUrl, screenshotPublicId;
     try {
-      const uploadPromise = new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            folder: 'event-registrations/memewar/payment',
-            resource_type: 'image',
-            quality: 'auto'
-          },
-          (error, result) => {
-            if (error) {
-              console.error('Screenshot upload callback error:', error);
-              reject(error);
-            } else {
-              resolve(result);
-            }
-          }
-        );
-
-        // Add timeout
-        const timeout = setTimeout(() => {
-          stream.destroy(new Error('Upload timeout'));
-          reject(new Error('Upload timeout after 30s'));
-        }, 30000);
-
-        stream.on('finish', () => clearTimeout(timeout));
-        stream.end(screenshotFile.buffer);
-      });
-
-      const result = await uploadPromise;
+      const result = await uploadFileToCloudinary(
+        screenshotFile, 
+        'event-registrations/memewar/payment',
+        true  // isScreenshot
+      );
       screenshotUrl = result.secure_url;
       screenshotPublicId = result.public_id;
+      console.log('Screenshot filename used:', screenshotFile.originalname);  // NEW: Debug
       console.log('Screenshot uploaded:', screenshotUrl);
     } catch (uploadErr) {
       console.error('Screenshot upload error details:', {
@@ -123,44 +133,22 @@ router.post('/register', upload.fields([
       });
     }
 
-    // Upload memes (sequential, removed format: 'auto')
+    // Upload memes (sequential)
     const memes = [];
     const uploadedMemeIds = [];
     try {
       for (const [index, memeFile] of memeFiles.entries()) {
-        const uploadPromise = new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream(
-            {
-              folder: 'event-registrations/memewar/memes',
-              resource_type: 'image',
-              quality: 'auto'
-            },
-            (error, result) => {
-              if (error) {
-                console.error(`Meme ${index + 1} upload callback error:`, error);
-                reject(error);
-              } else {
-                resolve(result);
-              }
-            }
-          );
-
-          const timeout = setTimeout(() => {
-            stream.destroy(new Error('Upload timeout'));
-            reject(new Error('Upload timeout after 30s'));
-          }, 30000);
-
-          stream.on('finish', () => clearTimeout(timeout));
-          stream.end(memeFile.buffer);
-        });
-
-        const result = await uploadPromise;
+        const result = await uploadFileToCloudinary(
+          memeFile, 
+          'event-registrations/memewar/memes'
+        );
         memes.push({
           url: result.secure_url,
           public_id: result.public_id,
-          format: result.format
+          format: result.format  // Use Cloudinary's detected format
         });
         uploadedMemeIds.push(result.public_id);
+        console.log(`Meme ${index + 1} filename used:`, memeFile.originalname);  // NEW: Debug
         console.log(`Meme ${index + 1} uploaded:`, result.secure_url);
       }
     } catch (uploadErr) {
