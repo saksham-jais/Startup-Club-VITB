@@ -8,7 +8,7 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleSignup = () => {
-    // Scroll to the events section instead of navigating to registration
+    // Scroll to the events section
     const eventsSection = document.getElementById('events-section');
     if (eventsSection) {
       eventsSection.scrollIntoView({ behavior: 'smooth' });

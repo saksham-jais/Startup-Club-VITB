@@ -170,6 +170,7 @@ const FullscreenCarousel = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   const whoWeAreText = [
     "The StartUp Club is more than just a club; it's an ecosystem.",
@@ -177,15 +178,17 @@ const FullscreenCarousel = () => {
     "Whether you're a seasoned coder, a brilliant designer, a sharp marketer, or just have a spark of an idea, this is where you start."
   ];
 
-  // Auto-slide carousel
+  // Auto-slide carousel with hover pause
   useEffect(() => {
+    if (isHovered) return;
+
     const id = setInterval(() => {
       setCurrentEventIndex((prev) => (prev + 1) % events.length);
-    }, 6000); // Change every 6 seconds
+    }, 8000); // Increased to 8 seconds
     setIntervalId(id);
 
     return () => clearInterval(id);
-  }, []);
+  }, [isHovered]);
 
   // Typewriter effect for Who We Are section
   useEffect(() => {
@@ -264,7 +267,7 @@ const FullscreenCarousel = () => {
     clearInterval(intervalId);
     const newId = setInterval(() => {
       setCurrentEventIndex((prev) => (prev + 1) % events.length);
-    }, 6000);
+    }, 8000);
     setIntervalId(newId);
   };
 
@@ -274,7 +277,7 @@ const FullscreenCarousel = () => {
       window.open('/event-selection', '_blank');
     } else {
       // Tech Fest - route to event selection tech
-      window.open('/event-selection/tech', '_blank');
+      window.open('/event-selection-tech', '_blank');
     }
   };
 
@@ -469,8 +472,22 @@ const FullscreenCarousel = () => {
     setTimeout(restartAutoSlide, 10000); // Restart auto-slide after 10 seconds
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    clearInterval(intervalId);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    restartAutoSlide();
+  };
+
   const EventCard = ({ event, index }) => (
-    <div className="w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8 transform hover:scale-[1.02] transition-all duration-300">
+    <div 
+      className="w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="text-center">
         <button
           onClick={() => handleEventTitleClick(index)}
@@ -495,14 +512,14 @@ const FullscreenCarousel = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={() => handleRegisterClick(index)}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
           >
             🚀 Register Now
           </button>
           
           <button
             onClick={() => handleEventTitleClick(index)}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 transform hover:scale-105 shadow-lg border border-white/20"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 border border-white/20 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
             📖 View Details
           </button>
@@ -519,7 +536,7 @@ const FullscreenCarousel = () => {
   return (
     <>
       {/* Events Section */}
-      <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4">
+      <div id="events-section" className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4">
         
         {/* Header Section - Outside the box in background */}
         <div className="text-center mb-4 md:mb-2 w-full max-w-4xl mx-auto px-4">
@@ -536,7 +553,7 @@ const FullscreenCarousel = () => {
         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
           <button
             onClick={handlePrev}
-            className="bg-white/20 hover:bg-white/30 text-white p-4 rounded-full backdrop-blur-sm transition-all duration-300 text-3xl font-bold shadow-lg"
+            className="bg-white/20 hover:bg-white/30 text-white p-4 rounded-full backdrop-blur-sm transition-all duration-300 text-3xl font-bold shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Previous slide"
           >
             ‹
@@ -545,7 +562,7 @@ const FullscreenCarousel = () => {
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
           <button
             onClick={handleNext}
-            className="bg-white/20 hover:bg-white/30 text-white p-4 rounded-full backdrop-blur-sm transition-all duration-300 text-3xl font-bold shadow-lg"
+            className="bg-white/20 hover:bg-white/30 text-white p-4 rounded-full backdrop-blur-sm transition-all duration-300 text-3xl font-bold shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
             aria-label="Next slide"
           >
             ›
@@ -560,7 +577,7 @@ const FullscreenCarousel = () => {
           onTouchEnd={handleTouchEnd}
         >
           <div 
-            className="flex transition-transform duration-700 ease-in-out"
+            className="flex transition-transform duration-1000 ease-in-out" // Increased transition duration to 1s for smoother slide
             style={{ transform: `translateX(-${currentEventIndex * 100}%)` }}
           >
             {events.map((event, index) => (
