@@ -11,6 +11,8 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [eventFilter, setEventFilter] = useState('all');
+  const [showMemesModal, setShowMemesModal] = useState(false);
+  const [selectedMemes, setSelectedMemes] = useState([]);
   const navigate = useNavigate();
   const hasFetched = useRef(false);
 
@@ -61,6 +63,16 @@ function AdminDashboard() {
     fetchRegistrations();
   }, [navigate]);
 
+  const viewMemes = (memes) => {
+    setSelectedMemes(memes);
+    setShowMemesModal(true);
+  };
+
+  const closeModal = () => {
+    setShowMemesModal(false);
+    setSelectedMemes([]);
+  };
+
   const filtered = useMemo(() => {
     let filteredRegs = registrations;
 
@@ -104,7 +116,7 @@ function AdminDashboard() {
         Seat: r.seat || 'N/A',
         'Screenshot': r.screenshotUrl || 'N/A',
         'Submission': r.submissionUrl || 'N/A',
-        'Memes Count': r.memesCount || 'N/A',
+        'Memes': r.memes ? JSON.stringify(r.memes.map(m => ({ url: m.url, format: m.format }))) : 'N/A',
         'Created': new Date(r.createdAt || r.registeredAt || Date.now()).toLocaleString(),
       };
       return row;
@@ -220,7 +232,7 @@ function AdminDashboard() {
               <table className="w-full text-left">
                 <thead className="bg-gray-100">
                   <tr>
-                    {['Type', 'Title', 'Name', 'Email', 'Reg No', 'UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes Count', 'Created'].map(h => (
+                    {['Type', 'Title', 'Name', 'Email', 'Reg No', 'UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes', 'Created'].map(h => (
                       <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">
                         {h}
                       </th>
@@ -233,6 +245,7 @@ function AdminDashboard() {
                     const hasScreenshot = r.screenshotUrl;
                     const hasSubmission = r.submissionUrl;
                     const seatBadge = getSeatBadge(r);
+                    const hasMemes = r.memes && r.memes.length > 0;
 
                     return (
                       <tr key={r._id} className="hover:bg-gray-50">
@@ -278,7 +291,18 @@ function AdminDashboard() {
                             '-'
                           )}
                         </td>
-                        <td className="px-4 py-3 text-sm">{r.memesCount || '-'}</td>
+                        <td className="px-4 py-3 text-sm">
+                          {hasMemes ? (
+                            <button
+                              onClick={() => viewMemes(r.memes)}
+                              className="text-blue-600 hover:underline text-xs font-medium"
+                            >
+                              View {r.memes.length}
+                            </button>
+                          ) : (
+                            '-'
+                          )}
+                        </td>
                         <td className="px-4 py-3 text-xs text-gray-500">
                           {new Date(r.createdAt || r.registeredAt || Date.now()).toLocaleString()}
                         </td>
@@ -290,6 +314,48 @@ function AdminDashboard() {
             </div>
             <div className="bg-gray-50 px-4 py-2 text-sm text-gray-600">
               Showing {filtered.length} of {registrations.length} {eventFilter !== 'all' ? `(${eventFilter.toUpperCase()}) ` : ''}results
+            </div>
+          </div>
+        )}
+
+        {/* Memes Modal */}
+        {showMemesModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl max-w-4xl max-h-[90vh] w-full overflow-y-auto shadow-2xl">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-bold">Uploaded Memes ({selectedMemes.length})</h3>
+                  <button 
+                    onClick={closeModal} 
+                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {selectedMemes.map((meme, index) => (
+                    <div key={index} className="border rounded-lg p-2 bg-gray-50">
+                      <img 
+                        src={meme.url} 
+                        alt={`Meme ${index + 1}`}
+                        className="w-full h-48 object-contain rounded border"
+                        onError={(e) => {
+                          e.target.src = '/placeholder-image.png'; // Fallback if needed
+                        }}
+                      />
+                      <p className="text-xs text-gray-500 mt-2 truncate">{meme.public_id.split('/').pop()}</p>
+                      <a 
+                        href={meme.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline text-xs block mt-1"
+                      >
+                        Open Full Size
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
