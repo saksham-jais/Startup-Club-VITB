@@ -6,7 +6,7 @@ const startupEvent = {
   title: "S²-25 - StartUp Synergy Day-1",
   subtitle: "28 November 2025",
   description:
-    "Opening Ceremony+Live Podcast Session, Coding Challenge, Ideathon, Meme War Competition",
+    "Opening Ceremony+Live Podcast Session, Ideathon, Meme War Competition",
   img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
   bannerImages: [
     "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
