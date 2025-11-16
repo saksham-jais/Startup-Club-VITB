@@ -8,7 +8,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 const EsportsRegistration = () => {
   const eventTitle = "Esports Championship 2025";
-  const bgImage = "/Day 2-images/e-sports.avif";
+  const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763291700/hackathon_screenshots/ad8jkvag1ioh2xe7f3ec.avif";
 
   const [formData, setFormData] = useState({
     name: '',
