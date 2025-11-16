@@ -110,7 +110,10 @@ router.post('/register', upload.fields([
           {
             folder: 'event-registrations/ideathon/payment',
             resource_type: 'image',
-            quality: 'auto'
+            quality: 'auto',
+            use_filename: true,        // Preserve original filename
+            unique_filename: true,     // Append random suffix if duplicate
+            filename: screenshotFile.originalname  // NEW: Explicitly pass original filename for stream uploads
           },
           (error, result) => {
             if (error) {
@@ -134,7 +137,8 @@ router.post('/register', upload.fields([
       const result = await uploadPromise;
       screenshotUrl = result.secure_url;
       screenshotPublicId = result.public_id;
-      console.log('Screenshot uploaded:', screenshotUrl);
+      console.log('Screenshot filename used:', screenshotFile.originalname);  // NEW: Debug log
+      console.log('Screenshot uploaded:', screenshotUrl); // Now shows original name in path
     } catch (uploadErr) {
       console.error('Screenshot upload error details:', {
         message: uploadErr.message,
@@ -153,7 +157,10 @@ router.post('/register', upload.fields([
         const stream = cloudinary.uploader.upload_stream(
           {
             folder: 'event-registrations/ideathon/submissions',
-            resource_type: 'raw'
+            resource_type: 'raw',
+            use_filename: true,        // Preserve original filename
+            unique_filename: true,     // Append random suffix if duplicate
+            filename: submissionFile.originalname  // NEW: Explicitly pass original filename for stream uploads
           },
           (error, result) => {
             if (error) {
@@ -181,7 +188,8 @@ router.post('/register', upload.fields([
       if (!['pdf', 'ppt', 'pptx'].includes(submissionFormat)) {
         throw new Error('Unsupported submission format');
       }
-      console.log('Submission uploaded:', submissionUrl);
+      console.log('Submission filename used:', submissionFile.originalname);  // NEW: Debug log
+      console.log('Submission uploaded:', submissionUrl); // Now shows original name in path
     } catch (uploadErr) {
       // Cleanup screenshot
       cloudinary.uploader.destroy(screenshotPublicId).catch(() => {});
