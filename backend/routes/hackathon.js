@@ -1,25 +1,44 @@
 import express from 'express';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary'; // npm i multer-storage-cloudinary
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import HackathonRegistration from '../models/HackathonRegistration.js';
 
 const router = express.Router();
 
-// Configure Multer with Cloudinary storage
+// Configure Multer with Cloudinary storage (ADDED 'avif' to allowed_formats)
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'hackathon_screenshots',
-    allowed_formats: ['png', 'jpg', 'jpeg'],
+    allowed_formats: ['png', 'jpg', 'jpeg', 'avif'], // Fix: Support AVIF
     transformation: [{ width: 800, height: 600, crop: 'limit' }],
   },
 });
 
 const upload = multer({ storage });
 
-// POST /hackathon/register
-router.post('/register', upload.single('screenshot'), async (req, res) => {
+// Multer error handler middleware (NEW: Catches upload failures gracefully)
+const handleMulterError = (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_FORMAT') {
+      return res.status(400).json({ error: 'Unsupported file format. Please use PNG, JPG, JPEG, or AVIF.' });
+    }
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'File too large. Max 10MB.' });
+    }
+    return res.status(400).json({ error: 'File upload failed. Please try again.' });
+  }
+  next(err); // Pass non-Multer errors to Express
+};
+
+// POST /hackathon/register (APPLY error handler)
+router.post('/register', (req, res, next) => {
+  upload.single('screenshot')(req, res, (err) => {
+    if (err) return handleMulterError(err, req, res, next);
+    next(); // Proceed if upload succeeds
+  });
+}, async (req, res) => { // Route handler now only runs post-upload
   try {
     // Parse form fields (multer populates req.body)
     const { title, teamName, leaderName, leaderRegNo, email, utrId, members: membersStr } = req.body;
@@ -96,7 +115,7 @@ router.post('/register', upload.single('screenshot'), async (req, res) => {
       id: registration._id,
     });
   } catch (error) {
-    console.error('Hackathon registration error:', error);
+    console.error('Hackathon registration error:', error.message, error.stack); // IMPROVED: More verbose logging
     res.status(500).json({ error: 'Server error during registration' });
   }
 });

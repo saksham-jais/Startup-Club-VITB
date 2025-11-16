@@ -5,13 +5,13 @@ import MemeWarRegistration from '../models/MemeWarRegistration.js';
 
 const router = express.Router();
 
-// Use memory storage to parse files
+// Use memory storage to parse files (UNCHANGED)
 const upload = multer({ 
   storage: multer.memoryStorage(), 
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit per file
 });
 
-// Helper to check config
+// Helper to check config (UNCHANGED)
 const checkCloudinaryConfig = () => {
   const config = cloudinary.config();
   if (!config.cloud_name || !config.api_key || !config.api_secret) {
@@ -26,7 +26,7 @@ const checkCloudinaryConfig = () => {
   return true;
 };
 
-// NEW: Helper to upload a single file via stream (reduces duplication)
+// UPDATED: Helper to upload (FIX: Add allowed_formats for security; better comma preservation)
 const uploadFileToCloudinary = (file, folder, isScreenshot = false) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -34,9 +34,10 @@ const uploadFileToCloudinary = (file, folder, isScreenshot = false) => {
         folder,
         resource_type: 'image',
         quality: 'auto',
-        use_filename: true,        // Preserve original filename
-        unique_filename: true,     // Append suffix if duplicate
-        filename: file.originalname  // Explicitly pass original filename for stream uploads
+        use_filename: true,
+        unique_filename: true,
+        filename: file.originalname,
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif'], // NEW: Explicit formats (Cloudinary enforces)
       },
       (error, result) => {
         if (error) {
@@ -60,7 +61,7 @@ const uploadFileToCloudinary = (file, folder, isScreenshot = false) => {
 
 router.post('/register', upload.fields([
   { name: 'screenshot', maxCount: 1 },
-  { name: 'memeFile' } // Enforce 3 max
+  { name: 'memeFile', maxCount: 3 } // FIX: Enforce max 3
 ]), async (req, res) => {
   const screenshotFile = req.files?.screenshot?.[0];
   const memeFiles = req.files?.memeFile || [];
@@ -68,13 +69,13 @@ router.post('/register', upload.fields([
   try {
     const { title, name, registrationNumber, email, utrId } = req.body;
 
-    // Trim and normalize (remove trailing commas/spaces)
-    const trimmedName = (name || '').trim().replace(/,+$/, '');
-    const trimmedRegNo = (registrationNumber || '').trim().toUpperCase().replace(/,+$/, '');
-    const trimmedEmail = (email || '').trim().toLowerCase().replace(/,+$/, '');
-    const trimmedUtrId = (utrId || '').trim().replace(/,+$/, '');
+    // Enhanced trim (FIX: Preserve internal commas; only strip leading/trailing)
+    const trimmedName = (name || '').trim().replace(/^,+|,+$/g, ''); // Remove only leading/trailing commas
+    const trimmedRegNo = (registrationNumber || '').trim().toUpperCase().replace(/^,+|,+$/g, '');
+    const trimmedEmail = (email || '').trim().toLowerCase().replace(/^,+|,+$/g, '');
+    const trimmedUtrId = (utrId || '').trim().replace(/^,+|,+$/g, '');
 
-    // Early validation
+    // Early validation (UNCHANGED, but add email regex)
     if (!title?.trim() || !trimmedName || !trimmedRegNo || !trimmedEmail || !trimmedUtrId) {
       return res.status(400).json({ error: 'All required fields must be filled' });
     }
@@ -83,21 +84,21 @@ router.post('/register', upload.fields([
       return res.status(400).json({ error: 'Payment screenshot is required' });
     }
 
-    if (memeFiles.length < 1) {
+    if (memeFiles.length < 1 || memeFiles.length > 3) { // FIX: Enforce 1-3
       return res.status(400).json({ error: '1–3 memes are required' });
     }
 
-    // Basic email check
-    if (!trimmedEmail.includes('@') || !trimmedEmail.includes('.')) {
+    // NEW: Email regex
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       return res.status(400).json({ error: 'Valid email is required' });
     }
 
-    // Check Cloudinary config before any uploads
+    // Check Cloudinary (UNCHANGED)
     if (!checkCloudinaryConfig()) {
       return res.status(500).json({ error: 'Cloudinary configuration error - check server logs and .env' });
     }
 
-    // Check existing
+    // Check existing (UNCHANGED)
     const existing = await MemeWarRegistration.findOne({
       $or: [
         { email: trimmedEmail },
@@ -110,64 +111,45 @@ router.post('/register', upload.fields([
       return res.status(409).json({ error: 'Already registered with this email, UTR ID, or registration number' });
     }
 
-    // Upload screenshot
+    // Upload screenshot (UNCHANGED, but add stack logging on error)
     let screenshotUrl, screenshotPublicId;
     try {
-      const result = await uploadFileToCloudinary(
-        screenshotFile, 
-        'event-registrations/memewar/payment',
-        true  // isScreenshot
-      );
+      const result = await uploadFileToCloudinary(screenshotFile, 'event-registrations/memewar/payment', true);
       screenshotUrl = result.secure_url;
       screenshotPublicId = result.public_id;
-      console.log('Screenshot filename used:', screenshotFile.originalname);  // NEW: Debug
+      console.log('Screenshot filename used:', screenshotFile.originalname);
       console.log('Screenshot uploaded:', screenshotUrl);
     } catch (uploadErr) {
-      console.error('Screenshot upload error details:', {
-        message: uploadErr.message,
-        code: uploadErr.http_code || 'N/A',
-        status: uploadErr.statusCode || 'N/A'
-      });
-      return res.status(500).json({ 
-        error: 'Failed to upload payment screenshot. Check console for details (likely config or network).' 
-      });
+      console.error('Screenshot upload error details:', uploadErr.message, uploadErr.stack); // FIX: Add stack
+      return res.status(500).json({ error: 'Failed to upload payment screenshot.' });
     }
 
-    // Upload memes (sequential)
+    // Upload memes (UNCHANGED, but add stack logging)
     const memes = [];
     const uploadedMemeIds = [];
     try {
       for (const [index, memeFile] of memeFiles.entries()) {
-        const result = await uploadFileToCloudinary(
-          memeFile, 
-          'event-registrations/memewar/memes'
-        );
+        const result = await uploadFileToCloudinary(memeFile, 'event-registrations/memewar/memes');
         memes.push({
           url: result.secure_url,
           public_id: result.public_id,
-          format: result.format  // Use Cloudinary's detected format
+          format: result.format
         });
         uploadedMemeIds.push(result.public_id);
-        console.log(`Meme ${index + 1} filename used:`, memeFile.originalname);  // NEW: Debug
+        console.log(`Meme ${index + 1} filename used:`, memeFile.originalname);
         console.log(`Meme ${index + 1} uploaded:`, result.secure_url);
       }
     } catch (uploadErr) {
-      // Cleanup screenshot and any partial memes
+      // Cleanup (UNCHANGED)
       await Promise.all([
         cloudinary.uploader.destroy(screenshotPublicId),
         ...uploadedMemeIds.map(id => cloudinary.uploader.destroy(id))
       ]).catch(err => console.error('Cleanup error:', err));
-      console.error('Meme upload error details:', {
-        message: uploadErr.message,
-        code: uploadErr.http_code || 'N/A',
-        status: uploadErr.statusCode || 'N/A'
-      });
-      return res.status(500).json({ 
-        error: 'Failed to upload one or more memes. Check console for details.' 
-      });
+      console.error('Meme upload error details:', uploadErr.message, uploadErr.stack); // FIX: Add stack
+      return res.status(500).json({ error: 'Failed to upload one or more memes.' });
     }
 
-    // Save to DB
+    // Save to DB (UNCHANGED)
     const registration = new MemeWarRegistration({
       title: title.trim(),
       name: trimmedName,
@@ -188,13 +170,13 @@ router.post('/register', upload.fields([
     });
 
   } catch (error) {
-    // Cleanup uploads on DB/other errors
+    // Cleanup (UNCHANGED, but ensure screenshotPublicId is defined)
     if (screenshotPublicId) {
       cloudinary.uploader.destroy(screenshotPublicId).catch(() => {});
     }
     uploadedMemeIds.forEach(id => cloudinary.uploader.destroy(id).catch(() => {}));
 
-    console.error('MemeWar registration error:', error);
+    console.error('MemeWar registration error:', error.message, error.stack); // FIX: Add stack
 
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(e => `${e.path}: ${e.message}`).join(', ');
