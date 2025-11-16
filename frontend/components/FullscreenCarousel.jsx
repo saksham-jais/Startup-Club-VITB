@@ -451,20 +451,20 @@ const FullscreenCarousel = () => {
             🚀 Register Now
           </button>
 
-          <button
+          {/* <button
             type="button"
             onClick={() => handleEventTitleClick(index)}
             className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 border border-white/20 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
             📖 View Details
-          </button>
+          </button> */}
         </div>
 
         <div className="mt-4 text-white/70 text-xs">
           <p>📍 VIT Bhopal University</p>
-          <p className="mt-1 text-white/50">
+          {/* <p className="mt-1 text-white/50">
             Click the event title or "View Details" to see full schedule
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
