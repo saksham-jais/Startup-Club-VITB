@@ -168,7 +168,6 @@ const techFestEvent = {
 
 const events = [startupEvent, techFestEvent];
 
-// Typewriter lines (outside component so they are stable)
 const whoWeAreText = [
   "The StartUp Club is more than just a club; it's an ecosystem.",
   "We empower students by providing the resources, mentorship, and network needed to navigate the journey from concept to company.",
@@ -178,17 +177,13 @@ const whoWeAreText = [
 const FullscreenCarousel = () => {
   const navigate = useNavigate();
 
-  // Typewriter state
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // refs to store timer IDs so we can clear them properly
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  // Typewriter effect
   useEffect(() => {
-    // Clear any existing interval/timeout to avoid overlaps (flicker)
     if (intervalRef.current) clearInterval(intervalRef.current);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
@@ -204,7 +199,6 @@ const FullscreenCarousel = () => {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
 
-          // Wait before moving to next line
           timeoutRef.current = setTimeout(() => {
             setCurrentIndex((prev) => prev + 1);
             setDisplayedText("");
@@ -212,14 +206,12 @@ const FullscreenCarousel = () => {
         }
       }, 30);
     } else {
-      // Finished all lines – reset smoothly after a pause
       timeoutRef.current = setTimeout(() => {
         setCurrentIndex(0);
         setDisplayedText("");
       }, 3000);
     }
 
-    // Cleanup on index change or unmount
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -419,7 +411,7 @@ const FullscreenCarousel = () => {
   };
 
   const EventCard = ({ event, index }) => (
-    <div className="w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8">
+    <div className="w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8 relative z-20 pointer-events-auto">
       <div className="text-center">
         <button
           type="button"
@@ -446,25 +438,14 @@ const FullscreenCarousel = () => {
           <button
             type="button"
             onClick={() => handleRegisterClick(index)}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+            className="relative z-30 pointer-events-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
           >
             🚀 Register Now
           </button>
-
-          {/* <button
-            type="button"
-            onClick={() => handleEventTitleClick(index)}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 border border-white/20 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
-            📖 View Details
-          </button> */}
         </div>
 
         <div className="mt-4 text-white/70 text-xs">
           <p>📍 VIT Bhopal University</p>
-          {/* <p className="mt-1 text-white/50">
-            Click the event title or "View Details" to see full schedule
-          </p> */}
         </div>
       </div>
     </div>
@@ -475,7 +456,7 @@ const FullscreenCarousel = () => {
       {/* Events Section */}
       <div
         id="events-section"
-        className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4"
       >
         {/* Header Section */}
         <div className="text-center mb-4 md:mb-8 w-full max-w-4xl mx-auto px-4">
@@ -483,7 +464,11 @@ const FullscreenCarousel = () => {
             UPCOMING EVENTS
           </h1>
           <div className="w-40 h-2 bg-yellow-400 mx-auto mb-4 rounded-full"></div>
-          <p className="text-xl text-blue-100 font-semibold">This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.</p>
+          <p className="text-xl text-blue-100 font-semibold">
+            This two-day event is designed to foster innovation, collaboration,
+            and intellectual engagement through a diverse range of activities
+            including competitions, speaker sessions, and entertainment.
+          </p>
         </div>
 
         {/* Event Cards */}
