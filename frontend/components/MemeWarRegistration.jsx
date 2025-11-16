@@ -8,7 +8,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 const MemeWarRegistration = () => {
   const eventTitle = "Meme War Championship";
-  const pricePricePerMeme = 149;
+  const pricePricePerMeme = 50;
   const bgImage = "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
 
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ const MemeWarRegistration = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const totalMemes = formData.memes.length;
-  const totalPrice = totalMemes * 149;
+  const totalPrice = totalMemes * 50;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -140,11 +140,11 @@ const MemeWarRegistration = () => {
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 text-center">
               <h3 className="text-xl font-bold text-gray-800 mb-4">Pay Per Meme — No Limit!</h3>
               <p className="text-3xl font-bold text-green-600 mb-2">Total: ₹{totalPrice}</p>
-              <p className="text-lg text-gray-700 mb-6">₹149 × {totalMemes} meme{totalMemes !== 1 ? 's' : ''}</p>
+              <p className="text-lg text-gray-700 mb-6">₹50 × {totalMemes} meme{totalMemes !== 1 ? 's' : ''}</p>
               <div className="flex justify-center mb-4">
                 <img src="/qr.jpg" alt="Payment QR" className="w-56 h-56 border-4 border-white rounded-2xl shadow-2xl" />
               </div>
-              <p className="text-sm text-gray-600">Upload as many memes as you want — each costs ₹149</p>
+              <p className="text-sm text-gray-600">Upload as many memes as you want — each costs ₹50</p>
             </div>
 
             {/* Payment Screenshot */}

@@ -8,7 +8,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 const HackathonRegistration = () => {
   const eventTitle = "National Hackathon 2025";
-  const basePrice = 499;
+  const basePrice = 80;
   const bgImage = "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
 
   const [teamName, setTeamName] = useState('');
@@ -188,7 +188,7 @@ const HackathonRegistration = () => {
               Total Amount: ₹{totalPrice}
             </p>
             <p className="text-lg text-gray-700 mb-6">
-              ₹499 × {totalMembers} member{totalMembers > 1 ? 's' : ''}
+              ₹80 × {totalMembers} member{totalMembers > 1 ? 's' : ''}
             </p>
             <img src="/qr.jpg" alt="QR" className="w-56 h-56 mx-auto border-4 border-white rounded-2xl shadow-2xl" />
           </div>
