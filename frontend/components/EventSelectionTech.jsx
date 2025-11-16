@@ -49,7 +49,7 @@ const EventSelectionEntertainment = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             Entertainment Events: Select Your Fun
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
             Unwind and showcase your talents in our entertainment lineup at S²-25 - StartUp Synergy. From gaming battles to cultural celebrations and comedy nights. Each event has its own dedicated registration.
           </p>
           <div className="w-24 h-1 bg-blue-500 mx-auto mt-6 rounded-full"></div>

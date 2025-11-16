@@ -483,7 +483,7 @@ const FullscreenCarousel = () => {
             UPCOMING EVENTS
           </h1>
           <div className="w-40 h-2 bg-yellow-400 mx-auto mb-4 rounded-full"></div>
-          <p className="text-xl text-blue-100 font-semibold">This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.</p>
+          <p className="text-blue-100 font-semibold">This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.</p>
         </div>
 
         {/* Event Cards */}
