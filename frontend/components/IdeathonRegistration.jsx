@@ -8,7 +8,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 const IdeathonRegistration = () => {
   const eventTitle = "Ideathon 2025";
-  const basePrice = 299;
+  const basePrice = 50;
   const bgImage = "https://images.unsplash.com/photo-1559136555-9303b3202038?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
 
   const [teamName, setTeamName] = useState('');
@@ -180,7 +180,7 @@ const IdeathonRegistration = () => {
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 text-center">
               <h3 className="text-xl font-bold text-gray-800 mb-4">Scan QR Code for Payment</h3>
               <p className="text-3xl font-bold text-green-600 mb-2">Total: ₹{totalPrice}</p>
-              <p className="text-lg text-gray-700 mb-6">₹299 × {totalMembers} member{totalMembers > 1 ? 's' : ''}</p>
+              <p className="text-lg text-gray-700 mb-6">₹50 × {totalMembers} member{totalMembers > 1 ? 's' : ''}</p>
               <div className="flex justify-center mb-4">
                 <img src="/qr.jpg" alt="Payment QR" className="w-56 h-56 border-4 border-white rounded-2xl shadow-2xl" />
               </div>
