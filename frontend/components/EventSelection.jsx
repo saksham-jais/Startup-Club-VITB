@@ -9,7 +9,7 @@ const subEvents = [
     img: "https://images.unsplash.com/photo-1583391733959-9527843349ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "Media Studio",
     time: "10:00 AM - 5:00 PM",
-    registrationFee: "₹199 per person",
+    registrationFee: "Free",
     teamSize: "Individual",
     route: "/register-podcast"
   },
@@ -20,7 +20,7 @@ const subEvents = [
     img: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "AB1-307",
     // time: "Starts Dec 6, 10:00 AM",
-    // registrationFee: "₹499 per team",
+    registrationFee: "₹80 per person",
     teamSize: "Maximum 3 members",
     route: "/register-hackathon"
   },
@@ -31,7 +31,7 @@ const subEvents = [
     img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "Online/Offline Hybrid",
     // time: "7:00 PM onwards",
-    // registrationFee: "₹149 per person",
+    registrationFee: "₹50 per person",
     teamSize: "Individual",
     route: "/register-memewar"
   },
@@ -42,7 +42,7 @@ const subEvents = [
     img: "https://images.unsplash.com/photo-1559136555-9303b3202038?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "AB1 Coding Studio",
     // time: "10:00 AM - 4:00 PM",
-    // registrationFee: "₹299 per team",
+    registrationFee: "₹50 per person(in team)",
     // teamSize: "2-5 members",
     route: "/register-ideathon"
   }
