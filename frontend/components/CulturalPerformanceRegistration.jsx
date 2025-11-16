@@ -8,7 +8,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 const CulturalPerformanceRegistration = () => {
   const eventTitle = "Cultural Performance 2025";
-  const bgImage = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+  const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763290543/event-registrations/memewar/memes/WhatsApp_Image_2025-11-16_at_4.18.36_PM_1_e2eoc3.jpg";
 
   const [formData, setFormData] = useState({
     name: '',

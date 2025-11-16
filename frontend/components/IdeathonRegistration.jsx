@@ -9,7 +9,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 const IdeathonRegistration = () => {
   const eventTitle = "Ideathon 2025";
   const basePrice = 50;
-  const bgImage = "https://images.unsplash.com/photo-1559136555-9303b3202038?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+  const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763290346/event-registrations/memewar/memes/WhatsApp_Image_2025-11-16_at_4.18.36_PM_mnoncp.jpg";
 
   const [teamName, setTeamName] = useState('');
   const [leader, setLeader] = useState({ name: '', regNo: '', email: '' });
