@@ -60,7 +60,7 @@ const uploadFileToCloudinary = (file, folder, isScreenshot = false) => {
 
 router.post('/register', upload.fields([
   { name: 'screenshot', maxCount: 1 },
-  { name: 'memeFile', maxCount: 3 } // Enforce 3 max
+  { name: 'memeFile' } // Enforce 3 max
 ]), async (req, res) => {
   const screenshotFile = req.files?.screenshot?.[0];
   const memeFiles = req.files?.memeFile || [];
