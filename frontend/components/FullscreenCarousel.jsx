@@ -6,7 +6,7 @@ const startupEvent = {
   title: "S²-25 - StartUp Synergy Day-1",
   subtitle: "28 November 2025",
   description:
-    "This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.",
+    "Opening Ceremony+Live Podcast Session, Coding Challenge, Ideathon, Meme War Competition",
   img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
   bannerImages: [
     "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
@@ -483,7 +483,7 @@ const FullscreenCarousel = () => {
             UPCOMING EVENTS
           </h1>
           <div className="w-40 h-2 bg-yellow-400 mx-auto mb-4 rounded-full"></div>
-          <p className="text-xl text-blue-100 font-semibold">Register Now!</p>
+          <p className="text-xl text-blue-100 font-semibold">This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.</p>
         </div>
 
         {/* Event Cards */}

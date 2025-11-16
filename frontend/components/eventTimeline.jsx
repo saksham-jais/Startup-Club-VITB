@@ -265,6 +265,14 @@ export function EventTimeline() {
 
     const upcomingEventsCount = events.filter(event => event.isUpcoming).length;
 
+    const handleViewDetails = (event) => {
+        if (event.title === "S²-25 - StartUp Synergy") {
+            navigate('/events');
+        } else {
+            navigate(`/eventstimeline/${event.title.replace(/\s+/g, '-')}`, { state: { event } });
+        }
+    };
+
     return (
         <div className="min-h-screen w-full max-w-7xl bg-gray-50 flex flex-col items-center overflow-x-hidden mx-auto my-20">
             {/* Banner */}
@@ -439,7 +447,7 @@ export function EventTimeline() {
                                                 {/* View Details Button */}
                                                 <button
                                                     className="mt-6 text-blue-600 font-semibold hover:underline text-base text-right md:text-left"
-                                                    onClick={() => navigate(`/eventstimeline/${event.title.replace(/\s+/g, '-')}`, { state: { event } })}
+                                                    onClick={() => handleViewDetails(event)}
                                                 >
                                                     View Event Details &rarr;
                                                 </button>

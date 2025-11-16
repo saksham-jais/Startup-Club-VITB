@@ -4,11 +4,11 @@ import React from "react";
 const subEvents = [
   {
     id: 1,
-    title: "Podcast Recording Session",
+    title: "Live Podcast Session",
     description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "/Day 1-images/podcast.jpg",
-    venue: "Media Studio",
-    time: "10:00 AM - 5:00 PM",
+    venue: "AB2-Audi2",
+    time: "10:00 AM - 1:00 PM",
     registrationFee: "Free",
     teamSize: "Individual",
     route: "/register-podcast"
@@ -19,7 +19,7 @@ const subEvents = [
     description: "Decode logic → Build solutions",
     img: "/Day 1-images/reverse coding.jpg",
     venue: "AB1-307",
-    // time: "Starts Dec 6, 10:00 AM",
+    time: "1:00 PM - 5:00 PM",
     registrationFee: "₹80 per person",
     teamSize: "Maximum 3 members",
     route: "/register-hackathon"
@@ -30,7 +30,7 @@ const subEvents = [
     description: "Create the funniest, most relatable memes on given themes. Audience votes + judges decide the ultimate Meme Lord!",
     img: "/Day 1-images/meme war.jpg",
     venue: "Online/Offline Hybrid",
-    // time: "7:00 PM onwards",
+    time: "1:00 PM - 5:00 PM",
     registrationFee: "₹50 per person",
     teamSize: "Individual",
     route: "/register-memewar"
@@ -41,9 +41,9 @@ const subEvents = [
     description: "Solve real-world problems through innovation.",
     img: "/Day 1-images/ideathon.jpg",
     venue: "AB1 Coding Studio",
-    // time: "10:00 AM - 4:00 PM",
+    time: "1:00 PM - 5:00 PM",
     registrationFee: "₹50 per person(in team)",
-    // teamSize: "2-5 members",
+    teamSize: "1-6 members",
     route: "/register-ideathon"
   }
 ];

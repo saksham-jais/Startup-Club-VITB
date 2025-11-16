@@ -12,7 +12,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   /* ----------  EVENT DATA  ---------- */
   const [eventData, setEventData] = useState({
     title: title,
-    bgImage: 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763290376/event-registrations/memewar/payment/standup_a1zlnz.jpg',
+    bgImage: 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763294521/event-registrations/esports/oeklpqyl7di0nvqsteck.webp',
   });
 
   /* ----------  SEATING FLAG  ---------- */
