@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// const API_BASE = 'http://localhost:5000'||'https://startup-club-dczt.onrender.com';
-const API_BASE = 'https://startup-club-dczt.onrender.com';
+const API_BASE = 'http://localhost:5000'||'https://startup-club-dczt.onrender.com';
+// const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 const HackathonRegistration = () => {
   const eventTitle = "National Hackathon 2025";
   const basePrice = 80;
-  const bgImage = "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
+  const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763290379/event-registrations/memewar/memes/WhatsApp_Image_2025-11-16_at_4.18.35_PM_griimo.jpg";
 
   const [teamName, setTeamName] = useState('');
   const [leader, setLeader] = useState({ name: '', regNo: '', email: '' });
