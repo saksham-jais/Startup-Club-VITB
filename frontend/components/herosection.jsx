@@ -125,7 +125,7 @@ const HeroSection = () => {
                 <br />
                 Become Ventures.
               </h1>
-              <p className="lg:text-xl text-gray-600 mt-6 max-w-lg">
+              <p className="text-gray-600 mt-6 max-w-lg">
                 Welcome to the StartUp Club, your campus launchpad for innovation and
                 entrepreneurship. We are a community of creators, builders, and
                 dreamers dedicated to turning bold ideas into real-world impact.
