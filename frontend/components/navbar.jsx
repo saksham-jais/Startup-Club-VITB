@@ -8,13 +8,16 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleSignup = () => {
-    // Scroll to the events section instead of navigating to registration
+    // Scroll to the events section with offset to show partial view of both sections
     const eventsSection = document.getElementById('events-section');
     if (eventsSection) {
-      eventsSection.scrollIntoView({ behavior: 'smooth' });
+      const sectionHeight = eventsSection.clientHeight;
+      const offset = sectionHeight * 0.3; // Adjust this value (0.3 = 30% scrolled down) to control visibility
+      const targetPosition = eventsSection.offsetTop + offset;
+      window.scrollTo({ top: targetPosition, behavior: 'smooth' });
     } else {
       // Fallback: navigate to home if events section not found
-      navigate('/events');
+      navigate('/');
     }
     closeMobileMenu();
   };
@@ -69,7 +72,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 md:space-x-4">
             <button
               onClick={handleSignup}
-              className="relative px-4 py-2 md:px-6 md:py-3 bg-blue-400 text-white no-underline text-sm md:text-[16px] font-semibold transition-all duration-300 ease-in-out overflow-hidden rounded-md md:rounded-lg shadow-md hover:shadow-lg before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-[rgba(96,165,250,0.3)] before:to-[rgba(96,165,250,0.3)] before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:[text-shadow:_0_0_5px_rgba(255,255,255,0.5)] hover:bg-blue-500 active:scale-95 active:shadow-inner"
+              className="px-4 py-2 md:px-6 md:py-3 bg-blue-400 text-white text-sm md:text-[16px] font-semibold transition-colors duration-300 rounded-md md:rounded-lg shadow-md hover:shadow-lg hover:bg-blue-500 active:scale-95 active:shadow-inner"
             >
               Register Now
             </button>
@@ -119,7 +122,7 @@ const Navbar = () => {
             <Link
               to="/"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               Home
             </Link>
@@ -130,7 +133,7 @@ const Navbar = () => {
             <Link
               to="/teams"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               Team
             </Link>
@@ -141,7 +144,7 @@ const Navbar = () => {
             <Link
               to="/eventstimeline"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               Events Timeline
             </Link>
@@ -152,7 +155,7 @@ const Navbar = () => {
             <Link
               to="/ClubDetails"
               onClick={closeMobileMenu}
-              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600 hover:[text-shadow:_0_0_5px_rgba(96,165,250,0.2)]"
+              className="block py-3 text-left text-slate-800 no-underline text-[16px] font-medium transition-colors duration-300 hover:text-blue-600"
             >
               About Us
             </Link>
