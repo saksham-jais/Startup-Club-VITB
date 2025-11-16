@@ -13,17 +13,17 @@ const subEvents = [
     teamSize: "Individual",
     route: "/register-podcast"
   },
-  {
-    id: 2,
-    title: "Reverse Coding",
-    description: "Decode logic → Build solutions",
-    img: "/Day 1-images/reverse coding.jpg",
-    venue: "AB1-307",
-    time: "1:00 PM - 5:00 PM",
-    registrationFee: "₹80 per person",
-    teamSize: "Maximum 3 members",
-    route: "/register-hackathon"
-  },
+  // {
+  //   id: 2,
+  //   title: "Reverse Coding",
+  //   description: "Decode logic → Build solutions",
+  //   img: "/Day 1-images/reverse coding.jpg",
+  //   venue: "AB1-307",
+  //   time: "1:00 PM - 5:00 PM",
+  //   registrationFee: "₹80 per person",
+  //   teamSize: "Maximum 3 members",
+  //   route: "/register-hackathon"
+  // },
   {
     id: 3,
     title: "Meme War Championship",
