@@ -12,7 +12,7 @@ const HackathonRegistration = () => {
   const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763290379/event-registrations/memewar/memes/WhatsApp_Image_2025-11-16_at_4.18.35_PM_griimo.jpg";
 
   const [teamName, setTeamName] = useState('');
-  const [leader, setLeader] = useState({ name: '', regNo: '', email: '' });
+  const [leader, setLeader] = useState({ name: '', regNo: '', email: '', phone: '' });
   const [utrId, setUtrId] = useState('');
   const [screenshot, setScreenshot] = useState(null);
   const [extraMembers, setExtraMembers] = useState([]); // Dynamic members
@@ -46,6 +46,7 @@ const HackathonRegistration = () => {
     if (!leader.name.trim()) return toast.error('Leader name is required');
     if (!leader.regNo.trim()) return toast.error('Leader registration number is required');
     if (!leader.email.trim()) return toast.error('Leader email is required');
+    if (!leader.phone.trim()) return toast.error('Leader phone is required');
     if (!utrId.trim()) return toast.error('UTR ID is required');
     if (!screenshot) return toast.error('Payment screenshot is required');
 
@@ -65,6 +66,7 @@ const HackathonRegistration = () => {
     formData.append('leaderName', leader.name.trim());
     formData.append('leaderRegNo', leader.regNo.trim());
     formData.append('email', leader.email.trim());
+    formData.append('phone', leader.phone.trim());
     formData.append('utrId', utrId.trim());
     formData.append('screenshot', screenshot);
     formData.append('members', JSON.stringify(extraMembers.map(m => ({
@@ -85,7 +87,7 @@ const HackathonRegistration = () => {
       
       // Reset
       setTeamName('');
-      setLeader({ name: '', regNo: '', email: '' });
+      setLeader({ name: '', regNo: '', email: '', phone: '' });
       setUtrId('');
       setScreenshot(null);
       setExtraMembers([]);
@@ -140,6 +142,7 @@ const HackathonRegistration = () => {
             <input placeholder="Team Leader Name *" value={leader.name} onChange={(e) => setLeader({ ...leader, name: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
             <input placeholder="Leader Registration No. *" value={leader.regNo} onChange={(e) => setLeader({ ...leader, regNo: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
             <input placeholder="Team Email *" value={leader.email} onChange={(e) => setLeader({ ...leader, email: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
+            <input placeholder="Leader Phone *" value={leader.phone} onChange={(e) => setLeader({ ...leader, phone: e.target.value })} className="px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
             <input placeholder="UTR ID *" value={utrId} onChange={(e) => setUtrId(e.target.value)} className="px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500" />
           </div>
 

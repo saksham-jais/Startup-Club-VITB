@@ -65,7 +65,7 @@ router.post('/register', (req, res, next) => {
       return res.status(500).json({ error: 'Cloudinary configuration error - check server logs.' });
     }
 
-    const { title, name, registrationNumber, email, utrId } = req.body;
+    const { title, name, registrationNumber, email, utrId, phone } = req.body;
     const screenshotFile = req.file;
 
     // Enhanced validation (NEW: Email regex; trim but preserve commas if needed)
@@ -101,6 +101,7 @@ router.post('/register', (req, res, next) => {
       name: trimmedName,
       registrationNumber: trimmedRegNo,
       email: trimmedEmail,
+      phone: phone?.trim(),
       utrId: trimmedUtrId,
       screenshotUrl: screenshotFile.path,
     };

@@ -6,6 +6,7 @@ const standupSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   registrationNumber: { type: String, unique: true, sparse: true },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  phone: { type: String, required: true, trim: true },
   utrId: { type: String, required: true, unique: true, trim: true },
   screenshotUrl: { type: String, required: true },
   seatRow: { type: String, uppercase: true, match: /^[A-Z]$/, sparse: true },
