@@ -219,11 +219,8 @@ const FullscreenCarousel = () => {
   }, [currentIndex]);
 
   const handleRegisterClick = (eventIndex) => {
-    if (eventIndex === 0) {
-      navigate("/event-selection"); // Day 1 – Startup Synergy
-    } else {
-      navigate("/event-selection-tech"); // Day 2 – Tech Fest
-    }
+    const path = eventIndex === 0 ? '/event-selection' : '/event-selection-tech';
+    window.open(path, '_blank');
   };
 
   const getEventDetails = (index) => {
