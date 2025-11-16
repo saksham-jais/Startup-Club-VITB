@@ -83,7 +83,7 @@ router.post('/register', upload.fields([
       return res.status(400).json({ error: 'Payment screenshot is required' });
     }
 
-    if (memeFiles.length < 1 || memeFiles.length > 3) {
+    if (memeFiles.length < 1) {
       return res.status(400).json({ error: '1–3 memes are required' });
     }
 
