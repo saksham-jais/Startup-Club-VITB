@@ -7,20 +7,20 @@ const subEvents = [
     title: "Esports Tournament",
     description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
     img: "/Day 2-images/e-sports.avif",
-    venue: "AB1 Labs",
-    time: "11:00 Am - 1:30 PM",
+    venue: "Lab Complex",
+    time: "11:00 Am - 1:00 PM",
     registrationFee: "₹149 per player",
-    // teamSize: "Individual",
+    teamSize: "Individual",
     route: "/register-esports"
   },
   {
     id: 2,
-    title: "Spoken-Poet Artist Session",
+    title: "Artist Performance",
     description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
     img: "/Day 2-images/standup.webp",
     venue: "AB1, Auditorium-1",
-    // time: "8:00 PM - 10:00 PM, Dec 8",
-    // registrationFee: "₹199 per person (payment proof required)",
+    time: "3:00 PM - 4:00 PM",
+    registrationFee: "₹399-₹699 per person (based on seat)",
     teamSize: "Individual",
     route: "/register-standup"
   },
@@ -30,9 +30,9 @@ const subEvents = [
     description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
     img: "/Day 2-images/dance.jpg",
     venue: "Cultural Hall",
-    time: "11:00 AM - 1:00 PM",
+    time: "1:00 PM - 2:00 PM",
     registrationFee: "Free for performers and audience",
-    // teamSize: "1-5 members",
+    // teamSize: "NA",
     route: "/register-cultural"
   }
 ];
@@ -73,7 +73,7 @@ const EventSelectionEntertainment = () => {
                   <p><span className="font-semibold">📍 Venue:</span> {subEvent.venue}</p>
                   <p><span className="font-semibold">⏰ Time:</span> {subEvent.time}</p>
                   <p><span className="font-semibold">💰 Fee:</span> {subEvent.registrationFee}</p>
-                  <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p>
+                  {/* <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p> */}
                 </div>
                 <button
                   onClick={() => handleRegisterClick(subEvent.route)}

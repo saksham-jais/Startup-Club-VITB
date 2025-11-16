@@ -8,13 +8,13 @@ const Navbar = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   const handleSignup = () => {
-    // Scroll to the events section
+    // Scroll to the events section instead of navigating to registration
     const eventsSection = document.getElementById('events-section');
     if (eventsSection) {
       eventsSection.scrollIntoView({ behavior: 'smooth' });
     } else {
       // Fallback: navigate to home if events section not found
-      navigate('/');
+      navigate('/events');
     }
     closeMobileMenu();
   };
@@ -34,7 +34,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 hover:text-blue-600"
               >
                 Home
               </Link>
@@ -42,7 +42,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/teams"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 hover:text-blue-600"
               >
                 Team
               </Link>
@@ -50,7 +50,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/eventstimeline"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 hover:text-blue-600"
               >
                 Events Timeline
               </Link>
@@ -58,7 +58,7 @@ const Navbar = () => {
             <li className="mx-[35px]">
               <Link
                 to="/ClubDetails"
-                className="relative text-slate-800 no-underline text-[18px] transition-all duration-300 ease-in-out overflow-hidden before:content-[''] before:absolute before:inset-0 before:w-full before:h-full before:bg-gradient-to-r before:from-transparent before:via-[rgba(96,165,250,0.1)] before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-[600ms] hover:before:translate-x-full hover:text-blue-600 hover:[text-shadow:_0_0_10px_rgba(96,165,250,0.3)]"
+                className="text-slate-800 no-underline text-[18px] transition-colors duration-300 hover:text-blue-600"
               >
                 About Us
               </Link>
