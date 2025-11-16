@@ -1,6 +1,6 @@
-// routes/admin.js
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';  // Added: Import bcrypt (install with npm i bcryptjs)
 import CulturalPerformanceRegistration from '../models/CulturalPerformanceRegistration.js';
 import EsportsRegistration from '../models/EsportsRegistration.js';
 import HackathonRegistration from '../models/HackathonRegistration.js';
@@ -11,7 +11,7 @@ import StandupRegistration from '../models/StandupRegistration.js';
 
 const router = express.Router();
 
-// Middleware for authentication
+// Middleware for authentication (used for /all)
 const authenticate = (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -19,7 +19,7 @@ const authenticate = (req, res, next) => {
       return res.status(401).json({ error: 'Access denied. No token provided.' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret'); // Use env JWT_SECRET
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
     req.user = decoded;
     next();
   } catch (error) {
@@ -28,7 +28,7 @@ const authenticate = (req, res, next) => {
   }
 };
 
-// === ADMIN AUTH MIDDLEWARE (unchanged) ===
+// ADMIN AUTH MIDDLEWARE
 const adminAuth = async (req, res, next) => {
   if (req.path === '/login') {
     const { username, password } = req.body;
@@ -44,11 +44,16 @@ const adminAuth = async (req, res, next) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
+  // For protected routes (non-login)
   const token = req.header('Authorization')?.replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'No token' });
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });  // Added: Role check
+    }
+    req.user = decoded;  // Attach user for downstream use
     next();
   } catch (err) {
     res.status(401).json({ error: 'Invalid token' });
@@ -134,7 +139,7 @@ router.get('/all', authenticate, async (req, res) => {
   }
 });
 
-// === ADMIN ROUTES ===
+// ADMIN ROUTES
 router.post('/login', adminAuth);
 
 export default router;
