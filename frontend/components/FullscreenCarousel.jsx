@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const startupEvent = {
-  title: "S²-25 - StartUp Synergy",
-  subtitle: "29 - 30 November 2025",
+  title: "S²-25 - StartUp Synergy Day-1",
+  subtitle: "28 November 2025",
   description: "This two-day event is designed to foster innovation, collaboration, and intellectual engagement through a diverse range of activities including competitions, speaker sessions, and entertainment.",
   img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
   bannerImages: [
@@ -82,9 +82,9 @@ const startupEvent = {
 };
 
 const techFestEvent = {
-  title: "Tech Fest 2025",
-  subtitle: "15 - 17 December 2025",
-  description: "Annual tech fest featuring workshops, hackathons, tech talks, and exciting competitions to showcase innovation and creativity.",
+  title: "S²-25 - StartUp Synergy Day-2",
+  subtitle: "29 December 2025",
+  description: "Featuring E-Sports, Cultural Performances, and Artists Performance.",
   img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
   bannerImages: [
     "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
