@@ -5,23 +5,23 @@ const subEvents = [
   {
     id: 1,
     title: "Podcast Recording Session",
-    description: "Join a live podcast recording with top speakers and get a chance to ask questions and interact in real-time.",
+    description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "https://images.unsplash.com/photo-1583391733959-9527843349ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "Media Studio",
-    time: "4:00 PM - 6:00 PM",
+    time: "10:00 AM - 5:00 PM",
     registrationFee: "₹199 per person",
     teamSize: "Individual",
     route: "/register-podcast"
   },
   {
     id: 2,
-    title: "National Hackathon 2025",
-    description: "48-hour coding challenge with real-world problems. Build, innovate, and compete for cash prizes and internships.",
+    title: "Reverse Coding",
+    description: "Decode logic → Build solutions",
     img: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    venue: "AB1 Labs",
-    time: "Starts Dec 6, 10:00 AM",
-    registrationFee: "₹499 per team",
-    teamSize: "2-4 members",
+    venue: "AB1-307",
+    // time: "Starts Dec 6, 10:00 AM",
+    // registrationFee: "₹499 per team",
+    teamSize: "Maximum 3 members",
     route: "/register-hackathon"
   },
   {
@@ -29,21 +29,21 @@ const subEvents = [
     title: "Meme War Championship",
     description: "Create the funniest, most relatable memes on given themes. Audience votes + judges decide the ultimate Meme Lord!",
     img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    venue: "Main Auditorium",
-    time: "7:00 PM onwards",
-    registrationFee: "₹149 per person",
+    venue: "Online/Offline Hybrid",
+    // time: "7:00 PM onwards",
+    // registrationFee: "₹149 per person",
     teamSize: "Individual",
     route: "/register-memewar"
   },
   {
     id: 4,
     title: "Ideathon 2025",
-    description: "Pitch your startup or social impact idea to investors and mentors. Top teams get funding and incubation support.",
+    description: "Solve real-world problems through innovation.",
     img: "https://images.unsplash.com/photo-1559136555-9303b3202038?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    venue: "Innovation Hub",
-    time: "10:00 AM - 4:00 PM",
-    registrationFee: "₹299 per team",
-    teamSize: "2-5 members",
+    venue: "AB1 Coding Studio",
+    // time: "10:00 AM - 4:00 PM",
+    // registrationFee: "₹299 per team",
+    // teamSize: "2-5 members",
     route: "/register-ideathon"
   }
 ];

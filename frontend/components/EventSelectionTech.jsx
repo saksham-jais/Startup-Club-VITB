@@ -7,20 +7,20 @@ const subEvents = [
     title: "Esports Tournament",
     description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
     img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    venue: "Gaming Arena",
-    time: "6:00 PM - 10:00 PM, Dec 7",
-    registrationFee: "₹299 per player",
-    teamSize: "Individual",
+    venue: "AB1 Labs",
+    time: "11:00 Am - 1:30 PM",
+    // registrationFee: "₹299 per player",
+    // teamSize: "Individual",
     route: "/register-esports"
   },
   {
     id: 2,
-    title: "Comedy Standup Night",
-    description: "Enjoy uproarious standup comedy from talented performers. Secure your seat for an evening of non-stop laughter.",
+    title: "Spoken-Poet Artist Session",
+    description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
     img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    venue: "Main Auditorium",
-    time: "8:00 PM - 10:00 PM, Dec 8",
-    registrationFee: "₹199 per person (payment proof required)",
+    venue: "AB1, Auditorium-1",
+    // time: "8:00 PM - 10:00 PM, Dec 8",
+    // registrationFee: "₹199 per person (payment proof required)",
     teamSize: "Individual",
     route: "/register-standup"
   },
@@ -30,9 +30,9 @@ const subEvents = [
     description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
     img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "Cultural Hall",
-    time: "2:00 PM - 6:00 PM, Dec 9",
+    time: "11:00 AM - 1:00 PM",
     registrationFee: "Free for performers",
-    teamSize: "1-5 members",
+    // teamSize: "1-5 members",
     route: "/register-cultural"
   }
 ];
