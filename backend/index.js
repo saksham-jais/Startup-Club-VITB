@@ -32,7 +32,8 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'https://startup-club-vitb.vercel.app',
-    'https://startup-club-vitbhopal.vercel.app'
+    'https://startup-club-vitbhopal.vercel.app',
+    'https://www.startupclubvitb.in'
   ],
   credentials: true,
 }));
