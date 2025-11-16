@@ -23,6 +23,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     name: '',
     registrationNumber: '',
     email: '',
+    phone: '',
     utrId: '',
     screenshot: null,
   });
@@ -196,7 +197,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   };
 
   const handleSubmit = async () => {
-    const requiredFieldsCheck = ['name', 'email', 'utrId', 'screenshot'].filter(field => !formData[field]);
+    const requiredFieldsCheck = ['name', 'email', 'phone', 'utrId', 'screenshot'].filter(field => !formData[field].trim());
     let missing = requiredFieldsCheck.length > 0 ? requiredFieldsCheck : [];
     if (hasSeating && !selectedSeat) {
       missing.push('seat selection');
@@ -217,6 +218,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     fd.append('name', formData.name.trim());
     fd.append('registrationNumber', formData.registrationNumber.trim() || null);
     fd.append('email', formData.email.trim().toLowerCase());
+    fd.append('phone', formData.phone.trim());
     fd.append('utrId', formData.utrId.trim());
     fd.append('screenshot', formData.screenshot);
     if (hasSeating && selectedSeat) {
@@ -246,6 +248,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
         name: '',
         registrationNumber: '',
         email: '',
+        phone: '',
         utrId: '',
         screenshot: null,
       });
@@ -529,6 +532,19 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                   placeholder="your.email@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-base font-semibold text-gray-700 mb-2">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                  placeholder="e.g. +91 9876543210"
                 />
               </div>
               <div>

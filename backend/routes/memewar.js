@@ -61,22 +61,23 @@ const uploadFileToCloudinary = (file, folder, isScreenshot = false) => {
 
 router.post('/register', upload.fields([
   { name: 'screenshot', maxCount: 1 },
-  { name: 'memeFile', maxCount: 3 } // FIX: Enforce max 3
+  { name: 'memeFile' }
 ]), async (req, res) => {
   const screenshotFile = req.files?.screenshot?.[0];
   const memeFiles = req.files?.memeFile || [];
 
   try {
-    const { title, name, registrationNumber, email, utrId } = req.body;
+    const { title, name, registrationNumber, email, utrId, phone } = req.body;
 
     // Enhanced trim (FIX: Preserve internal commas; only strip leading/trailing)
     const trimmedName = (name || '').trim().replace(/^,+|,+$/g, ''); // Remove only leading/trailing commas
     const trimmedRegNo = (registrationNumber || '').trim().toUpperCase().replace(/^,+|,+$/g, '');
     const trimmedEmail = (email || '').trim().toLowerCase().replace(/^,+|,+$/g, '');
     const trimmedUtrId = (utrId || '').trim().replace(/^,+|,+$/g, '');
+    const trimmedPhone = (phone || '').trim();
 
     // Early validation (UNCHANGED, but add email regex)
-    if (!title?.trim() || !trimmedName || !trimmedRegNo || !trimmedEmail || !trimmedUtrId) {
+    if (!title?.trim() || !trimmedName || !trimmedRegNo || !trimmedEmail || !trimmedUtrId || !trimmedPhone) {
       return res.status(400).json({ error: 'All required fields must be filled' });
     }
 
@@ -84,8 +85,8 @@ router.post('/register', upload.fields([
       return res.status(400).json({ error: 'Payment screenshot is required' });
     }
 
-    if (memeFiles.length < 1 || memeFiles.length > 3) { // FIX: Enforce 1-3
-      return res.status(400).json({ error: '1–3 memes are required' });
+    if (memeFiles.length < 1) {
+      return res.status(400).json({ error: 'At least 1 meme is required' });
     }
 
     // NEW: Email regex
@@ -155,6 +156,7 @@ router.post('/register', upload.fields([
       name: trimmedName,
       registrationNumber: trimmedRegNo,
       email: trimmedEmail,
+      phone: trimmedPhone,
       utrId: trimmedUtrId,
       screenshotUrl,
       screenshotPublicId,

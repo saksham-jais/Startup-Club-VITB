@@ -11,13 +11,14 @@ const memeWarSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   registrationNumber: { type: String, required: true, unique: true, trim: true, uppercase: true },
   email: { type: String, required: true, unique: true, lowercase: true, trim: true, match: [/^\S+@\S+\.\S+$/] },
+  phone: { type: String, required: true, trim: true },
   utrId: { type: String, required: true, unique: true, trim: true },
   screenshotUrl: { type: String, required: true },
   screenshotPublicId: String,
   memes: {
     type: [memeSchema],
     required: true,
-    validate: [arr => arr.length >= 1 && arr.length <= 3, '1–3 memes required']
+    validate: [arr => arr.length >= 1, 'At least 1 meme required']
   },
   createdAt: { type: Date, default: Date.now }
 }, { timestamps: true, collection: 'memewar_registrations' });

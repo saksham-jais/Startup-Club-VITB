@@ -43,7 +43,7 @@ router.get('/booked/:title', async (req, res) => {
 // POST: Submit registration
 router.post('/register', upload.single('screenshot'), async (req, res) => {
   try {
-    const { title, name, registrationNumber, email, utrId, seatRow, seatColumn } = req.body;
+    const { title, name, registrationNumber, email, utrId, seatRow, seatColumn, phone } = req.body;
     const screenshotFile = req.file;
 
     if (!title || !name?.trim() || !email?.trim() || !utrId?.trim() || !screenshotFile) {
@@ -51,11 +51,18 @@ router.post('/register', upload.single('screenshot'), async (req, res) => {
       return res.status(400).json({ error: 'All required fields + screenshot needed' });
     }
 
+    // Email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim().toLowerCase())) {
+      if (screenshotFile) await cloudinary.uploader.destroy(screenshotFile.public_id).catch(() => {});
+      return res.status(400).json({ error: 'Valid email is required' });
+    }
+
     const data = {
       title: title.trim(),
       name: name.trim(),
       registrationNumber: registrationNumber?.trim() || null,
       email: email.trim().toLowerCase(),
+      phone: phone?.trim(),
       utrId: utrId.trim(),
       screenshotUrl: screenshotFile.path,
     };

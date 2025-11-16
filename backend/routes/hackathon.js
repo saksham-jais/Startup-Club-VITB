@@ -41,13 +41,14 @@ router.post('/register', (req, res, next) => {
 }, async (req, res) => { // Route handler now only runs post-upload
   try {
     // Parse form fields (multer populates req.body)
-    const { title, teamName, leaderName, leaderRegNo, email, utrId, members: membersStr } = req.body;
+    const { title, teamName, leaderName, leaderRegNo, email, utrId, phone, members: membersStr } = req.body;
 
     // Reconstruct leader object
     const leader = {
       name: leaderName?.trim(),
       registrationNumber: leaderRegNo?.trim(),
       email: email?.toLowerCase().trim(),
+      phone: phone?.trim(),
     };
 
     // Parse members JSON string
