@@ -10,7 +10,6 @@ const subEvents = [
     venue: "AB2-Audi2",
     time: "10:00 AM - 1:00 PM",
     registrationFee: "Free",
-    teamSize: "Individual",
     route: "/register-podcast"
   },
   {
@@ -32,7 +31,6 @@ const subEvents = [
     venue: "Online/Offline Hybrid",
     time: "1:00 PM - 5:00 PM",
     registrationFee: "₹50 per person",
-    teamSize: "Individual",
     route: "/register-memewar"
   },
   {
@@ -88,7 +86,9 @@ const EventSelection = () => {
                   <p><span className="font-semibold">Venue:</span> {subEvent.venue}</p>
                   <p><span className="font-semibold">Time:</span> {subEvent.time}</p>
                   <p><span className="font-semibold">Fee:</span> {subEvent.registrationFee}</p>
-                  <p><span className="font-semibold">Team Size:</span> {subEvent.teamSize}</p>
+                  {subEvent.teamSize && (
+                    <p><span className="font-semibold">Team Size:</span> {subEvent.teamSize}</p>
+                  )}
                 </div>
 
                 {/* Push button to bottom so all align horizontally */}
