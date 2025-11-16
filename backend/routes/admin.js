@@ -28,6 +28,33 @@ const authenticate = (req, res, next) => {
   }
 };
 
+// === ADMIN AUTH MIDDLEWARE (unchanged) ===
+const adminAuth = async (req, res, next) => {
+  if (req.path === '/login') {
+    const { username, password } = req.body;
+    if (!username || !password) return res.status(400).json({ error: 'Credentials required' });
+
+    const match = username === process.env.ADMIN_USERNAME &&
+                  await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
+
+    if (match) {
+      const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '2h' });
+      return res.json({ message: 'Login successful', token });
+    }
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'No token' });
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    next();
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
 // GET /admin/all - Fetch all registrations with normalization
 router.get('/all', authenticate, async (req, res) => {
   try {
