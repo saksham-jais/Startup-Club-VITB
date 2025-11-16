@@ -27,6 +27,16 @@ function AdminDashboard() {
     { value: 'ideathon', label: 'Ideathon' }
   ];
 
+  const excludedColumns = {
+    cultural: ['UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes'],
+    podcast: ['UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes'],
+    esports: ['UTR ID', 'Team Name', 'Members', 'Seat', 'Submission', 'Memes'],
+    memewar: ['Team Name', 'Members', 'Seat', 'Submission'],
+    standup: ['Team Name', 'Members', 'Submission'],
+    hackathon: ['Seat', 'Submission', 'Memes'],
+    ideathon: ['Seat', 'Memes']
+  };
+
   const fetchRegistrations = async () => {
     const token = localStorage.getItem('adminToken');
     if (!token) { 
@@ -38,7 +48,7 @@ function AdminDashboard() {
     setLoading(true);
     try {
       const { data } = await axios.get(
-        'https://startup-club-dczt.onrender.com/admin/all',
+        'http://localhost:5000/admin/all',
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setRegistrations(data.data || []);
@@ -89,6 +99,7 @@ function AdminDashboard() {
         return (
           (r.name || '').toLowerCase().includes(s) ||
           (r.email || '').toLowerCase().includes(s) ||
+          (r.phone || r.leader?.phone || '').toLowerCase().includes(s) ||
           (r.registrationNumber || '').toLowerCase().includes(s) ||
           (r.utrId || '').toLowerCase().includes(s) ||
           (r.seat || '').toLowerCase().includes(s) ||
@@ -101,32 +112,78 @@ function AdminDashboard() {
     return filteredRegs;
   }, [registrations, searchTerm, eventFilter]);
 
-  const downloadExcel = () => {
-    const data = filtered.map(r => {
-      const row = {
-        ID: r._id,
-        Type: r.type?.toUpperCase(),
-        Title: r.title,
-        Name: r.name || r.leader?.name || 'N/A',
-        Email: r.email || r.leader?.email || 'N/A',
-        'Reg No': r.registrationNumber || r.leader?.registrationNumber || 'N/A',
-        'UTR ID': r.utrId || 'N/A',
-        'Team Name': r.teamName || 'N/A',
-        'Members': r.members || 'N/A',
-        Seat: r.seat || 'N/A',
-        'Screenshot': r.screenshotUrl || 'N/A',
-        'Submission': r.submissionUrl || 'N/A',
-        'Memes': r.memes ? JSON.stringify(r.memes.map(m => ({ url: m.url, format: m.format }))) : 'N/A',
-        'Created': new Date(r.createdAt || r.registeredAt || Date.now()).toLocaleString(),
-      };
-      return row;
-    });
+  const buildRow = (r, excludes) => {
+    const allFields = {
+      ID: r._id,
+      Type: r.type?.toUpperCase(),
+      Title: r.title,
+      Name: r.name || r.leader?.name || 'N/A',
+      Email: r.email || r.leader?.email || 'N/A',
+      Phone: r.phone || r.leader?.phone || 'N/A',
+      'Reg No': r.registrationNumber || r.leader?.registrationNumber || 'N/A',
+      'UTR ID': r.utrId || 'N/A',
+      'Team Name': r.teamName || 'N/A',
+      'Members': r.members || 'N/A',
+      Seat: r.seat || 'N/A',
+      'Screenshot': r.screenshotUrl || 'N/A',
+      'Submission': r.submissionUrl || 'N/A',
+      'Memes': r.memes ? JSON.stringify(r.memes.map(m => ({ url: m.url, format: m.format }))) : 'N/A',
+      'Created': new Date(r.createdAt || r.registeredAt || Date.now()).toLocaleString(),
+    };
 
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'All Registrations');
-    XLSX.writeFile(wb, `all_regs_${new Date().toISOString().slice(0,10)}.xlsx`);
-    toast.success('Downloaded Excel');
+    const row = {};
+    Object.entries(allFields).forEach(([key, value]) => {
+      if (!excludes.includes(key)) {
+        row[key] = value;
+      }
+    });
+    return row;
+  };
+
+  const downloadExcel = () => {
+    const date = new Date().toISOString().slice(0, 10);
+
+    if (eventFilter !== 'all') {
+      // Single file for specific event
+      const excludes = excludedColumns[eventFilter] || [];
+      const data = filtered.map(r => buildRow(r, excludes));
+
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(data);
+      const sheetName = `${eventFilter.toUpperCase()} Registrations`;
+      XLSX.utils.book_append_sheet(wb, ws, sheetName);
+      XLSX.writeFile(wb, `${eventFilter}_regs_${date}.xlsx`);
+      toast.success('Downloaded Excel');
+    } else {
+      // Separate files for all events (grouped by type)
+      const grouped = filtered.reduce((acc, r) => {
+        const type = r.type?.toUpperCase() || 'UNKNOWN';
+        if (!acc[type]) acc[type] = [];
+        acc[type].push(r);
+        return acc;
+      }, {});
+
+      let downloadedCount = 0;
+      Object.entries(grouped).forEach(([type, groupData]) => {
+        if (groupData.length > 0) {
+          const lowerType = type.toLowerCase();
+          const excludes = excludedColumns[lowerType] || [];
+          const data = groupData.map(r => buildRow(r, excludes));
+
+          const wb = XLSX.utils.book_new();
+          const ws = XLSX.utils.json_to_sheet(data);
+          XLSX.utils.book_append_sheet(wb, ws, `${type} Registrations`);
+          XLSX.writeFile(wb, `${lowerType}_regs_${date}.xlsx`);
+          downloadedCount++;
+        }
+      });
+
+      if (downloadedCount > 0) {
+        toast.success(`Downloaded ${downloadedCount} Excel files`);
+      } else {
+        toast.warn('No data to download');
+      }
+    }
   };
 
   const getSeatBadge = (r) => {
@@ -197,7 +254,7 @@ function AdminDashboard() {
             <div className="flex items-center gap-2">
               <input 
                 type="text" 
-                placeholder="Name / Email / Seat / Reg No / UTR / Team..."
+                placeholder="Name / Email / Phone / Seat / Reg No / UTR / Team..."
                 value={searchTerm} 
                 onChange={e => setSearchTerm(e.target.value)}
                 className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -232,7 +289,7 @@ function AdminDashboard() {
               <table className="w-full text-left">
                 <thead className="bg-gray-100">
                   <tr>
-                    {['Type', 'Title', 'Name', 'Email', 'Reg No', 'UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes', 'Created'].map(h => (
+                    {['Type', 'Title', 'Name', 'Email', 'Phone', 'Reg No', 'UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes', 'Created'].map(h => (
                       <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">
                         {h}
                       </th>
@@ -253,6 +310,7 @@ function AdminDashboard() {
                         <td className="px-4 py-3 text-sm">{r.title}</td>
                         <td className="px-4 py-3 font-medium text-sm">{r.name}</td>
                         <td className="px-4 py-3 text-sm">{r.email}</td>
+                        <td className="px-4 py-3 text-sm">{r.phone || r.leader?.phone || 'N/A'}</td>
                         <td className="px-4 py-3 text-sm">{r.registrationNumber}</td>
                         <td className="px-4 py-3 text-sm">{r.utrId || 'N/A'}</td>
                         <td className="px-4 py-3 text-sm font-medium">{r.teamName || '-'}</td>

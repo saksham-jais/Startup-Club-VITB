@@ -13,7 +13,8 @@ const PodcastRegistration = () => {
   const [formData, setFormData] = useState({
     name: '', 
     registrationNumber: '', 
-    email: ''
+    email: '',
+    phone: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -23,7 +24,7 @@ const PodcastRegistration = () => {
   };
 
   const handleSubmit = async () => {
-    const missing = ['name', 'registrationNumber', 'email'].filter(f => !formData[f]);
+    const missing = ['name', 'registrationNumber', 'email', 'phone'].filter(f => !formData[f].trim());
     if (missing.length > 0) return toast.error("All fields are required");
     if (!formData.email.includes('@')) return toast.error("Invalid email");
 
@@ -38,6 +39,7 @@ const PodcastRegistration = () => {
           name: formData.name,
           registrationNumber: formData.registrationNumber,
           email: formData.email,
+          phone: formData.phone.trim()
         }),
       });
 
@@ -45,7 +47,7 @@ const PodcastRegistration = () => {
       if (!response.ok) throw new Error(data.error || "Submission failed");
 
       toast.success("Registered successfully for Podcast Recording Session!");
-      setFormData({ name: '', registrationNumber: '', email: '' });
+      setFormData({ name: '', registrationNumber: '', email: '', phone: '' });
     } catch (e) {
       toast.error(e.message || "Submission error");
     } finally {
@@ -83,6 +85,9 @@ const PodcastRegistration = () => {
             <div><input name="registrationNumber" value={formData.registrationNumber} onChange={handleInputChange} placeholder="Registration Number *" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" /></div>
             <div className="md:col-span-2">
               <input name="email" value={formData.email} onChange={handleInputChange} placeholder="Email Address *" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+            </div>
+            <div className="md:col-span-2">
+              <input name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Phone Number *" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
             </div>
           </div>
 

@@ -34,7 +34,7 @@ router.post('/register', upload.fields([
   const submissionFile = req.files?.submissionFile?.[0];
 
   try {
-    const { title, teamName, leaderName, leaderRegNo, email, utrId, members: membersStr } = req.body;
+    const { title, teamName, leaderName, leaderRegNo, email, utrId, phone, members: membersStr } = req.body;
 
     // Trim and normalize
     const trimmedTitle = title?.trim();
@@ -210,7 +210,8 @@ router.post('/register', upload.fields([
       leader: {
         name: trimmedLeaderName,
         registrationNumber: trimmedLeaderRegNo,
-        email: trimmedEmail
+        email: trimmedEmail,
+        phone: phone?.trim()
       },
       members: trimmedMembers,
       utrId: trimmedUtrId,

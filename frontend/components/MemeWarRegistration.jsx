@@ -15,6 +15,7 @@ const MemeWarRegistration = () => {
     name: '',
     registrationNumber: '',
     email: '',
+    phone: '',
     utrId: '',
     screenshot: null,
     memes: []
@@ -55,6 +56,7 @@ const MemeWarRegistration = () => {
     if (!formData.name.trim()) return toast.error("Name is required");
     if (!formData.registrationNumber.trim()) return toast.error("Registration number required");
     if (!formData.email.includes('@')) return toast.error("Valid email required");
+    if (!formData.phone.trim()) return toast.error("Phone is required");
     if (!formData.utrId.trim()) return toast.error("UTR ID required");
     if (!formData.screenshot) return toast.error("Payment screenshot required");
     if (totalMemes === 0) return toast.error("Upload at least 1 meme!");
@@ -66,6 +68,7 @@ const MemeWarRegistration = () => {
     fd.append('name', formData.name.trim());
     fd.append('registrationNumber', formData.registrationNumber.trim());
     fd.append('email', formData.email.trim());
+    fd.append('phone', formData.phone.trim());
     fd.append('utrId', formData.utrId.trim());
     fd.append('screenshot', formData.screenshot);
     formData.memes.forEach(meme => fd.append('memeFile', meme));
@@ -77,7 +80,7 @@ const MemeWarRegistration = () => {
 
       toast.success(`${totalMemes} memes submitted! Total: ₹${totalPrice}. You're in the war!`);
 
-      setFormData({ name: '', registrationNumber: '', email: '', utrId: '', screenshot: null, memes: [] });
+      setFormData({ name: '', registrationNumber: '', email: '', phone: '', utrId: '', screenshot: null, memes: [] });
       document.querySelectorAll('input[type="file"]').forEach(el => el.value = '');
 
     } catch (e) {
@@ -129,6 +132,10 @@ const MemeWarRegistration = () => {
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-2">Email Address <span className="text-red-500">*</span></label>
                 <input name="email" value={formData.email} onChange={handleInputChange} placeholder="your.email@example.com" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+              </div>
+              <div>
+                <label className="block text-base font-semibold text-gray-700 mb-2">Phone Number <span className="text-red-500">*</span></label>
+                <input name="phone" type="tel" value={formData.phone} onChange={handleInputChange} placeholder="e.g. +91 9876543210" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
               </div>
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-2">UTR ID <span className="text-red-500">*</span></label>

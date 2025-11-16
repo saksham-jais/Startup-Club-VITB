@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const { title, name, registrationNumber, email } = req.body;
+    const { title, name, registrationNumber, email, phone } = req.body;
 
     if (!title?.trim() || !name?.trim() || !registrationNumber?.trim() || !email?.trim()) {
       return res.status(400).json({ error: 'All fields are required' });
@@ -36,7 +36,8 @@ router.post('/register', async (req, res) => {
       title: title.trim(),
       name: name.trim(),
       registrationNumber: normalizedRegNo,
-      email: email.trim().toLowerCase()
+      email: email.trim().toLowerCase(),
+      phone: phone?.trim()
     });
 
     await registration.save();

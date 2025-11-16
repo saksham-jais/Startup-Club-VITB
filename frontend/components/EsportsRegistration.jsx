@@ -14,6 +14,7 @@ const EsportsRegistration = () => {
     name: '',
     registrationNumber: '',
     email: '',
+    phone: '',
     utrId: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +28,7 @@ const EsportsRegistration = () => {
     if (!formData.name.trim()) return toast.error("Name is required");
     if (!formData.registrationNumber.trim()) return toast.error("Registration number required");
     if (!formData.email.includes('@')) return toast.error("Valid email required");
+    if (!formData.phone.trim()) return toast.error("Phone is required");
     if (!formData.utrId.trim()) return toast.error("UTR ID required");
 
     const screenshotFile = document.getElementById('screenshot').files[0];
@@ -39,6 +41,7 @@ const EsportsRegistration = () => {
     formDataToSend.append('name', formData.name.trim());
     formDataToSend.append('registrationNumber', formData.registrationNumber.trim());
     formDataToSend.append('email', formData.email.trim());
+    formDataToSend.append('phone', formData.phone.trim());
     formDataToSend.append('utrId', formData.utrId.trim());
     formDataToSend.append('screenshot', screenshotFile);
 
@@ -52,7 +55,7 @@ const EsportsRegistration = () => {
       if (!res.ok) throw new Error(data.error || "Registration failed");
 
       toast.success("You're registered for Esports Championship 2025!");
-      setFormData({ name: '', registrationNumber: '', email: '', utrId: '' });
+      setFormData({ name: '', registrationNumber: '', email: '', phone: '', utrId: '' });
       document.getElementById('screenshot').value = '';
 
     } catch (e) {
@@ -117,6 +120,16 @@ const EsportsRegistration = () => {
                 value={formData.email} 
                 onChange={handleChange} 
                 placeholder="your.email@vitbhopal.ac.in" 
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition" 
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className="block text-base font-semibold text-gray-700 mb-2">Phone Number <span className="text-red-500">*</span></label>
+              <input 
+                name="phone" 
+                value={formData.phone} 
+                onChange={handleChange} 
+                placeholder="e.g. +91 9876543210" 
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition" 
               />
             </div>

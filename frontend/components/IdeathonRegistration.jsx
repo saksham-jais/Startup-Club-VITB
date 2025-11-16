@@ -12,7 +12,7 @@ const IdeathonRegistration = () => {
   const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763290346/event-registrations/memewar/memes/WhatsApp_Image_2025-11-16_at_4.18.36_PM_mnoncp.jpg";
 
   const [teamName, setTeamName] = useState('');
-  const [leader, setLeader] = useState({ name: '', regNo: '', email: '' });
+  const [leader, setLeader] = useState({ name: '', regNo: '', email: '', phone: '' });
   const [utrId, setUtrId] = useState('');
   const [screenshot, setScreenshot] = useState(null);
   const [submissionFile, setSubmissionFile] = useState(null);
@@ -47,6 +47,7 @@ const IdeathonRegistration = () => {
     if (!leader.name.trim()) return toast.error("Leader name is required");
     if (!leader.regNo.trim()) return toast.error("Leader registration number is required");
     if (!leader.email.trim() || !leader.email.includes('@')) return toast.error("Valid email is required");
+    if (!leader.phone.trim()) return toast.error("Leader phone is required");
     if (!utrId.trim()) return toast.error("UTR ID is required");
     if (!screenshot) return toast.error("Payment screenshot is required");
     if (!submissionFile) return toast.error("PPT/PDF submission is required");
@@ -67,6 +68,7 @@ const IdeathonRegistration = () => {
     fd.append('leaderName', leader.name.trim());
     fd.append('leaderRegNo', leader.regNo.trim());
     fd.append('email', leader.email.trim());
+    fd.append('phone', leader.phone.trim());
     fd.append('utrId', utrId.trim());
     fd.append('screenshot', screenshot);
     fd.append('submissionFile', submissionFile);
@@ -88,7 +90,7 @@ const IdeathonRegistration = () => {
       
       // Reset form
       setTeamName('');
-      setLeader({ name: '', regNo: '', email: '' });
+      setLeader({ name: '', regNo: '', email: '', phone: '' });
       setUtrId('');
       setScreenshot(null);
       setSubmissionFile(null);
@@ -150,6 +152,10 @@ const IdeathonRegistration = () => {
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-2">Team Email <span className="text-red-500">*</span></label>
                 <input type="email" value={leader.email} onChange={(e) => setLeader({ ...leader, email: e.target.value })} placeholder="team@example.com" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+              </div>
+              <div>
+                <label className="block text-base font-semibold text-gray-700 mb-2">Leader Phone <span className="text-red-500">*</span></label>
+                <input type="tel" value={leader.phone} onChange={(e) => setLeader({ ...leader, phone: e.target.value })} placeholder="e.g. +91 9876543210" className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
               </div>
               <div>
                 <label className="block text-base font-semibold text-gray-700 mb-2">UTR ID <span className="text-red-500">*</span></label>
