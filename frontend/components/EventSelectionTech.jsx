@@ -59,28 +59,36 @@ const EventSelectionEntertainment = () => {
           {subEvents.map((subEvent) => (
             <div
               key={subEvent.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 border border-gray-200"
+              className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition-all duration-300 border border-gray-200 flex flex-col h-full"
             >
               <img
                 src={subEvent.img}
                 alt={subEvent.title}
                 className="w-full h-48 object-cover"
               />
-              <div className="p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">{subEvent.title}</h2>
-                <p className="text-gray-600 mb-4 leading-relaxed">{subEvent.description}</p>
+              <div className="p-6 flex flex-col flex-1">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  {subEvent.title}
+                </h2>
+                <p className="text-gray-600 mb-4 leading-relaxed">
+                  {subEvent.description}
+                </p>
                 <div className="space-y-2 text-sm text-gray-500 mb-4">
                   <p><span className="font-semibold">📍 Venue:</span> {subEvent.venue}</p>
                   <p><span className="font-semibold">⏰ Time:</span> {subEvent.time}</p>
                   <p><span className="font-semibold">💰 Fee:</span> {subEvent.registrationFee}</p>
                   {/* <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p> */}
                 </div>
-                <button
-                  onClick={() => handleRegisterClick(subEvent.route)}
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-md"
-                >
-                  🚀 Register Now for {subEvent.title}
-                </button>
+
+                {/* Push button to bottom so all align horizontally */}
+                <div className="mt-auto">
+                  <button
+                    onClick={() => handleRegisterClick(subEvent.route)}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-md"
+                  >
+                    🚀 Register Now for {subEvent.title}
+                  </button>
+                </div>
               </div>
             </div>
           ))}
