@@ -82,7 +82,7 @@ const EsportsRegistration = () => {
           </div>
           <div className="flex justify-center -mt-8">
             <div className="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 px-8 py-3 rounded-full shadow-xl transform hover:scale-105 transition-transform z-10">
-              <span className="text-base font-bold text-white">₹299 • LIMITED SEATS</span>
+              <span className="text-base font-bold text-white">₹149 • LIMITED SEATS</span>
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ const EsportsRegistration = () => {
 
           <div className="bg-gradient-to-br from-red-50 to-orange-50 px-6 md:px-10 py-8 rounded-2xl mb-8">
             <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">🎮 Secure Your Gaming Spot!</h3>
-            <p className="text-center text-gray-600 mb-6">₹299 per player • Submit payment proof</p>
+            <p className="text-center text-gray-600 mb-6">₹149 per player • Submit payment proof</p>
           </div>
 
           <div className="bg-gradient-to-br from-emerald-50 to-green-50 px-6 md:px-10 py-8">
@@ -158,7 +158,7 @@ const EsportsRegistration = () => {
               disabled={isSubmitting}
               className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 rounded-xl transition-all transform hover:scale-[1.02] focus:ring-4 focus:ring-emerald-300 shadow-lg text-lg disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Registering...' : 'Register Now (₹299)'}
+              {isSubmitting ? 'Registering...' : 'Register Now (₹149)'}
             </button>
           </div>
         </div>

@@ -171,7 +171,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     if (frontRows.includes(row)) return 699;
     if (normalRows.includes(row)) return 549;
     if (backRows.includes(row)) return 399;
-    if (firstFloorRows.includes(row)) return 499;
+    if (firstFloorRows.includes(row)) return 549;
     return 0; // Fallback
   };
 
@@ -319,7 +319,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
           >
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 py-6">
               <h1 className="text-4xl md:text-6xl font-bold text-white text-center drop-shadow-2xl mb-4">
-                Stand-Up Comedy Registration
+                Spoken-Poet Artist Registration
               </h1>
               {eventData.description && (
                 <p className="text-lg md:text-2xl text-white text-center max-w-3xl drop-shadow-lg">
@@ -416,7 +416,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                       {/* FIRST FLOOR BLOCK */}
                       <div className="mb-10">
                         <div className="text-center font-bold text-xl text-orange-700 mb-4 bg-orange-50 py-2 rounded-lg">
-                          FIRST FLOOR ₹499
+                          FIRST FLOOR ₹549
                         </div>
                         <div className="flex justify-center">
                           <div>{firstFloorRows.map(renderRow)}</div>
