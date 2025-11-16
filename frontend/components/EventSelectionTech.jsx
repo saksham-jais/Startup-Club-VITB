@@ -9,7 +9,7 @@ const subEvents = [
     img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "AB1 Labs",
     time: "11:00 Am - 1:30 PM",
-    // registrationFee: "₹299 per player",
+    registrationFee: "₹149 per player",
     // teamSize: "Individual",
     route: "/register-esports"
   },
@@ -31,7 +31,7 @@ const subEvents = [
     img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     venue: "Cultural Hall",
     time: "11:00 AM - 1:00 PM",
-    registrationFee: "Free for performers",
+    registrationFee: "Free for performers and audience",
     // teamSize: "1-5 members",
     route: "/register-cultural"
   }
