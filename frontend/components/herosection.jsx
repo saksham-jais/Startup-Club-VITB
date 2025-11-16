@@ -159,44 +159,12 @@ const HeroSection = () => {
       </style>
 
       {/* Main Hero Section with proper spacing from navbar */}
-      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden pt-20">
+      <section className="relative w-full h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center overflow-hidden pt-20 pb-20">
         <div className="container mx-auto px-4 max-w-6xl relative">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            {/* Left side: Details with animation */}
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            {/* Image Slideshow - Full width on mobile, half on large screens */}
             <div
-              className={`md:w-1/2 mb-10 md:mb-0 ${
-                zoomOut ? "animate-zoom-out" : "opacity-0"
-              }`}
-            >
-              <h1 className="text-5xl md:text-6xl font-bold text-black leading-tight">
-                Where Ideas
-                <br />
-                Become Ventures.
-              </h1>
-              <p className="text-lg md:text-xl text-gray-600 mt-6 max-w-lg">
-                Welcome to the StartUp Club, your campus launchpad for innovation and entrepreneurship. 
-                We are a community of creators, builders, and dreamers dedicated to turning bold ideas 
-                into real-world impact.
-              </p>
-              <div className="mt-8 flex items-center space-x-4">
-                <button 
-                  onClick={goToAboutUs}
-                  className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-blue-500 hover:border-2 hover:border-blue-500 transition duration-300"
-                >
-                  Join Our Community
-                </button>
-                <button 
-                  onClick={goToEvents}
-                  className="text-blue-500 font-medium hover:underline px-6 py-3 border border-blue-500 rounded-full hover:bg-blue-50 transition duration-300"
-                >
-                  See Upcoming Events
-                </button>
-              </div>
-            </div>
-
-            {/* Right side: Single image slideshow */}
-            <div
-              className={`md:w-1/2 relative h-10 md:h-[24rem] ${
+              className={`w-full lg:w-1/2 relative h-[30vh] lg:h-[24rem] order-1 ${
                 zoomOut ? "animate-zoom-out" : "opacity-0"
               }`}
             >
@@ -210,6 +178,10 @@ const HeroSection = () => {
                     className={`absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl object-cover transition-opacity duration-1000 ${
                       index === currentImageIndex ? 'opacity-100 animate-fadeIn' : 'opacity-0'
                     }`}
+                    onError={(e) => {
+                      console.error('Image failed to load:', image.src);
+                      e.target.style.display = 'none';
+                    }}
                   />
                 ))}
               </div>
@@ -227,6 +199,38 @@ const HeroSection = () => {
                     }`}
                   />
                 ))}
+              </div>
+            </div>
+
+            {/* Left side: Details with animation - Full width on mobile, half on large screens */}
+            <div
+              className={`w-full lg:w-1/2 mb-6 lg:mb-0 order-2 lg:order-2 ${
+                zoomOut ? "animate-zoom-out" : "opacity-0"
+              }`}
+            >
+              <h1 className="text-5xl lg:text-6xl font-bold text-black leading-tight">
+                Where Ideas
+                <br />
+                Become Ventures.
+              </h1>
+              <p className="text-lg lg:text-xl text-gray-600 mt-6 max-w-lg">
+                Welcome to the StartUp Club, your campus launchpad for innovation and entrepreneurship. 
+                We are a community of creators, builders, and dreamers dedicated to turning bold ideas 
+                into real-world impact.
+              </p>
+              <div className="mt-8 flex items-center space-x-4">
+                <button 
+                  onClick={goToAboutUs}
+                  className="bg-blue-500 text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-blue-500 hover:border-2 hover:border-blue-500 transition duration-300"
+                >
+                  Join Our Community
+                </button>
+                <button 
+                  onClick={goToEvents}
+                  className="text-blue-500 font-medium hover:underline px-6 py-3 border border-blue-500 rounded-full hover:bg-blue-50 transition duration-300"
+                >
+                  See Upcoming Events
+                </button>
               </div>
             </div>
           </div>
