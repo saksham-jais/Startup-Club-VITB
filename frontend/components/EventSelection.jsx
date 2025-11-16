@@ -60,7 +60,7 @@ const EventSelection = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             Select Your Event
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
             Choose from our exciting lineup at S²-25 - StartUp Synergy. Each event has its own dedicated registration form.
           </p>
           <div className="w-24 h-1 bg-blue-500 mx-auto mt-6 rounded-full"></div>
