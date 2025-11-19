@@ -148,11 +148,11 @@ const HeroSection = () => {
           </div>
 
           {/* Bottom collaboration note (empty but kept for layout consistency) */}
-          <div
+          {/* <div
             className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-gray-500 text-sm ${
               zoomOut ? "animate-zoom-out" : "opacity-0"
             }`}
-          ></div>
+          ></div> */}
         </div>
       </section>
     </>
