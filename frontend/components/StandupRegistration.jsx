@@ -385,10 +385,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                       <span className="font-semibold">Bank:</span> INDIAN BANK, VIT, BHOPAL
                     </p>
                     <p className="text-sm md:text-md text-gray-700">
-                      <span className="font-semibold">IFSC Code:</span> IDIB000V143
+                      <span className="font-semibold">Account Number:</span> 8093736714
                     </p>
                     <p className="text-sm md:text-md text-gray-700">
-                      <span className="font-semibold">Account Number:</span> 8093736714
+                      <span className="font-semibold">IFSC Code:</span> IDIB000V143
                     </p>
                   </div>
                 </div>
