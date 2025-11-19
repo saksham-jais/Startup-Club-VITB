@@ -3,13 +3,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://nonphonetical-renae-tanked.ngrok-free.dev';
+const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev'||'https://startup-club-dczt.onrender.com';
 
 function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
   
   // --- RESPONSIVE BANNER URLS ---
-  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763540574/event-registrations/standup/spvcn3o6uepxxqdautpp.jpg';
+  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763540574/event-registrations/standup/spvcn3o6uepxxqdauptpp.jpg';
   const mobileBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg'; // Mobile-specific banner
 
   const [eventData] = useState({
@@ -33,7 +33,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [isLoading, setIsLoading] = useState(true);
 
   /* -------------------- ZOOM & PAN -------------------- */
-  const [zoom, setZoom] = useState(() => (window.innerWidth < 768 ? 0.4 : 0.6));
+  const [zoom, setZoom] = useState(1); // Initialize to 1 (neutral) temporarily
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -45,6 +45,9 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const maxZoom = 2.5;
 
   const seatMapRef = useRef(null);
+
+  // Helper to get reset zoom level
+  const getResetZoom = () => window.innerWidth < 768 ? 0.35 : 0.45;
 
   const getDistance = (touches) => {
     const [t1, t2] = touches;
@@ -104,7 +107,16 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   };
   const handleMouseUp = () => setIsDragging(false);
 
-  const resetView = () => { setZoom(window.innerWidth < 768 ? 0.35 : 0.45); setPanOffset({ x: 0, y: 0 }); };
+  const resetView = () => { 
+    const resetZoom = getResetZoom();
+    setZoom(resetZoom); 
+    setPanOffset({ x: 0, y: 0 }); 
+  };
+
+  // NEW: Ensure initial zoom and pan are set on mount (forces reset view on first load)
+  useEffect(() => {
+    resetView();
+  }, []); // Empty dependency array: runs once on mount
 
   // Attach wheel and touch event listeners with passive: false using useEffect
   useEffect(() => {
