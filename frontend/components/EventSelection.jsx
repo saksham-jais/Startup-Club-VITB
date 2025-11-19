@@ -42,7 +42,7 @@ const subEvents = [
     time: "1:00 PM - 5:00 PM",
     registrationFee: "₹50 per person(in team)",
     teamSize: "1-6 members",
-    route: "/register-ideathon"
+    route: "https://unstop.com/p/ideathon-vit-bhopal-university-vit-bhopal-1597709?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   }
 ];
 
