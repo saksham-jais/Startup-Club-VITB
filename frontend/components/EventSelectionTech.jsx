@@ -11,7 +11,7 @@ const subEvents = [
     time: "11:00 Am - 1:00 PM",
     registrationFee: "₹149 per player",
     teamSize: "Individual",
-    route: "/register-esports"
+    route: "https://unstop.com/o/G4Lir3y?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const subEvents = [
     time: "1:00 PM - 2:00 PM",
     registrationFee: "Free for performers and audience",
     // teamSize: "NA",
-    route: "/register-cultural"
+    route: "https://unstop.com/o/I02NZ6c?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   }
 ];
 
