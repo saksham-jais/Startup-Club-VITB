@@ -4,6 +4,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev'||'https://startup-club-dczt.onrender.com';
+
 function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -24,9 +26,11 @@ function AdminLogin() {
     }
 
     try {
-      const response = await axios.post('https://startup-club-dczt.onrender.com/admin/login', {
+      const response = await axios.post(`${API_BASE}/admin/login`, {
         username,
         password,
+      }, {
+        headers: { 'ngrok-skip-browser-warning': 'true' }
       });
       console.log('Login response:', response.data); // Debug
       const token = response.data.token;

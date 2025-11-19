@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as XLSX from 'xlsx';
 
+const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev'||'https://startup-club-dczt.onrender.com';
+
 function AdminDashboard() {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,8 +50,13 @@ function AdminDashboard() {
     setLoading(true);
     try {
       const { data } = await axios.get(
-        'http://localhost:5000/admin/all',
-        { headers: { Authorization: `Bearer ${token}` } }
+        `${API_BASE}/admin/all`,
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'ngrok-skip-browser-warning': 'true'
+          } 
+        }
       );
       setRegistrations(data.data || []);
       if (!hasFetched.current) { 
