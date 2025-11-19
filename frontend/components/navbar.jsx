@@ -1,24 +1,35 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  const handleSignup = () => {
-    // Scroll to the events section with offset to show partial view of both sections
+  const scrollToEvents = () => {
     const eventsSection = document.getElementById('events-section');
     if (eventsSection) {
       const sectionHeight = eventsSection.clientHeight;
-      const offset = sectionHeight * 0.3; // Adjust this value (0.3 = 30% scrolled down) to control visibility
+      const offset = sectionHeight * 0.3; // 30% down inside the section
       const targetPosition = eventsSection.offsetTop + offset;
       window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-    } else {
-      // Fallback: navigate to home if events section not found
-      navigate('/');
     }
+  };
+
+  const handleSignup = () => {
+    // If already on home, just scroll
+    if (location.pathname === '/') {
+      scrollToEvents();
+    } else {
+      // Navigate to home first, then scroll to events
+      navigate('/');
+      setTimeout(() => {
+        scrollToEvents();
+      }, 400); // small delay to allow home to render
+    }
+
     closeMobileMenu();
   };
 
