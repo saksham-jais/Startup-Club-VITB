@@ -1,5 +1,6 @@
 // App.jsx
 import { Routes, Route } from "react-router-dom";
+import React, { useState } from "react";
 import MainLayout from "../components/MainLayout";
 import HeroSection from "../components/herosection";
 import Testimonial from "../components/testimonial";
@@ -21,11 +22,15 @@ import IdeathonRegistration from "../components/IdeathonRegistration";
 import EsportsRegistration from "../components/EsportsRegistration";
 import CulturalPerformanceRegistration from "../components/CulturalPerformanceRegistration";
 import StandupRegistration from "../components/StandupRegistration";
+import EventPopup from "../components/EventPopup";
+
 // import Login_SignUp from '../components/login_signup';
 
 function Home({ cards = [] }) {
+  const [showPopup, setShowPopup] = useState(true);
   return (
     <>
+    {showPopup && <EventPopup onClose={() => setShowPopup(false)} />}
       <HeroSection
         buildingImg="https://picsum.photos/300/200?random=1"
         personImg="https://picsum.photos/300/200?random=2"
