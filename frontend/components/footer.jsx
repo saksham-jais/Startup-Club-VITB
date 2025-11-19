@@ -60,18 +60,24 @@ const Footer = () => {
   return (
     <footer className="bg-teal-700 text-white py-12">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+        {/* CENTERED Navigation + Support */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+          
           {/* Navigation Links */}
-          <div>
-            <h5 className="border-l-4 border-white pl-4 mb-6 text-lg font-semibold">Navigation</h5>
-            <ul className="list-none space-y-3">
+          <div className="w-full max-w-xs text-left">
+            <h5 className="border-l-4 border-white pl-4 mb-6 text-lg font-semibold">
+              Navigation
+            </h5>
+            <ul className="list-none space-y-3 pl-4">
               {navLinks.map((link, index) => (
                 <li key={index}>
                   <a 
                     href={link.path} 
-                    className="flex items-center hover:ml-2 hover:font-semibold transition-all duration-300 group"
+                    className="flex items-center hover:ml-2 hover:font-semibold transition-all duration-300 group justify-start"
                   >
-                    <span className="mr-2 transform group-hover:translate-x-1 transition-transform duration-300">&gt;&gt;</span>
+                    <span className="mr-2 transform group-hover:translate-x-1 transition-transform duration-300">
+                      &gt;&gt;
+                    </span>
                     {link.name}
                   </a>
                 </li>
@@ -79,41 +85,20 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h5 className="border-l-4 border-white pl-4 mb-6 text-lg font-semibold">Quick Links</h5>
-            <ul className="list-none space-y-3">
-              {quickLinks.map((link, index) => (
-                <li key={index}>
-                  <a 
-                    href={link.path} 
-                    className="flex items-center hover:ml-2 hover:font-semibold transition-all duration-300 group"
-                  >
-                    <span className="mr-2 transform group-hover:translate-x-1 transition-transform duration-300">&gt;&gt;</span>
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Support Links / Contacts */}
+          <div className="w-full max-w-xs text-left">
+            <h5 className="border-l-4 border-white pl-4 mb-6 text-lg font-semibold">
+              Support
+            </h5>
+            <div className="pl-4">
+              <p className="font-bold">Student Co-ordinator:</p>
+              <p className="font-semibold">Lakshay Khtour</p>
+              <p>6377030052</p>
+              <p className="font-semibold mt-2">Chaitanya Gupta</p>
+              <p>8757451159</p>
+            </div>
           </div>
 
-          {/* Support Links */}
-          <div>
-            <h5 className="border-l-4 border-white pl-4 mb-6 text-lg font-semibold">Support</h5>
-            <ul className="list-none space-y-3">
-              {supportLinks.map((link, index) => (
-                <li key={index}>
-                  <a 
-                    href={link.path} 
-                    className="flex items-center hover:ml-2 hover:font-semibold transition-all duration-300 group"
-                  >
-                    <span className="mr-2 transform group-hover:translate-x-1 transition-transform duration-300">&gt;&gt;</span>
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
         {/* Social Media & Contact */}
