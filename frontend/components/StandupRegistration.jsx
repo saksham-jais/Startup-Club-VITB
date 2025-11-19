@@ -387,6 +387,9 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                     <p className="text-sm md:text-md text-gray-700">
                       <span className="font-semibold">IFSC Code:</span> IDIB000V143
                     </p>
+                    <p className="text-sm md:text-md text-gray-700">
+                      <span className="font-semibold">Account Number:</span> 8093736714
+                    </p>
                   </div>
                 </div>
 
