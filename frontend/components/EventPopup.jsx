@@ -37,7 +37,7 @@ export default function EventPopup({ onClose }) {
 
           {/* Poster Image */}
           <img
-            src="/public/synergy.png"
+            src="https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg"
             alt="Event Poster"
             className="w-full rounded-xl mb-4"
           />
