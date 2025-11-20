@@ -183,7 +183,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     if (frontRows.includes(row)) return 699;
     if (normalRows.includes(row)) return 549;
     if (backRows.includes(row)) return 399;
-    if (firstFloorRows.includes(row)) return 549;
+    if (firstFloorRows.includes(row)) return 399;
     return 0;
   };
 
