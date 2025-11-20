@@ -10,7 +10,7 @@ const subEvents = [
     venue: "AB2-Audi2",
     time: "10:00 AM - 1:00 PM",
     registrationFee: "Free",
-    route: "/register-podcast"
+    route: "https://unstop.com/workshops-webinars/s2-ignite-opening-ceremony-innovation-talk-vit-bhopal-university-vit-bhopal-1597731"
   },
   // {
   //   id: 2,
@@ -31,7 +31,7 @@ const subEvents = [
     venue: "Online/Offline Hybrid",
     time: "1:00 PM - 5:00 PM",
     registrationFee: "₹50 per person",
-    route: "https://unstop.com/p/meme-war-vit-bhopal-university-vit-bhopal-1597680?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
+    route: "https://unstop.com/events/meme-war-vit-bhopal-university-vit-bhopal-1597680?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ const subEvents = [
     time: "1:00 PM - 5:00 PM",
     registrationFee: "₹50 per person(in team)",
     teamSize: "1-6 members",
-    route: "https://unstop.com/p/ideathon-vit-bhopal-university-vit-bhopal-1597709?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
+    route: "https://unstop.com/competitions/ideathon-vit-bhopal-university-vit-bhopal-1597709?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   }
 ];
 
