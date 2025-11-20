@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev'||'https://startup-club-dczt.onrender.com';
+const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 function AdminLogin() {
   const [username, setUsername] = useState('');
