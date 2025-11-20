@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as XLSX from 'xlsx';
 
-const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev'||'https://startup-club-dczt.onrender.com';
+const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 function AdminDashboard() {
   const [registrations, setRegistrations] = useState([]);

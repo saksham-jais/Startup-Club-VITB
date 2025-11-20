@@ -9,7 +9,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 const MemeWarRegistration = () => {
   const eventTitle = "Meme War Championship";
   const pricePricePerMeme = 50;
-  const bgImage = "/public/Podcast_ban.jpg";
+  const bgImage = "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg";
 
   const [formData, setFormData] = useState({
     name: '',
