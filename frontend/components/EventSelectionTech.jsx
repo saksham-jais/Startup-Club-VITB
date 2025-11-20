@@ -15,7 +15,7 @@ const subEvents = [
   },
   {
     id: 2,
-    title: "Artist Performance",
+    title: "StandUp Comedy",
     description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
     img: "/Day 2-images/BANNER.png",
     venue: "AB1, Auditorium-1",

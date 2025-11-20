@@ -29,7 +29,7 @@ const techFestEvent = {
   title: "S²-25 - StartUp Synergy Day-2",
   subtitle: "29 December 2025",
   description:
-    "Featuring E-Sports, Cultural Performances, and Artists Performance.",
+    "Featuring E-Sports, Cultural Performances, and StandUp Comedy.",
   img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=2070&q=80",
   bannerImages: [
     "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=2070&q=80",

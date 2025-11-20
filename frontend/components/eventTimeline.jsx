@@ -11,10 +11,10 @@ export function EventTimeline() {
         {
             date: "Nov 29 - 30",
             year: "2025",
-            img: "/event_timeline/Nov 29-30.jpg",
+            img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763665482/Your_paragraph_text_hsccv9.png",
             title: "S²-25 - StartUp Synergy",
             venue: "AUDITORIUM 1",
-            time: "29th - 30th Nov 2025",
+            time: "28th - 29th Nov 2025",
             description: "A two-day event fostering innovation, collaboration, and intellectual engagement through competitions, speaker sessions, and entertainment activities.",
             registrationFee: "NA as of now",
             teamSize: "Individual & Team Events",
