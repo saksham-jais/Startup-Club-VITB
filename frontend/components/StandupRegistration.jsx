@@ -9,7 +9,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
   
   // --- RESPONSIVE BANNER URLS ---
-  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763540574/event-registrations/standup/spvcn3o6uepxxqdautpp.jpg';
+  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg';
   const mobileBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg'; // Mobile-specific banner
 
   const [eventData] = useState({
