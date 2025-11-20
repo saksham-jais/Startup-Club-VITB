@@ -3,27 +3,24 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev'||'https://startup-club-dczt.onrender.com';
+const API_BASE = 'https://nonphonetical-renae-tanked.ngrok-free.dev' || 'https://startup-club-dczt.onrender.com';
 
 function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
-  
+
   // --- RESPONSIVE BANNER URLS ---
   const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763540574/event-registrations/standup/spvcn3o6uepxxqdauptpp.jpg';
-  const mobileBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg'; // Mobile-specific banner
+  const mobileBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg';
 
-  const [eventData] = useState({
-    title,
-    bgImage: desktopBanner
-  });
+  const [eventData] = useState({ title, bgImage: desktopBanner });
   const [hasSeating] = useState(true);
 
   const [formData, setFormData] = useState({
-    name: '', 
-    registrationNumber: '', // Compulsory Field
-    email: '', 
-    phone: '', 
-    utrId: '', 
+    name: '',
+    registrationNumber: '',
+    email: '',
+    phone: '',
+    utrId: '',
     screenshot: null,
   });
 
@@ -33,7 +30,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [isLoading, setIsLoading] = useState(true);
 
   /* -------------------- ZOOM & PAN -------------------- */
-  const [zoom, setZoom] = useState(1); // Initialize to 1 (neutral) temporarily
+  const [zoom, setZoom] = useState(1);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -41,13 +38,19 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [baseZoomForPinch, setBaseZoomForPinch] = useState(1);
 
   const zoomStep = 0.15;
-  const minZoom = 0.3;
+  const minZoom = 0.2;
   const maxZoom = 2.5;
 
   const seatMapRef = useRef(null);
 
-  // Helper to get reset zoom level
-  const getResetZoom = () => window.innerWidth < 768 ? 0.35 : 0.45;
+  // Responsive reset zoom based on screen size
+  const getResetZoom = () => {
+    const width = window.innerWidth;
+    if (width < 640) return 0.26;   // Very small phones
+    if (width < 768) return 0.30;   // Mobile
+    if (width < 1024) return 0.42;  // Tablet
+    return 0.48;                    // Desktop
+  };
 
   const getDistance = (touches) => {
     const [t1, t2] = touches;
@@ -57,13 +60,11 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const handleZoomIn = () => setZoom(z => Math.min(z + zoomStep, maxZoom));
   const handleZoomOut = () => setZoom(z => Math.max(z - zoomStep, minZoom));
 
-  // Define handleWheel outside useEffect to avoid recreating it unnecessarily
   const handleWheel = useCallback((e) => {
     e.preventDefault();
     setZoom(z => Math.max(minZoom, Math.min(maxZoom, z - e.deltaY * 0.001)));
-  }, [minZoom, maxZoom]);
+  }, []);
 
-  // Touch handlers with useCallback
   const handleTouchStart = useCallback((e) => {
     if (e.target.tagName === 'BUTTON') return;
     e.preventDefault();
@@ -83,60 +84,63 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     e.preventDefault();
     const touches = e.touches;
     if (touches.length === 1 && isDragging) {
-      setPanOffset({ x: touches[0].clientX - dragStart.x, y: touches[0].clientY - dragStart.y });
+      setPanOffset({
+        x: touches[0].clientX - dragStart.x,
+        y: touches[0].clientY - dragStart.y
+      });
     } else if (touches.length === 2 && initialPinchDistance > 0) {
       const scale = getDistance(touches) / initialPinchDistance;
       setZoom(Math.max(minZoom, Math.min(maxZoom, baseZoomForPinch * scale)));
     }
-  }, [isDragging, dragStart, initialPinchDistance, baseZoomForPinch, minZoom, maxZoom]);
+  }, [isDragging, dragStart, initialPinchDistance, baseZoomForPinch]);
 
-  const handleTouchEnd = useCallback(() => { 
-    setInitialPinchDistance(0); 
-    setIsDragging(false); 
+  const handleTouchEnd = useCallback(() => {
+    setInitialPinchDistance(0);
+    setIsDragging(false);
   }, []);
 
-  // Mouse handlers (kept as functions for inline use)
-  const handleMouseDown = (e) => { 
-    if (e.target.tagName === 'BUTTON') return; 
-    setIsDragging(true); 
-    setDragStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y }); 
+  const handleMouseDown = (e) => {
+    if (e.target.tagName === 'BUTTON') return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
   };
-  const handleMouseMove = (e) => { 
-    if (!isDragging) return; 
-    setPanOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y }); 
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setPanOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
   };
+
   const handleMouseUp = () => setIsDragging(false);
 
-  const resetView = () => { 
-    const resetZoom = getResetZoom();
-    setZoom(resetZoom); 
-    setPanOffset({ x: 0, y: 0 }); 
+  const resetView = () => {
+    setZoom(getResetZoom());
+    setPanOffset({ x: 0, y: 0 });
   };
 
-  // NEW: Ensure initial zoom and pan are set on mount (forces reset view on first load)
+  // Initial reset + reset on resize
   useEffect(() => {
     resetView();
-  }, []); // Empty dependency array: runs once on mount
+    const handleResize = () => resetView();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  // Attach wheel and touch event listeners with passive: false using useEffect
+  // Attach event listeners
   useEffect(() => {
-    const element = seatMapRef.current;
-    if (element) {
-      // Wheel
-      element.addEventListener('wheel', handleWheel, { passive: false });
+    const el = seatMapRef.current;
+    if (!el) return;
 
-      // Touch
-      element.addEventListener('touchstart', handleTouchStart, { passive: false });
-      element.addEventListener('touchmove', handleTouchMove, { passive: false });
-      element.addEventListener('touchend', handleTouchEnd, { passive: false });
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    el.addEventListener('touchstart', handleTouchStart, { passive: false });
+    el.addEventListener('touchmove', handleTouchMove, { passive: false });
+    el.addEventListener('touchend', handleTouchEnd, { passive: false });
 
-      return () => {
-        element.removeEventListener('wheel', handleWheel);
-        element.removeEventListener('touchstart', handleTouchStart);
-        element.removeEventListener('touchmove', handleTouchMove);
-        element.removeEventListener('touchend', handleTouchEnd);
-      };
-    }
+    return () => {
+      el.removeEventListener('wheel', handleWheel);
+      el.removeEventListener('touchstart', handleTouchStart);
+      el.removeEventListener('touchmove', handleTouchMove);
+      el.removeEventListener('touchend', handleTouchEnd);
+    };
   }, [handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd]);
 
   /* -------------------- FETCH BOOKED SEATS -------------------- */
@@ -146,14 +150,9 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
         const res = await fetch(`${API_BASE}/standup/booked/${encodeURIComponent(eventData.title)}`, {
           headers: { 'ngrok-skip-browser-warning': 'true' },
         });
-
         if (!res.ok) throw new Error('Failed to load seats');
-
         const data = await res.json();
-        const seatSet = new Set();
-        data.forEach(seat => {
-          if (seat.row && seat.col) seatSet.add(`${seat.row}-${seat.col}`);
-        });
+        const seatSet = new Set(data.map(s => `${s.row}-${s.col}`));
         setBookedSeats(seatSet);
       } catch (err) {
         console.error(err);
@@ -162,15 +161,14 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
         setIsLoading(false);
       }
     };
-
     loadSeats();
   }, [eventData.title]);
 
   /* -------------------- PRICE LOGIC -------------------- */
-  const frontRows = ['E','D','C', 'B', 'A'];
-  const normalRows = ['X','W','V','U','T','S','R','Q','P','O','N','M','L','K','J','I','H','G','F'];
-  const backRows = ['AC','AB','AA','Z','Y'];
-  const firstFloorRows = ['AH','AG','AF','AE','AD'];
+  const frontRows = ['E', 'D', 'C', 'B', 'A'];
+  const normalRows = ['X', 'W', 'V', 'U', 'T', 'S', 'R', 'Q', 'P', 'O', 'N', 'M', 'L', 'K', 'J', 'I', 'H', 'G', 'F'];
+  const backRows = ['AC', 'AB', 'AA', 'Z', 'Y'];
+  const firstFloorRows = ['AH', 'AG', 'AF', 'AE', 'AD'];
 
   const getPrice = (row) => {
     if (frontRows.includes(row)) return 699;
@@ -212,7 +210,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
             {col}
           </button>
         ))}
-        </div>
+      </div>
     </div>
   );
 
@@ -227,7 +225,6 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   };
 
   const handleSubmit = async () => {
-    // registrationNumber is now required
     const required = ['name', 'registrationNumber', 'email', 'phone', 'utrId', 'screenshot'];
     const missing = required.filter(f => !formData[f]?.toString().trim());
     if (hasSeating && !selectedSeat) missing.push('seat');
@@ -245,8 +242,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     const fd = new FormData();
     fd.append('title', eventData.title);
     fd.append('name', formData.name.trim());
-    // Send registration number as compulsory
-    fd.append('registrationNumber', formData.registrationNumber.trim()); 
+    fd.append('registrationNumber', formData.registrationNumber.trim());
     fd.append('email', formData.email.trim().toLowerCase());
     fd.append('phone', formData.phone.trim());
     fd.append('utrId', formData.utrId.trim());
@@ -256,26 +252,28 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
       fd.append('seatColumn', String(selectedSeat.col));
     }
 
-    fetch(`${API_BASE}/standup/register`, {
-      method: 'POST',
-      headers: { 'ngrok-skip-browser-warning': 'true' },
-      body: fd,
-    })
-      .then(r => r.json().then(data => ({ ok: r.ok, data })))
-      .then(({ ok, data }) => {
-        if (!ok) throw new Error(data.error || 'Registration failed');
-        toast.success(`Successfully Booked! Seat ${selectedSeat.row}${selectedSeat.col}`);
-        setBookedSeats(prev => new Set(prev).add(`${selectedSeat.row}-${selectedSeat.col}`));
-        setSelectedSeat(null);
-        setFormData({ name: '', registrationNumber: '', email: '', phone: '', utrId: '', screenshot: null });
-        const fileInput = document.querySelector('input[type="file"]');
-        if (fileInput) fileInput.value = '';
-      })
-      .catch(e => toast.error(e.message || 'Submission failed'))
-      .finally(() => setIsSubmitting(false));
+    try {
+      const r = await fetch(`${API_BASE}/standup/register`, {
+        method: 'POST',
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        body: fd,
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Registration failed');
+
+      toast.success(`Successfully Booked! Seat ${selectedSeat.row}${selectedSeat.col}`);
+      setBookedSeats(prev => new Set(prev).add(`${selectedSeat.row}-${selectedSeat.col}`));
+      setSelectedSeat(null);
+      setFormData({ name: '', registrationNumber: '', email: '', phone: '', utrId: '', screenshot: null });
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = '';
+    } catch (e) {
+      toast.error(e.message || 'Submission failed');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  /* -------------------- LOADING STATE -------------------- */
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -285,77 +283,54 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     );
   }
 
-  /* -------------------- MAIN RENDER -------------------- */
   return (
     <>
-      {/* ====================== HERO BANNER (MOBILE/DESKTOP SWITCH) ====================== */}
+      {/* ====================== HERO BANNER ====================== */}
       <section className="relative w-full overflow-visible">
-        {/* Dark Overlay (Reduced opacity for better image visibility) */}
         <div className="absolute inset-0 z-10" />
-
-        {/* Background Image Container */}
         <div className="relative w-full">
-          {/* DESKTOP BANNER (Hidden on small screens) */}
-          <img
-            src={desktopBanner}
-            alt={title + " Desktop Banner"}
-            className="w-full h-auto object-cover block opacity-0 transition-opacity duration-1000 hidden md:block"
-            style={{ minHeight: '60vh' }}
-            onLoad={(e) => e.currentTarget.classList.replace('opacity-0', 'opacity-100')}
-          />
-
-          {/* MOBILE BANNER (Hidden on medium/large screens) */}
-          <img
-            src={mobileBanner}
-            alt={title + " Mobile Banner"}
-            className="w-full h-auto object-cover block opacity-0 transition-opacity duration-1000 md:hidden"
-            style={{ minHeight: '40vh' }}
-            onLoad={(e) => e.currentTarget.classList.replace('opacity-0', 'opacity-100')}
-          />
+          <img src={desktopBanner} alt="Desktop Banner" className="w-full h-auto object-cover hidden md:block opacity-0 transition-opacity duration-1000" style={{ minHeight: '60vh' }} onLoad={e => e.currentTarget.classList.replace('opacity-0', 'opacity-100')} />
+          <img src={mobileBanner} alt="Mobile Banner" className="w-full h-auto object-cover md:hidden opacity-0 transition-opacity duration-1000" style={{ minHeight: '40vh' }} onLoad={e => e.currentTarget.classList.replace('opacity-0', 'opacity-100')} />
         </div>
 
-        {/* MODIFIED BANNER CHIP POSITIONING (Overlapping effect) */}
-<div className="absolute left-1/2 -translate-x-1/2 bottom-0 z-[999]">
-  <div
-    className="inline-flex bg-gradient-to-r from-orange-500 via-red-600 to-pink-600
-               px-6 py-2 md:px-10 md:py-5 rounded-full shadow-2xl
-               translate-y-1/2"
-  >
-    <span className="text-base md:text-3xl font-bold text-white tracking-wider whitespace-nowrap">
-      LIMITED PREMIUM SEATS
-    </span>
-  </div>
-</div>
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-0 z-[999]">
+          <div className="inline-flex bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 px-6 py-2 md:px-10 md:py-5 rounded-full shadow-2xl translate-y-1/2">
+            <span className="text-base md:text-3xl font-bold text-white tracking-wider whitespace-nowrap">
+              LIMITED PREMIUM SEATS
+            </span>
+          </div>
+        </div>
       </section>
 
-      {/* ====================== MAIN CONTENT (Fixed Overlap by adding responsive padding) ====================== */}
-      <section className="w-full bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50 py-10 lg:py-16"> {/* Reduced overall vertical padding on mobile */}
-        {/* Adjusted top padding: pt-24 on mobile, pt-32 on desktop */}
-        <div className="max-w-7xl mx-auto px-6"> 
-        
+      {/* ====================== MAIN CONTENT ====================== */}
+      <section className="w-full bg-gradient-to-b from-purple-50 via-pink-50 to-blue-50 py-10 lg:py-16">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12">
 
-            {/* [ORDER 1: SEAT MAP on MOBILE, LEFT on DESKTOP] */}
+            {/* SEAT MAP (Mobile First, then Desktop Left) */}
             <div className="order-1 lg:order-1 flex flex-col">
               <h2 className="text-4xl font-bold text-center mb-10 text-gray-800">Choose Your Seat</h2>
 
-              <div className="flex justify-center gap-4 mb-6 text-base flex-wrap"> {/* Reduced gap and text size for mobile */}
-                <div className="flex items-center gap-2"><div className="w-6 h-6 bg-green-500 rounded-lg"></div> Available</div> {/* Reduced chip size */}
+              <div className="flex justify-center gap-4 mb-6 text-base flex-wrap">
+                <div className="flex items-center gap-2"><div className="w-6 h-6 bg-green-500 rounded-lg"></div> Available</div>
                 <div className="flex items-center gap-2"><div className="w-6 h-6 bg-blue-600 rounded-lg"></div> Selected</div>
                 <div className="flex items-center gap-2"><div className="w-6 h-6 bg-red-600 opacity-70 rounded-lg"></div> Booked</div>
               </div>
 
               <div className="flex justify-center gap-4 mb-10 flex-wrap">
-                <button onClick={handleZoomOut} className="px-4 py-2 text-sm bg-gray-800 text-white rounded-xl hover:bg-gray-900 font-medium">Zoom Out</button> {/* Reduced button size */}
+                <button onClick={handleZoomOut} className="px-4 py-2 text-sm bg-gray-800 text-white rounded-xl hover:bg-gray-900 font-medium">Zoom Out</button>
                 <button onClick={resetView} className="px-6 py-2 text-sm bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold">Reset View</button>
                 <button onClick={handleZoomIn} className="px-4 py-2 text-sm bg-gray-800 text-white rounded-xl hover:bg-gray-900 font-medium">Zoom In</button>
               </div>
 
+              {/* KEY CHANGE: Mobile = tall, Desktop = fixed */}
               <div
                 ref={seatMapRef}
-                className="relative overflow-hidden rounded-3xl border-4 border-gray-300 bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl h-full"
-                style={{ minHeight: '680px', cursor: isDragging ? 'grabbing' : 'grab', touchAction: 'none' }}
-                // Removed onWheel, onTouch* props; handled via useEffect and ref
+                className="relative overflow-hidden rounded-3xl border-4 border-gray-300 bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl 
+                           w-full h-[85vh] max-h-screen 
+                           md:h-auto md:min-h-[680px]
+                           cursor-grab"
+                style={{ touchAction: 'none' }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -396,7 +371,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
               </div>
 
               {selectedSeat && (
-                <div className="mt-8 p-6 md:p-8 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-3xl border-4 border-emerald-300 shadow-2xl text-center"> {/* Reduced padding and margin on mobile */}
+                <div className="mt-8 p-6 md:p-8 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-3xl border-4 border-emerald-300 shadow-2xl text-center">
                   <div className="text-4xl md:text-5xl font-bold text-emerald-600 mb-2">{selectedSeat.row}{selectedSeat.col}</div>
                   <div className="text-3xl md:text-4xl font-bold text-green-600">₹{getPrice(selectedSeat.row)}</div>
                   <button onClick={() => setSelectedSeat(null)} className="mt-4 px-6 py-2 text-base bg-red-600 text-white rounded-xl hover:bg-red-700 font-bold transition-all">
@@ -406,60 +381,36 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
               )}
             </div>
 
-            {/* [ORDER 2: FORM on MOBILE, RIGHT on DESKTOP] */}
+            {/* FORM (Mobile Second, Desktop Right) */}
             <div className="order-2 lg:order-2">
               <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-10 border-4 border-purple-200">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-10 text-gray-800">Complete Your Booking</h2> {/* Reduced margin on mobile */}
+                <h2 className="text-3xl md.Tpo4xl font-bold text-center mb-8 md:mb-10 text-gray-800">Complete Your Booking</h2>
 
-                <div className="space-y-4 md:space-y-6"> {/* Reduced space on mobile */}
-                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Full Name *" 
-                       className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
-                  
-                  {/* Registration Number is now required */}
-                <input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleInputChange} placeholder="Registration Number *" 
-                       className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
-
-                <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="Email Address *" 
-                       className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
-                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Phone Number *" 
-                       className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
-                <input type="text" name="utrId" value={formData.utrId} onChange={handleInputChange} placeholder="UTR / Transaction ID *" 
-                       className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
+                <div className="space-y-4 md:space-y-6">
+                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Full Name *" className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
+                  <input type="text" name="registrationNumber" value={formData.registrationNumber} onChange={handleInputChange} placeholder="Registration Number *" className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
+                  <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="Email Address *" className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} placeholder="Phone Number *" className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
+                  <input type="text" name="utrId" value={formData.utrId} onChange={handleInputChange} placeholder="UTR / Transaction ID *" className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
                 </div>
 
-                {/* Reduced padding and margin */}
                 <div className="mt-8 bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 md:p-8 text-center border border-pink-200 shadow-inner">
                   <h3 className="text-2xl md:text-3xl font-extrabold text-gray-700 mb-4 md:mb-6">Scan & Pay Securely</h3>
                   <div className="text-4xl md:text-5xl font-extrabold text-indigo-600 mb-6 md:mb-8 p-2 bg-white rounded-xl inline-block shadow-md">₹{currentPrice || 'Select a seat'}</div>
-                  <img src={qrCode} alt="Payment QR" className="w-56 h-56 md:w-80 md:h-80 mx-auto rounded-xl shadow-2xl border-4 border-white" /> {/* Reduced QR size on mobile */}
+                  <img src={qrCode} alt="Payment QR" className="w-56 h-56 md:w-80 md:h-80 mx-auto rounded-xl shadow-2xl border-4 border-white" />
 
-                  {/* ADDED BANK DETAILS */}
                   <div className="mt-4 md:mt-6 text-left inline-block p-4 bg-white/70 rounded-lg shadow-inner border border-pink-300">
                     <p className="text-base md:text-lg font-bold text-gray-800">Bank Transfer Details:</p>
-                    <p className="text-sm md:text-md text-gray-700 mt-1">
-                      <span className="font-semibold">Bank:</span> INDIAN BANK, VIT, BHOPAL
-                    </p>
-                    <p className="text-sm md:text-md text-gray-700">
-                      <span className="font-semibold">Account Number:</span> 8093736714
-                    </p>
-                    <p className="text-sm md:text-md text-gray-700">
-                      <span className="font-semibold">IFSC Code:</span> IDIB000V143
-                    </p>
+                    <p className="text-sm md:text-md text-gray-700 mt-1"><span className="font-semibold">Bank:</span> INDIAN BANK, VIT, BHOPAL</p>
+                    <p className="text-sm md:text-md text-gray-700"><span className="font-semibold">Account Number:</span> 8093736714</p>
+                    <p className="text-sm md:text-md text-gray-700"><span className="font-semibold">IFSC Code:</span> IDIB000V143</p>
                   </div>
                 </div>
 
-                {/* Reduced margin */}
-                <div className="mt-8"> 
+                <div className="mt-8">
                   <label className="block text-lg md:text-xl font-bold mb-3 text-gray-700">Upload Payment Screenshot *</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gradient-to-r file:from-indigo-600 file:to-purple-600 file:text-white file:font-semibold file:text-sm md:file:text-base hover:file:from-indigo-700 hover:file:to-purple-700 file:cursor-pointer transition duration-300 border-2 border-gray-300 rounded-xl p-2"
-                  />
-                  {formData.screenshot && (
-                    <p className="mt-3 text-green-600 font-bold text-base">Selected: {formData.screenshot.name}</p>
-                  )}
+                  <input type="file" accept="image/*" onChange={handleFileChange} className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gradient-to-r file:from-indigo-600 file:to-purple-600 file:text-white file:font-semibold file:text-sm md:file:text-base hover:file:from-indigo-700 hover:file:to-purple-700 file:cursor-pointer transition duration-300 border-2 border-gray-300 rounded-xl p-2" />
+                  {formData.screenshot && <p className="mt-3 text-green-600 font-bold text-base">Selected: {formData.screenshot.name}</p>}
                 </div>
 
                 <button
