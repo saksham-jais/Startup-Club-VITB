@@ -9,7 +9,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
 
   // --- RESPONSIVE BANNER URLS ---
-  const desktopBanner = '.';
+  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763647548/2_vjtukv.png';
   const mobileBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763635145/event-registrations/standup/bt8pduu30mbfvz0r9ffi.png'; // Mobile-specific banner
 
   const [eventData] = useState({ title, bgImage: desktopBanner });
@@ -355,7 +355,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                 >
                   <div className="space-y-14 p-12">
                     <div className="text-center">
-                      <div className="inline-block px-10 py-3 bg-orange-100 text-orange-700 font-bold rounded-xl mb-4 text-xl">FIRST FLOOR ₹549</div>
+                      <div className="inline-block px-10 py-3 bg-orange-100 text-orange-700 font-bold rounded-xl mb-4 text-xl">FIRST FLOOR ₹399</div>
                       {firstFloorRows.map(renderRow)}
                     </div>
                     <div className="text-center">
