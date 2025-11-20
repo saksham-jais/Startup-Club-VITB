@@ -37,7 +37,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [initialPinchDistance, setInitialPinchDistance] = useState(0);
   const [baseZoomForPinch, setBaseZoomForPinch] = useState(1);
 
-  const zoomStep = 0.15;
+  const zoomStep = 0.1;
   const minZoom = 0.2;
   const maxZoom = 2.5;
 
@@ -46,7 +46,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   // Responsive reset zoom based on screen size
   const getResetZoom = () => {
     const width = window.innerWidth;
-    if (width < 640) return 0.26;   // Very small phones
+    if (width < 640) return 0.29;   // Very small phones
     if (width < 768) return 0.30;   // Mobile
     if (width < 1024) return 0.42;  // Tablet
     return 0.48;                    // Desktop
@@ -84,9 +84,12 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     e.preventDefault();
     const touches = e.touches;
     if (touches.length === 1 && isDragging) {
+      const newX = touches[0].clientX - dragStart.x;
+      const newY = touches[0].clientY - dragStart.y;
+      const maxOffset = 500; // Maximum drag distance in pixels
       setPanOffset({
-        x: touches[0].clientX - dragStart.x,
-        y: touches[0].clientY - dragStart.y
+        x: Math.max(-maxOffset, Math.min(maxOffset, newX)),
+        y: Math.max(-maxOffset, Math.min(maxOffset, newY))
       });
     } else if (touches.length === 2 && initialPinchDistance > 0) {
       const scale = getDistance(touches) / initialPinchDistance;
@@ -107,7 +110,13 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
 
   const handleMouseMove = (e) => {
     if (!isDragging) return;
-    setPanOffset({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+    const newX = e.clientX - dragStart.x;
+    const newY = e.clientY - dragStart.y;
+    const maxOffset = 500; // Maximum drag distance in pixels
+    setPanOffset({ 
+      x: Math.max(-maxOffset, Math.min(maxOffset, newX)), 
+      y: Math.max(-maxOffset, Math.min(maxOffset, newY)) 
+    });
   };
 
   const handleMouseUp = () => setIsDragging(false);
@@ -323,12 +332,12 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                 <button onClick={handleZoomIn} className="px-4 py-2 text-sm bg-gray-800 text-white rounded-xl hover:bg-gray-900 font-medium">Zoom In</button>
               </div>
 
-              {/* KEY CHANGE: Mobile = tall, Desktop = fixed */}
+              {/* Mobile = tall viewport, Desktop = match form height */}
               <div
                 ref={seatMapRef}
                 className="relative overflow-hidden rounded-3xl border-4 border-gray-300 bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl 
                            w-full h-[85vh] max-h-screen 
-                           md:h-auto md:min-h-[680px]
+                           lg:h-full lg:max-h-none
                            cursor-grab"
                 style={{ touchAction: 'none' }}
                 onMouseDown={handleMouseDown}
@@ -384,7 +393,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
             {/* FORM (Mobile Second, Desktop Right) */}
             <div className="order-2 lg:order-2">
               <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-10 border-4 border-purple-200">
-                <h2 className="text-3xl md.Tpo4xl font-bold text-center mb-8 md:mb-10 text-gray-800">Complete Your Booking</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-10 text-gray-800">Complete Your Booking</h2>
 
                 <div className="space-y-4 md:space-y-6">
                   <input type="text" name="name" value={formData.name} onChange={handleInputChange} placeholder="Full Name *" className="w-full px-4 py-3 md:px-5 md:py-4 border-2 border-gray-300 rounded-lg text-base md:text-lg placeholder-gray-500 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-200 transition-all shadow-sm" required />
