@@ -9,12 +9,29 @@ export default function EventPopup({ onClose }) {
   }, []);
 
   const handleRegister = () => {
-  const eventSection = document.getElementById("events-section");
-  if (eventSection) {
-    eventSection.scrollIntoView({ behavior: "smooth" });
-  }
-  onClose();
-};
+    const eventSection = document.getElementById("events-section");
+
+    if (eventSection) {
+      const firstCard = eventSection.querySelector(".event-card");
+
+      if (firstCard) {
+        const cardHeight = firstCard.clientHeight;
+
+        // Scroll so half of card 1 + half of card 2 are visible
+        const targetPosition = eventSection.offsetTop + cardHeight * 0.5;
+
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+      } else {
+        // Fallback: normal scroll if selector not found
+        eventSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    onClose();
+  };
 
   return (
     <>
