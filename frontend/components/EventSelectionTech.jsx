@@ -11,7 +11,7 @@ const subEvents = [
     time: "11:00 Am - 1:00 PM",
     registrationFee: "₹149 per player",
     teamSize: "Individual",
-    route: "https://unstop.com/o/G4Lir3y?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
+    route: "https://unstop.com/events/s2-esports-tournament-vit-bhopal-university-vit-bhopal-1598015?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const subEvents = [
     time: "1:00 PM - 2:00 PM",
     registrationFee: "Free for performers and audience",
     // teamSize: "NA",
-    route: "https://unstop.com/o/I02NZ6c?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
+    route: "https://unstop.com/events/music-performance-competition-vit-bhopal-university-vit-bhopal-1598020?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
   }
 ];
 
