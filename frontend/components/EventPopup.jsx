@@ -4,34 +4,41 @@ export default function EventPopup({ onClose }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // show popup with animation
     setIsVisible(true);
   }, []);
 
   const handleRegister = () => {
-    const eventSection = document.getElementById("events-section");
+  const eventSection = document.getElementById("events-section");
 
-    if (eventSection) {
-      const firstCard = eventSection.querySelector(".event-card");
+  if (eventSection) {
+    const firstCard = eventSection.querySelector(".event-card");
 
-      if (firstCard) {
-        const cardHeight = firstCard.clientHeight;
+    if (firstCard) {
+      const cardHeight = firstCard.clientHeight;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
 
-        // Scroll so half of card 1 + half of card 2 are visible
-        const targetPosition = eventSection.offsetTop + cardHeight * 0.5;
+      let offsetMultiplier = 0.5; // default for desktop
 
-        window.scrollTo({
-          top: targetPosition,
-          behavior: "smooth",
-        });
-      } else {
-        // Fallback: normal scroll if selector not found
-        eventSection.scrollIntoView({ behavior: "smooth" });
+      // Very narrow + small height mobile screens
+      if (screenWidth <= 430 && screenHeight <= 900) {
+        offsetMultiplier = 0.95;  // <<< MAIN FIX
       }
-    }
 
-    onClose();
-  };
+      const target = eventSection.offsetTop + cardHeight * offsetMultiplier;
+
+      window.scrollTo({
+        top: target,
+        behavior: "smooth",
+      });
+    } else {
+      eventSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  onClose();
+};
+
 
   return (
     <>
@@ -59,7 +66,7 @@ export default function EventPopup({ onClose }) {
             className="w-full rounded-xl mb-4"
           />
 
-          {/* Register Button */}
+          {/* Register Now */}
           <button
             onClick={handleRegister}
             className="w-full bg-gradient-to-r from-green-500 to-emerald-600

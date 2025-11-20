@@ -120,10 +120,12 @@ const FullscreenCarousel = () => {
         <div className="relative w-full max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {events.map((event, index) => (
-              <div
-                key={index}
-                className="w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8 relative z-20"
-              >
+  <div
+    key={index}
+    className="event-card w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8 relative z-20"
+  >
+
+
                 <div className="text-center">
 
                   {/* Event Title */}
