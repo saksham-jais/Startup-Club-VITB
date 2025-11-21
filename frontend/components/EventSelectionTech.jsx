@@ -17,7 +17,7 @@ const subEvents = [
     id: 2,
     title: "StandUp Comedy",
     description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
-    img: "/Day 2-images/BANNER.png",
+    img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763729598/Copy_of_STARTUP_SYNERGY_Banner_Landscape_rwheiq.png",
     venue: "AB1, Auditorium-1",
     time: "3:00 PM",
     registrationFee: "₹399-₹549",
