@@ -1,115 +1,139 @@
-// routes/standup.js
+// routes/standup.js — FIXED UTR EXTRACTION (Sets sharedUtrId from body[0])
 import express from 'express';
 import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { v2 as cloudinary } from 'cloudinary';
 import StandupRegistration from '../models/StandupRegistration.js';
 
 const router = express.Router();
 
-// Cloudinary config
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'event-registrations/standup',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+// Multer: Buffer file in memory
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },  // 5MB
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only images allowed'), false);
   },
 });
 
-const upload = multer({ storage });
-
-// routes/standup.js — FINAL BULLETPROOF VERSION
-router.post('/register', upload.fields([{ name: 'screenshot', maxCount: 1 }]), async (req, res) => {
+router.post('/register', upload.single('screenshot'), async (req, res) => {
+  let screenshotUrl = null;
+  let screenshotPublicId = null;
   try {
-    const file = req.files?.screenshot?.[0];
     const body = req.body;
-
     console.log('BODY KEYS:', Object.keys(body));
     console.log('OFFER APPLIED:', body.offerApplied);
+    console.log('FILE BUFFER SIZE (bytes):', req.file?.buffer?.length || 0);
 
-    if (!file) return res.status(400).json({ error: 'Payment screenshot required' });
+    if (!req.file) {
+      return res.status(400).json({ error: 'Payment screenshot required (image only, <5MB)' });
+    }
 
     const members = [];
-
-    // Dynamically detect how many members were sent
     let i = 0;
     while (true) {
       const name = body[`member_name_${i}`];
-      if (!name) break; // No more members
-
+      if (!name) break;
       const regNo = body[`member_regNo_${i}`];
       const email = body[`member_email_${i}`];
       const phone = body[`member_phone_${i}`];
       const utrId = body[`member_utrId_${i}`];
       const category = body[`member_category_${i}`] || 'normal';
 
-      // Validate each member
       if (!name || !regNo || !email || !phone || !utrId) {
-        await cloudinary.uploader.destroy(file.filename);
         return res.status(400).json({ error: 'All fields required for member ' + (i + 1) });
       }
-
       if (!email.endsWith('@vitbhopal.ac.in')) {
-        await cloudinary.uploader.destroy(file.filename);
         return res.status(400).json({ error: 'Only @vitbhopal.ac.in emails allowed' });
       }
-
       if (!/^\d{10}$/.test(phone)) {
-        await cloudinary.uploader.destroy(file.filename);
         return res.status(400).json({ error: 'Phone must be exactly 10 digits' });
       }
-
       if (utrId.length < 12 || !/^[a-zA-Z0-9]+$/.test(utrId)) {
-        await cloudinary.uploader.destroy(file.filename);
         return res.status(400).json({ error: 'UTR must be 12+ alphanumeric characters' });
       }
 
-      members.push({ name, regNo, email: email.toLowerCase(), phone, utrId, category });
+      members.push({ name, registrationNumber: regNo, email: email.toLowerCase(), phone, category });
       i++;
     }
 
-    if (members.length === 0) {
-      await cloudinary.uploader.destroy(file.filename);
-      return res.status(400).json({ error: 'No member data received' });
+    if (members.length === 0 || members.length > 2) {
+      return res.status(400).json({ error: '1-2 members required' });
     }
 
-    // Duplicate check
+    // Extract shared UTR (from first member — all should match)
+    const sharedUtrId = body[`member_utrId_0`];
+    if (!sharedUtrId) {
+      return res.status(400).json({ error: 'Shared UTR ID required' });
+    }
+
+    // Optional: Validate all UTRs match (frontend copies, but enforce)
+    for (let j = 1; j < members.length; j++) {
+      const thisUtr = body[`member_utrId_${j}`];
+      if (thisUtr !== sharedUtrId) {
+        return res.status(400).json({ error: 'All members must use the same UTR ID' });
+      }
+    }
+
+    // Upload to Cloudinary (AFTER validation)
+    try {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const { upload_stream } = cloudinary.uploader;
+        const stream = upload_stream(
+          {
+            folder: 'event-registrations/standup',
+            resource_type: 'image',
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      screenshotUrl = uploadResult.secure_url;
+      screenshotPublicId = uploadResult.public_id;
+      console.log('UPLOAD SUCCESS: Public ID', screenshotPublicId);
+    } catch (uploadErr) {
+      console.error('Cloudinary upload error:', uploadErr);
+      return res.status(400).json({ error: 'Upload failed—ensure JPG/PNG <5MB and try again' });
+    }
+
+    // Duplicate check: By shared UTR or any email (per event)
     const existing = await StandupRegistration.findOne({
       title: body.title?.trim(),
       $or: [
-        { email: { $in: members.map(m => m.email) } },
-        { utrId: { $in: members.map(m => m.utrId) } }
+        { utrId: sharedUtrId },
+        { 'members.email': { $in: members.map(m => m.email) } }
       ]
     });
-
     if (existing) {
-      await cloudinary.uploader.destroy(file.filename);
+      await cloudinary.uploader.destroy(screenshotPublicId).catch(console.error);
       return res.status(409).json({ error: 'Already registered with this email or UTR' });
     }
 
-    // Save all members
-    const registrations = members.map(member => new StandupRegistration({
+    // PREPARE single registration doc
+    const registration = new StandupRegistration({
       title: body.title?.trim(),
-      name: member.name,
-      registrationNumber: member.regNo,
-      email: member.email,
-      phone: member.phone,
-      utrId: member.utrId,
-      category: member.category,
-      screenshotUrl: file.path,
-      screenshotPublicId: file.filename,
+      members,  // Array of members
+      utrId: sharedUtrId,
+      screenshotUrl,
+      screenshotPublicId,
       totalAmount: parseInt(body.totalAmount) || 0,
       memberCount: members.length,
       offerApplied: body.offerApplied === 'true',
-    }));
+    });
 
-    await Promise.all(registrations.map(r => r.save()));
+    console.log('GROUP REG DATA:', {
+      title: registration.title,
+      memberCount: registration.memberCount,
+      utrId: registration.utrId,
+      members: registration.members.map(m => ({ name: m.name, email: m.email })),
+    });
+
+    // SAVE single doc
+    const savedReg = await registration.save();
+    console.log(`SAVED GROUP: ${members.length} members, ID:`, savedReg._id);
 
     res.status(201).json({
       success: true,
@@ -120,9 +144,8 @@ router.post('/register', upload.fields([{ name: 'screenshot', maxCount: 1 }]), a
 
   } catch (err) {
     console.error('Standup Registration Error:', err);
-    // Only delete if file exists and wasn't already deleted
-    if (req.files?.screenshot?.[0]?.filename) {
-      await cloudinary.uploader.destroy(req.files.screenshot[0].filename).catch(() => {});
+    if (screenshotPublicId) {
+      await cloudinary.uploader.destroy(screenshotPublicId).catch(console.error);
     }
     res.status(500).json({ error: 'Server error. Please try again.' });
   }
