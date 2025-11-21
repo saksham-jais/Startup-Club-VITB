@@ -4,18 +4,21 @@ import mongoose from 'mongoose';
 const standupSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
   name: { type: String, required: true, trim: true },
-  registrationNumber: { type: String, unique: true, sparse: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  registrationNumber: { type: String, sparse: true },
+  email: { type: String, required: true, lowercase: true, trim: true },
   phone: { type: String, required: true, trim: true },
-  utrId: { type: String, required: true, unique: true, trim: true },
+  utrId: { type: String, required: true, trim: true },
+  category: { type: String, enum: ['normal', 'front'], default: 'normal' },
   screenshotUrl: { type: String, required: true },
-  seatRow: { type: String, uppercase: true, match: /^[A-Z]$/, sparse: true },
-  seatColumn: { type: Number, min: 1, max: 50, sparse: true },
+  screenshotPublicId: { type: String }, // For deletion
+  totalAmount: { type: Number },
+  memberCount: { type: Number, default: 1 },
+  offerApplied: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
-}, { timestamps: true, collection: 'standup_registrations' });
+}, { timestamps: true });
 
-// Unique seat per event
-standupSchema.index({ title: 1, seatRow: 1, seatColumn: 1 }, { unique: true, sparse: true });
-// Removed: standupSchema.index({ email: 1 }); standupSchema.index({ utrId: 1 });  // Duplicates
+// Compound unique indexes
+standupSchema.index({ title: 1, email: 1 }, { unique: true });        // One email per event
+standupSchema.index({ title: 1, utrId: 1 }, { unique: true });         // One UTR per event (shared)
 
 export default mongoose.model('StandupRegistration', standupSchema);

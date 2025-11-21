@@ -1,432 +1,195 @@
-// src/components/AdminDashboard.jsx - Updated for all events with filters
-import { useState, useEffect, useRef, useMemo } from 'react';
+// src/components/AdminDashboard.jsx - SIMPLE & CLEAN STANDUP ONLY
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as XLSX from 'xlsx';
 
-const API_BASE = 'https://startup-club-dczt.onrender.com';
+const API_BASE = 'http://localhost:5000'||'https://startup-club-dczt.onrender.com';
 
 function AdminDashboard() {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [eventFilter, setEventFilter] = useState('all');
-  const [showMemesModal, setShowMemesModal] = useState(false);
-  const [selectedMemes, setSelectedMemes] = useState([]);
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const hasFetched = useRef(false);
 
-  const eventTypes = [
-    { value: 'all', label: 'All Events' },
-    { value: 'cultural', label: 'Cultural' },
-    { value: 'podcast', label: 'Podcast' },
-    { value: 'esports', label: 'Esports' },
-    { value: 'memewar', label: 'Meme War' },
-    { value: 'standup', label: 'Standup' },
-    { value: 'hackathon', label: 'Hackathon' },
-    { value: 'ideathon', label: 'Ideathon' }
-  ];
-
-  const excludedColumns = {
-    cultural: ['UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes'],
-    podcast: ['UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes'],
-    esports: ['UTR ID', 'Team Name', 'Members', 'Seat', 'Submission', 'Memes'],
-    memewar: ['Team Name', 'Members', 'Seat', 'Submission'],
-    standup: ['Team Name', 'Members', 'Submission'],
-    hackathon: ['Seat', 'Submission', 'Memes'],
-    ideathon: ['Seat', 'Memes']
-  };
-
-  const fetchRegistrations = async () => {
+  const fetchData = async () => {
     const token = localStorage.getItem('adminToken');
-    if (!token) { 
-      toast.error('Login required'); 
-      navigate('/admin', { replace: true }); 
-      return; 
+    if (!token) {
+      toast.error('Please login');
+      navigate('/admin');
+      return;
     }
 
     setLoading(true);
     try {
-      const { data } = await axios.get(
-        `${API_BASE}/admin/all`,
-        { 
-          headers: { 
-            Authorization: `Bearer ${token}`,
-            'ngrok-skip-browser-warning': 'true'
-          } 
-        }
-      );
-      setRegistrations(data.data || []);
-      if (!hasFetched.current) { 
-        toast.success('Loaded all registrations'); 
-        hasFetched.current = true; 
-      } else {
-        toast.success('Refreshed');
+      const { data } = await axios.get(`${API_BASE}/admin/all`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const standupOnly = (data.data || []).filter(r => r.type === 'standup');
+      setRegistrations(standupOnly);
+
+      if (!hasFetched.current) {
+        toast.success(`Loaded ${standupOnly.length} registrations`);
+        hasFetched.current = true;
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to fetch');
-      if (err.response?.status === 401) { 
-        localStorage.removeItem('adminToken'); 
-        navigate('/admin'); 
+      toast.error('Failed to load data');
+      if (err.response?.status === 401) {
+        localStorage.removeItem('adminToken');
+        navigate('/admin');
       }
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchRegistrations();
-  }, [navigate]);
+    fetchData();
+  }, []);
 
-  const viewMemes = (memes) => {
-    setSelectedMemes(memes);
-    setShowMemesModal(true);
-  };
-
-  const closeModal = () => {
-    setShowMemesModal(false);
-    setSelectedMemes([]);
-  };
-
-  const filtered = useMemo(() => {
-    let filteredRegs = registrations;
-
-    // Filter by event type
-    if (eventFilter !== 'all') {
-      filteredRegs = filteredRegs.filter(r => r.type === eventFilter);
-    }
-
-    // Filter by search term
-    if (searchTerm) {
-      const s = searchTerm.toLowerCase();
-      filteredRegs = filteredRegs.filter(r => {
-        // Common fields
-        return (
-          (r.name || '').toLowerCase().includes(s) ||
-          (r.email || '').toLowerCase().includes(s) ||
-          (r.phone || r.leader?.phone || '').toLowerCase().includes(s) ||
-          (r.registrationNumber || '').toLowerCase().includes(s) ||
-          (r.utrId || '').toLowerCase().includes(s) ||
-          (r.seat || '').toLowerCase().includes(s) ||
-          (r.teamName || '').toLowerCase().includes(s) ||
-          (r.members || '').toLowerCase().includes(s)
-        );
-      });
-    }
-
-    return filteredRegs;
-  }, [registrations, searchTerm, eventFilter]);
-
-  const buildRow = (r, excludes) => {
-    const allFields = {
-      ID: r._id,
-      Type: r.type?.toUpperCase(),
-      Title: r.title,
-      Name: r.name || r.leader?.name || 'N/A',
-      Email: r.email || r.leader?.email || 'N/A',
-      Phone: r.phone || r.leader?.phone || 'N/A',
-      'Reg No': r.registrationNumber || r.leader?.registrationNumber || 'N/A',
-      'UTR ID': r.utrId || 'N/A',
-      'Team Name': r.teamName || 'N/A',
-      'Members': r.members || 'N/A',
-      Seat: r.seat || 'N/A',
-      'Screenshot': r.screenshotUrl || 'N/A',
-      'Submission': r.submissionUrl || 'N/A',
-      'Memes': r.memes ? JSON.stringify(r.memes.map(m => ({ url: m.url, format: m.format }))) : 'N/A',
-      'Created': new Date(r.createdAt || r.registeredAt || Date.now()).toLocaleString(),
-    };
-
-    const row = {};
-    Object.entries(allFields).forEach(([key, value]) => {
-      if (!excludes.includes(key)) {
-        row[key] = value;
-      }
-    });
-    return row;
-  };
+  const filtered = registrations.filter(r =>
+    search === '' ||
+    r.name?.toLowerCase().includes(search.toLowerCase()) ||
+    r.email?.toLowerCase().includes(search.toLowerCase()) ||
+    r.phone?.includes(search) ||
+    r.utrId?.includes(search) ||
+    r.registrationNumber?.toLowerCase().includes(search.toLowerCase())
+  );
 
   const downloadExcel = () => {
-    const date = new Date().toISOString().slice(0, 10);
+    const data = filtered.map((r, i) => ({
+      'S.No': i + 1,
+      'Name': r.name,
+      'Email': r.email,
+      'Phone': r.phone,
+      'Reg No': r.registrationNumber,
+      'UTR ID': r.utrId,
+      'Seat': r.category === 'front' ? 'Front Row' : 'Normal Row',
+      'Amount': '₹' + r.totalAmount,
+      'Offer': r.offerApplied ? 'Duo ₹998' : '-',
+      'Date': new Date(r.createdAt).toLocaleDateString(),
+      'Time': new Date(r.createdAt).toLocaleTimeString()
+    }));
 
-    if (eventFilter !== 'all') {
-      // Single file for specific event
-      const excludes = excludedColumns[eventFilter] || [];
-      const data = filtered.map(r => buildRow(r, excludes));
-
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(data);
-      const sheetName = `${eventFilter.toUpperCase()} Registrations`;
-      XLSX.utils.book_append_sheet(wb, ws, sheetName);
-      XLSX.writeFile(wb, `${eventFilter}_regs_${date}.xlsx`);
-      toast.success('Downloaded Excel');
-    } else {
-      // Separate files for all events (grouped by type)
-      const grouped = filtered.reduce((acc, r) => {
-        const type = r.type?.toUpperCase() || 'UNKNOWN';
-        if (!acc[type]) acc[type] = [];
-        acc[type].push(r);
-        return acc;
-      }, {});
-
-      let downloadedCount = 0;
-      Object.entries(grouped).forEach(([type, groupData]) => {
-        if (groupData.length > 0) {
-          const lowerType = type.toLowerCase();
-          const excludes = excludedColumns[lowerType] || [];
-          const data = groupData.map(r => buildRow(r, excludes));
-
-          const wb = XLSX.utils.book_new();
-          const ws = XLSX.utils.json_to_sheet(data);
-          XLSX.utils.book_append_sheet(wb, ws, `${type} Registrations`);
-          XLSX.writeFile(wb, `${lowerType}_regs_${date}.xlsx`);
-          downloadedCount++;
-        }
-      });
-
-      if (downloadedCount > 0) {
-        toast.success(`Downloaded ${downloadedCount} Excel files`);
-      } else {
-        toast.warn('No data to download');
-      }
-    }
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Standup');
+    XLSX.writeFile(wb, `Standup_Registrations_${new Date().toISOString().slice(0,10)}.xlsx`);
+    toast.success('Excel downloaded');
   };
-
-  const getSeatBadge = (r) => {
-    if (!r.seat) return null;
-    const isPremium = ['N', 'M', 'L'].includes(r.seatRow);
-    return (
-      <span className={`px-2 py-0.5 text-xs rounded-full text-white ${isPremium ? 'bg-purple-600' : 'bg-teal-600'}`}>
-        {isPremium ? 'Premium' : 'Executive'}
-      </span>
-    );
-  };
-
-  const isTeamEvent = (type) => ['hackathon', 'ideathon'].includes(type);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow p-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            All Event Registrations Dashboard
-          </h2>
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6 border">
+          <h1 className="text-2xl font-bold text-gray-800">Standup Comedy Registrations</h1>
+          <p className="text-gray-600 mt-1">Total: <strong>{registrations.length}</strong> | Front Row: <strong>{registrations.filter(r => r.category === 'front').length}</strong></p>
+        </div>
+
+        {/* Controls */}
+        <div className="bg-white rounded-lg shadow-sm p-4 mb-6 border flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
+          <input
+            type="text"
+            placeholder="Search name, email, phone, UTR..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 border rounded-lg w-full md:w-96 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
           <div className="flex gap-3">
-            <button 
-              onClick={fetchRegistrations} 
-              disabled={loading}
-              className={`px-5 py-2 rounded-lg text-white font-medium ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}
-            >
+            <button onClick={fetchData} className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Refresh
             </button>
-            <button 
-              onClick={downloadExcel} 
-              disabled={loading || filtered.length === 0}
-              className={`px-5 py-2 rounded-lg text-white font-medium ${loading || filtered.length === 0 ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}
-            >
+            <button onClick={downloadExcel} className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
               Download Excel
             </button>
-            <button 
+            <button
               onClick={() => {
                 localStorage.removeItem('adminToken');
                 toast.info('Logged out');
                 navigate('/admin');
               }}
-              className="px-5 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700"
+              className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
             >
               Logout
             </button>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-2xl shadow p-4 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Event</label>
-            <select 
-              value={eventFilter} 
-              onChange={(e) => setEventFilter(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {eventTypes.map(type => (
-                <option key={type.value} value={type.value}>{type.label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-            <div className="flex items-center gap-2">
-              <input 
-                type="text" 
-                placeholder="Name / Email / Phone / Seat / Reg No / UTR / Team..."
-                value={searchTerm} 
-                onChange={e => setSearchTerm(e.target.value)}
-                className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {searchTerm && (
-                <button 
-                  onClick={() => setSearchTerm('')} 
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            {searchTerm && (
-              <p className="text-sm text-gray-500 mt-1">
-                {filtered.length} of {registrations.length} results
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Loading / Empty / Table */}
+        {/* Table */}
         {loading ? (
-          <div className="text-center py-12 bg-white rounded-2xl shadow">Loading registrations...</div>
+          <div className="text-center py-20 text-gray-500">Loading...</div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-2xl shadow">
-            {searchTerm || eventFilter !== 'all' ? 'No matching registrations' : 'No registrations yet'}
+          <div className="text-center py-20 text-gray-500 text-lg">
+            {search ? 'No results found' : 'No registrations yet'}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow overflow-hidden">
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-gray-100">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-100 border-b">
                   <tr>
-                    {['Type', 'Title', 'Name', 'Email', 'Phone', 'Reg No', 'UTR ID', 'Team Name', 'Members', 'Seat', 'Screenshot', 'Submission', 'Memes', 'Created'].map(h => (
-                      <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                        {h}
-                      </th>
-                    ))}
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">S.No</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Name</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Email</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Phone</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Reg No</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">UTR</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Seat</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Amount</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Offer</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Screenshot</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-700">Date & Time</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {filtered.map(r => {
-                    const isTeam = isTeamEvent(r.type);
-                    const hasScreenshot = r.screenshotUrl;
-                    const hasSubmission = r.submissionUrl;
-                    const seatBadge = getSeatBadge(r);
-                    const hasMemes = r.memes && r.memes.length > 0;
-
-                    return (
-                      <tr key={r._id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-xs font-medium text-gray-900">{r.type?.toUpperCase()}</td>
-                        <td className="px-4 py-3 text-sm">{r.title}</td>
-                        <td className="px-4 py-3 font-medium text-sm">{r.name}</td>
-                        <td className="px-4 py-3 text-sm">{r.email}</td>
-                        <td className="px-4 py-3 text-sm">{r.phone || r.leader?.phone || 'N/A'}</td>
-                        <td className="px-4 py-3 text-sm">{r.registrationNumber}</td>
-                        <td className="px-4 py-3 text-sm">{r.utrId || 'N/A'}</td>
-                        <td className="px-4 py-3 text-sm font-medium">{r.teamName || '-'}</td>
-                        <td className="px-4 py-3 text-sm">{isTeam ? (r.members || 'Solo') : '-'}</td>
-                        <td className="px-4 py-3 text-sm">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold">{r.seat || '-'}</span>
-                            {seatBadge}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          {hasScreenshot ? (
-                            <a 
-                              href={r.screenshotUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline text-xs"
-                            >
-                              View
-                            </a>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          {hasSubmission ? (
-                            <a 
-                              href={r.submissionUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline text-xs"
-                            >
-                              View
-                            </a>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          {hasMemes ? (
-                            <button
-                              onClick={() => viewMemes(r.memes)}
-                              className="text-blue-600 hover:underline text-xs font-medium"
-                            >
-                              View {r.memes.length}
-                            </button>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-xs text-gray-500">
-                          {new Date(r.createdAt || r.registeredAt || Date.now()).toLocaleString()}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {filtered.map((r, i) => (
+                    <tr key={r._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-gray-600">{i + 1}</td>
+                      <td className="px-4 py-3 font-medium">{r.name}</td>
+                      <td className="px-4 py-3 text-blue-600">{r.email}</td>
+                      <td className="px-4 py-3">{r.phone}</td>
+                      <td className="px-4 py-3 text-sm">{r.registrationNumber}</td>
+                      <td className="px-4 py-3 font-mono text-xs">{r.utrId}</td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          r.category === 'front' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {r.category === 'front' ? 'Front' : 'Normal'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-bold text-green-600">₹{r.totalAmount}</td>
+                      <td className="px-4 py-3 text-center">
+                        {r.offerApplied ? <span className="text-green-600 font-medium">Duo ₹998</span> : '-'}
+                      </td>
+                      <td className="px-4 py-3">
+                        <a href={r.screenshotUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
+                          View
+                        </a>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-600">
+                        {new Date(r.createdAt).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
-            <div className="bg-gray-50 px-4 py-2 text-sm text-gray-600">
-              Showing {filtered.length} of {registrations.length} {eventFilter !== 'all' ? `(${eventFilter.toUpperCase()}) ` : ''}results
+            <div className="bg-gray-50 px-6 py-3 text-sm text-gray-600 border-t">
+              Showing {filtered.length} of {registrations.length} registrations
+              {search && ` • Filtered by "${search}"`}
             </div>
           </div>
         )}
-
-        {/* Memes Modal */}
-        {showMemesModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl max-w-4xl max-h-[90vh] w-full overflow-y-auto shadow-2xl">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold">Uploaded Memes ({selectedMemes.length})</h3>
-                  <button 
-                    onClick={closeModal} 
-                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-                  >
-                    ×
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {selectedMemes.map((meme, index) => (
-                    <div key={index} className="border rounded-lg p-2 bg-gray-50">
-                      <img 
-                        src={meme.url} 
-                        alt={`Meme ${index + 1}`}
-                        className="w-full h-48 object-contain rounded border"
-                        onError={(e) => {
-                          e.target.src = '/placeholder-image.png'; // Fallback if needed
-                        }}
-                      />
-                      <p className="text-xs text-gray-500 mt-2 truncate">{meme.public_id.split('/').pop()}</p>
-                      <a 
-                        href={meme.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline text-xs block mt-1"
-                      >
-                        Open Full Size
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <ToastContainer position="top-right" autoClose={3000} theme="colored" />
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }
