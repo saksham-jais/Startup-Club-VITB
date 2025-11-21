@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const API_BASE = 'http://localhost:5000' || 'https://startup-club-dczt.onrender.com';
+const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
