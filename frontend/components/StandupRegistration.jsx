@@ -6,7 +6,7 @@ const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const qrCode = "/qr.jpg";
-  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763729714/1_gasfky.png';
+  const desktopBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763731070/BANNER_1_ts1xwq.png';
   const mobileBanner = 'https://res.cloudinary.com/dt83ijcjr/image/upload/v1763729986/standup_comedy_ishant_syqqml.png';
 
   const [members, setMembers] = useState([
