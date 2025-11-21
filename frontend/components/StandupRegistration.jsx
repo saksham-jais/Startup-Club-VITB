@@ -55,7 +55,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
       const updated = prev.map(m => m.id === id ? { ...m, [field]: value } : m);
 
       if (updated[0].category === 'normal' && updated.length > 1) {
-        toast.warn('Normal row selected → 2nd member removed! Duo offer only for 2 Front Rows.');
+        toast.warn('Normal row selected → 2nd member removed! Duo offer only for 2 Front Seat.');
         return [updated[0]];
       }
 
@@ -142,7 +142,7 @@ const handleSubmit = async () => {
         <img src={mobileBanner} alt="Banner" className="w-full h-auto md:hidden" />
         <div className="absolute inset-x-0 bottom-0 translate-y-1/2 text-center">
           <div className="inline-block bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 px-8 py-4 rounded-full shadow-2xl">
-            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT ROWS = ONLY ₹998!</span>
+            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹998!</span>
           </div>
         </div>
       </section>
