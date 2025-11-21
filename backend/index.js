@@ -1,4 +1,4 @@
-// server.js — FINAL FIXED VERSION
+// server.js — FIXED WITH JSON PARSER (Safe for Multer + JSON routes)
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -26,11 +26,8 @@ app.use(cors({
   credentials: true,
 }));
 
-// REMOVE express.json() ENTIRELY WHEN USING MULTER
-// app.use(express.json({ limit: '50mb' }));  // DELETE THIS LINE
-
-// Only keep this if you have pure JSON routes elsewhere
-// Otherwise, remove it completely
+// ADD JSON PARSER (Needed for login/admin JSON POSTs; Multer overrides for multipart)
+app.use(express.json({ limit: '50mb' }));  // Uncommented: Safe with per-route Multer
 
 app.get('/', (req, res) => {
   res.json({ message: 'Startup Club API Running!' });
