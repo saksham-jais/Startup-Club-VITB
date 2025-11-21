@@ -19,8 +19,8 @@ const subEvents = [
     description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
     img: "/Day 2-images/BANNER.png",
     venue: "AB1, Auditorium-1",
-    time: "3:00 PM - 4:00 PM",
-    registrationFee: "₹399-₹699 per person (based on seat)",
+    time: "3:00 PM",
+    registrationFee: "₹399-₹549",
     teamSize: "Individual",
     route: "/register-standup"
   },
