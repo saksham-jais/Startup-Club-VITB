@@ -13,6 +13,7 @@ function AdminDashboard() {
   const [flattened, setFlattened] = useState([]);  // Flattened for table/search/export
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [seatFilter, setSeatFilter] = useState('all');
   const navigate = useNavigate();
   const hasFetched = useRef(false);
 
@@ -61,19 +62,35 @@ function AdminDashboard() {
 
   useEffect(() => { fetchData(); }, []);
 
-  const filtered = flattened.filter(r =>
-    search === '' ||
-    r.name?.toLowerCase().includes(search.toLowerCase()) ||
-    r.email?.toLowerCase().includes(search.toLowerCase()) ||
-    r.phone?.includes(search) ||
-    r.utrId?.includes(search) ||
-    r.registrationNumber?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = flattened.filter(r => {
+    const matchesSearch = search === '' ||
+      r.name?.toLowerCase().includes(search.toLowerCase()) ||
+      r.email?.toLowerCase().includes(search.toLowerCase()) ||
+      r.phone?.includes(search) ||
+      r.utrId?.includes(search) ||
+      r.registrationNumber?.toLowerCase().includes(search.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    switch (seatFilter) {
+      case 'normal':
+        return r.category === 'normal';
+      case 'front-solo':
+        return r.category === 'front' && r.memberCount === 1;
+      case 'front-duo':
+        return r.category === 'front' && r.memberCount === 2;
+      case 'duo':
+        return r.memberCount === 2 && r.category !== 'front';
+      default:
+        return true;
+    }
+  });
 
   // Stats from flattened/groups
   const totalRegs = flattened.length;
   const duoGroups = groups.filter(g => g.offerApplied).length;  // Groups with offer
   const frontSeats = flattened.filter(r => r.category === 'front').length;
+  const totalAmount = groups.reduce((acc, g) => acc + g.totalAmount, 0);
 
   const downloadExcel = () => {
     const data = filtered.map((r, i) => ({
@@ -83,9 +100,9 @@ function AdminDashboard() {
       'Phone': r.phone,
       'Reg No': r.registrationNumber,
       'UTR ID': r.utrId,
-      'Seat': r.category === 'front' ? 'Front Row' : 'Normal Row',
+      'Seat': r.category === 'front' ? (r.memberCount === 2 ? 'Front Row Duo' : 'Front Row Solo') : 'Normal Row',
       'Amount': '₹' + r.totalAmount,
-      'Offer': r.offerApplied ? 'DUO ₹998' : 'No',
+      'Offer': r.offerApplied ? 'DUO' : 'No',
       'Group Size': r.memberCount,
       'Screenshot': r.screenshotUrl || 'N/A',
       'Date': new Date(r.createdAt).toLocaleDateString(),
@@ -106,7 +123,8 @@ function AdminDashboard() {
         <p className="text-xl text-gray-600 mb-8">
           Total Registrants: <strong>{totalRegs}</strong> | 
           Duo Groups: <strong>{duoGroups}</strong> |
-          Front Row Seats: <strong>{frontSeats}</strong>
+          Front Row Seats: <strong>{frontSeats}</strong> |
+          Total Amount: <strong>₹{totalAmount}</strong>
         </p>
 
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6 flex flex-wrap gap-4">
@@ -114,6 +132,13 @@ function AdminDashboard() {
             type="text" placeholder="Search by name/email/phone/regNo/UTR..." value={search} onChange={e => setSearch(e.target.value)}
             className="px-4 py-3 border rounded-lg w-full md:w-96"
           />
+          <select value={seatFilter} onChange={e => setSeatFilter(e.target.value)} className="px-4 py-3 border rounded-lg">
+            <option value="all">All Seats</option>
+            <option value="normal">Normal Row</option>
+            <option value="front-solo">Front Row Solo</option>
+            <option value="front-duo">Front Row Duo</option>
+            {/* <option value="duo">Normal Duo</option> */}
+          </select>
           <button onClick={fetchData} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Refresh</button>
           <button onClick={downloadExcel} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Excel</button>
           <button onClick={() => { localStorage.removeItem('adminToken'); navigate('/admin'); }} className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700">Logout</button>
@@ -151,12 +176,12 @@ function AdminDashboard() {
                      <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">{r.utrId}</td>
                      <td className="px-6 py-4 whitespace-nowrap">
                        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${r.category === 'front' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-700'}`}>
-                         {r.category === 'front' ? 'Front' : 'Normal'}
+                         {r.category === 'front' ? (r.memberCount === 2 ? 'Front Duo' : 'Front Solo') : 'Normal'}
                        </span>
                      </td>
                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">₹{r.totalAmount}</td>
                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
-                       {r.offerApplied ? <span className="text-green-600 font-bold">DUO ₹998</span> : '-'}
+                       {r.offerApplied ? <span className="text-green-600 font-bold">DUO</span> : '-'}
                      </td>
                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-medium">{r.memberCount === 2 ? '2 (Duo)' : '1'}</td>
                      <td className="px-6 py-4 whitespace-nowrap text-sm">
