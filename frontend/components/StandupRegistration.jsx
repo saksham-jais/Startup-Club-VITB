@@ -162,7 +162,7 @@ const handleSubmit = async () => {
       <section className="bg-gradient-to-b from-purple-50 to-pink-50 py-16">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-800">Group Registration – Best Deal!</h2>
-          <p className="text-center text-lg text-gray-600 mb-12 max-w-2xl mx-auto">If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.</p>
+          <p className="text-center text-lg font-semibold text-red-600 mb-12 max-w-2xl mx-auto">If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.</p>
 
           <div className="grid lg:grid-cols-2 gap-10">
             {/* LEFT: Member Forms */}
@@ -238,7 +238,7 @@ const handleSubmit = async () => {
                 </div>
               </div>
 
-              <p className="text-center text-sm text-gray-600 mb-4">If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.</p>
+              <p className="text-center text-sm font-semibold text-red-600 mb-4">If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.</p>
 
               <div className="space-y-4">
                 <label className="block text-xl font-bold">Upload Payment Screenshot *</label>
