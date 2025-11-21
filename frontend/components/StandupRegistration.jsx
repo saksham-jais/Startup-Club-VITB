@@ -28,23 +28,6 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const totalPrice = calculateTotal();
   const isOfferApplied = members.length === 2 && members.every(m => m.category === 'front');
 
-  const addMember = () => {
-    if (members.length >= 2) return toast.warn('Maximum 2 members allowed');
-    if (members[0].category !== 'front') return toast.error('Select Front Row for Member 1 to unlock ₹998 Duo Offer!');
-
-    const firstMemberUtr = members[0].utrId.trim();
-    if (!firstMemberUtr || firstMemberUtr.length < 12) {
-      toast.error('Please enter valid UTR ID for Member 1 first!');
-      return;
-    }
-
-    setMembers([...members, {
-      id: Date.now(),
-      name: '', regNo: '', email: '', phone: '', utrId: firstMemberUtr, category: 'front'
-    }]);
-    toast.success('2nd Member Added! UTR ID auto-filled from Member 1');
-  };
-
   const removeMember = (id) => {
     setMembers(members.filter(m => m.id !== id));
     toast.info('2nd member removed');
@@ -52,16 +35,29 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
 
   const updateMember = (id, field, value) => {
     setMembers(prev => {
-      const updated = prev.map(m => m.id === id ? { ...m, [field]: value } : m);
+      if (field === 'category' && value === 'duo' && prev.length === 1) {
+        const first = { ...prev[0], category: 'front' };
+        const second = {
+          id: Date.now(),
+          name: '', regNo: '', email: '', phone: '', utrId: first.utrId, category: 'front'
+        };
+        // toast.success('2nd Member Added Automatically! Please provide UTR ID for the duo payment.');
+        return [first, second];
+      } else if (field === 'category') {
+        const first = { ...prev[0], category: value };
+        return [first];
+      }
+
+      let updated = prev.map(m => m.id === id ? { ...m, [field]: value } : m);
 
       if (updated[0].category === 'normal' && updated.length > 1) {
-        toast.warn('Normal row selected → 2nd member removed! Duo offer only for 2 Front Seat.');
+        toast.warn('Normal row selected → 2nd member removed! Duo offer only for Front Seats.');
         return [updated[0]];
       }
 
-      if (updated.length === 2 && id === updated[0].id && field === 'utrId') {
-        updated[1].utrId = value;
-        toast.info('UTR updated for both members');
+      if (updated.length === 2 && field === 'utrId') {
+        updated = updated.map(m => ({ ...m, utrId: value }));
+        // toast.info('UTR updated for both members');
       }
 
       return updated;
@@ -114,9 +110,25 @@ const handleSubmit = async () => {
       body: fd, // No headers needed — FormData sets correct Content-Type
     });
 
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.error || 'Registration failed');
+    if (!r.ok) {
+      let errorMsg = 'Registration failed';
+      try {
+        const text = await r.text();
+        try {
+          const data = JSON.parse(text);
+          errorMsg = data.error || errorMsg;
+        } catch (parseErr) {
+          // If not JSON, truncate text for display (e.g., HTML error page)
+          errorMsg = text.length > 200 ? text.substring(0, 200) + '...' : text;
+          if (!errorMsg.trim()) errorMsg = `HTTP ${r.status}: Server responded with unexpected content`;
+        }
+      } catch (textErr) {
+        errorMsg = `HTTP ${r.status}: Unable to read response`;
+      }
+      throw new Error(errorMsg);
+    }
 
+    const data = await r.json();
     toast.success(isOfferApplied
       ? 'OFFER APPLIED! 2 Front Row Seats → Only ₹998!'
       : `Registered ${members.length} member(s) → ₹${totalPrice}`
@@ -173,8 +185,8 @@ const handleSubmit = async () => {
                       className={`w-full px-4 py-3 border-2 rounded-xl transition ${member.email && !isValidVitEmail(member.email) ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'}`} />
                     {member.email && !isValidVitEmail(member.email) && <p className="text-red-600 text-sm -mt-2">Only @vitbhopal.ac.in allowed</p>}
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
+                    <div className={`grid ${idx === 0 ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
+                      <div className={idx === 0 ? '' : 'col-span-full'}>
                         <input type="text" placeholder="Phone * (10 digits)" value={member.phone}
                           onChange={e => { const digits = e.target.value.replace(/\D/g, '').slice(0, 10); updateMember(member.id, 'phone', digits); }}
                           className={`w-full px-4 py-3 border-2 rounded-xl font-mono text-lg ${member.phone && member.phone.length !== 10 ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'}`}
@@ -182,39 +194,31 @@ const handleSubmit = async () => {
                         {member.phone && member.phone.length !== 10 && <p className="text-red-600 text-sm mt-1">Exactly 10 digits ({member.phone.length}/10)</p>}
                       </div>
 
-                      <div>
-                        <input type="text" placeholder={idx === 1 ? `UTR ID * (Same as Member 1)` : `UTR ID * (min 12 chars)`}
-                          value={member.utrId} onChange={e => updateMember(member.id, 'utrId', e.target.value.slice(0, 30))}
-                          readOnly={idx === 1} maxLength={30}
-                          className={`w-full px-4 py-3 border-2 rounded-xl ${member.utrId && (member.utrId.length < 12 || !/^[a-zA-Z0-9]+$/.test(member.utrId)) ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'} ${idx === 1 ? 'bg-gray-50 cursor-not-allowed' : ''}`} />
-                        {idx === 1 && member.utrId && member.utrId.length >= 12 && /^[a-zA-Z0-9]+$/.test(member.utrId) && <p className="text-green-600 text-sm mt-1">Same UTR Applied</p>}
-                        {idx === 0 && member.utrId && member.utrId.length < 12 && <p className="text-red-600 text-sm mt-1">Min 12 characters ({member.utrId.length}/12)</p>}
-                        {idx === 0 && member.utrId && !/^[a-zA-Z0-9]+$/.test(member.utrId) && member.utrId.length >= 1 && <p className="text-red-600 text-sm mt-1">Only letters & numbers</p>}
-                        {idx === 0 && member.utrId && member.utrId.length >= 12 && /^[a-zA-Z0-9]+$/.test(member.utrId) && <p className="text-green-600 text-sm mt-1">Valid UTR</p>}
-                      </div>
+                      {idx === 0 && (
+                        <div>
+                          <input type="text" placeholder={`UTR ID * (min 12 chars)`}
+                            value={member.utrId} onChange={e => updateMember(member.id, 'utrId', e.target.value.slice(0, 30))}
+                            maxLength={30}
+                            className={`w-full px-4 py-3 border-2 rounded-xl ${member.utrId && (member.utrId.length < 12 || !/^[a-zA-Z0-9]+$/.test(member.utrId)) ? 'border-red-500 bg-red-50' : 'border-gray-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'}`} />
+                          {member.utrId && member.utrId.length < 12 && <p className="text-red-600 text-sm mt-1">Min 12 characters ({member.utrId.length}/12)</p>}
+                          {member.utrId && !/^[a-zA-Z0-9]+$/.test(member.utrId) && member.utrId.length >= 1 && <p className="text-red-600 text-sm mt-1">Only letters & numbers</p>}
+                          {member.utrId && member.utrId.length >= 12 && /^[a-zA-Z0-9]+$/.test(member.utrId) && <p className="text-green-600 text-sm mt-1">Valid UTR</p>}
+                        </div>
+                      )}
                     </div>
 
-                    {idx === 0 ? (
-                      <select value={member.category} onChange={e => updateMember(member.id, 'category', e.target.value)} disabled={members.length > 1}
-                        className={`w-full px-4 py-3 border-2 rounded-xl font-medium transition ${members.length > 1 ? 'bg-gray-100 cursor-not-allowed' : 'border-gray-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100'}`}>
+                    {idx === 0 && members.length === 1 && (
+                      <select value={member.category} onChange={e => updateMember(member.id, 'category', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition">
                         <option value="normal">Normal Rows - ₹399</option>
                         <option value="front">Front Rows - ₹549</option>
+                        <option value="duo">Duo Front Rows - ₹998</option>
                       </select>
-                    ) : (
-                      <div className="w-full px-4 py-3 bg-emerald-100 border-2 border-emerald-400 rounded-xl text-center font-bold text-emerald-800">
-                        Front Rows - ₹549 (Offer Locked)
-                      </div>
                     )}
                   </div>
                 </div>
               ))}
 
-              {members.length < 2 && (
-                <button onClick={addMember} disabled={members[0].category !== 'front'}
-                  className="w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xl rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition hover:scale-105">
-                  {members[0].category === 'front' ? '+ Add 2nd Member (Unlock ₹998 Offer!)' : 'Select Front Row First'}
-                </button>
-              )}
             </div>
 
             {/* RIGHT: Payment */}
