@@ -1,147 +1,54 @@
+// routes/admin.js
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';  // Added: Import bcrypt (install with npm i bcryptjs)
-import CulturalPerformanceRegistration from '../models/CulturalPerformanceRegistration.js';
-import EsportsRegistration from '../models/EsportsRegistration.js';
-import HackathonRegistration from '../models/HackathonRegistration.js';
-import IdeathonRegistration from '../models/IdeathonRegistration.js';
-import MemeWarRegistration from '../models/MemeWarRegistration.js';
-import PodcastRegistration from '../models/PodcastRegistration.js';
+import bcrypt from 'bcryptjs';
 import StandupRegistration from '../models/StandupRegistration.js';
 
 const router = express.Router();
 
-// Middleware for authentication (used for /all)
-const authenticate = (req, res, next) => {
+// ADMIN LOGIN
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Credentials required' });
+
+  const valid = username === process.env.ADMIN_USERNAME &&
+    await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
+
+  if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+
+  const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
+  res.json({ message: 'Login successful', token });
+});
+
+// GET ALL STANDUP REGISTRATIONS
+router.get('/all', authenticateToken, async (req, res) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) {
-      return res.status(401).json({ error: 'Access denied. No token provided.' });
-    }
+    const regs = await StandupRegistration.find({}).sort({ createdAt: -1 }).lean();
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-    req.user = decoded;
-    next();
-  } catch (error) {
-    console.error('Auth error:', error);
-    res.status(401).json({ error: 'Invalid token.' });
-  }
-};
+    const formatted = regs.map(r => ({
+      ...r,
+      type: 'standup',
+      seatDisplay: r.category === 'front' ? 'Front Row' : 'Normal Row',
+      offerDisplay: r.offerApplied ? 'Duo ₹998' : 'No Offer',
+      memberCount: r.memberCount
+    }));
 
-// ADMIN AUTH MIDDLEWARE
-const adminAuth = async (req, res, next) => {
-  if (req.path === '/login') {
-    const { username, password } = req.body;
-    if (!username || !password) return res.status(400).json({ error: 'Credentials required' });
-
-    const match = username === process.env.ADMIN_USERNAME &&
-                  await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
-
-    if (match) {
-      const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET || 'fallback-secret', { expiresIn: '2h' });
-      return res.json({ message: 'Login successful', token });
-    }
-    return res.status(401).json({ error: 'Invalid credentials' });
-  }
-
-  // For protected routes (non-login)
-  const token = req.header('Authorization')?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'No token' });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
-    if (decoded.role !== 'admin') {
-      return res.status(403).json({ error: 'Admin access required' });  // Added: Role check
-    }
-    req.user = decoded;  // Attach user for downstream use
-    next();
+    res.json({ success: true, data: formatted });
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-};
-
-// GET /admin/all - Fetch all registrations with normalization
-router.get('/all', authenticate, async (req, res) => {
-  try {
-    const [
-      culturalRegs,
-      esportsRegs,
-      hackathonRegs,
-      ideathonRegs,
-      memewarRegs,
-      podcastRegs,
-      standupRegs
-    ] = await Promise.all([
-      CulturalPerformanceRegistration.find({}).lean(),
-      EsportsRegistration.find({}).lean(),
-      HackathonRegistration.find({}).lean(),
-      IdeathonRegistration.find({}).lean(),
-      MemeWarRegistration.find({}).lean(),
-      PodcastRegistration.find({}).lean(),
-      StandupRegistration.find({}).lean()
-    ]);
-
-    // Normalize each type to common structure
-    const normalizeIndividual = (reg, type) => ({
-      ...reg,
-      type,
-      name: reg.name,
-      email: reg.email || null,
-      phone: reg.phone || null,
-      registrationNumber: reg.registrationNumber || null,
-      utrId: reg.utrId || null,
-      screenshotUrl: reg.screenshotUrl || null,
-      seat: reg.seatRow && reg.seatColumn ? `${reg.seatRow}${reg.seatColumn}` : null,
-      seatRow: reg.seatRow || null,
-      seatColumn: reg.seatColumn || null,
-      members: null, // No members
-      teamName: null,
-      submissionUrl: null,
-      memesCount: reg.memes ? reg.memes.length : null
-    });
-
-    const normalizeTeam = (reg, type) => {
-      const leader = reg.leader;
-      return {
-        ...reg,
-        type,
-        name: leader.name,
-        email: leader.email,
-        phone: leader.phone || null,
-        registrationNumber: leader.registrationNumber,
-        utrId: reg.utrId,
-        screenshotUrl: reg.screenshotUrl,
-        seat: null, // Teams don't have seats
-        seatRow: null,
-        seatColumn: null,
-        members: reg.members ? reg.members.map(m => `${m.name} (${m.registrationNumber})`).join(', ') : null,
-        teamName: reg.teamName,
-        submissionUrl: reg.submissionFile ? reg.submissionFile.url : null,
-        memesCount: null
-      };
-    };
-
-    const allRegs = [
-      ...culturalRegs.map(r => normalizeIndividual(r, 'cultural')),
-      ...podcastRegs.map(r => normalizeIndividual(r, 'podcast')),
-      ...esportsRegs.map(r => normalizeIndividual(r, 'esports')),
-      ...memewarRegs.map(r => normalizeIndividual(r, 'memewar')),
-      ...standupRegs.map(r => normalizeIndividual(r, 'standup')),
-      ...hackathonRegs.map(r => normalizeTeam(r, 'hackathon')),
-      ...ideathonRegs.map(r => normalizeTeam(r, 'ideathon'))
-    ];
-
-    // Sort by createdAt descending
-    allRegs.sort((a, b) => new Date(b.createdAt || b.registeredAt) - new Date(a.createdAt || a.registeredAt));
-
-    res.json({ data: allRegs });
-  } catch (error) {
-    console.error('Error fetching all registrations:', error);
-    res.status(500).json({ error: 'Failed to fetch registrations' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch' });
   }
 });
 
-// ADMIN ROUTES
-router.post('/login', adminAuth);
+function authenticateToken(req, res, next) {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'No token' });
+
+  jwt.verify(token, process.env.JWT_SECRET || 'secret', (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+}
 
 export default router;
