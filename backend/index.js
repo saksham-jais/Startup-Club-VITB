@@ -1,20 +1,9 @@
-// server.js - Updated for Render compatibility
+// server.js — FINAL FIXED VERSION
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
 import { v2 as cloudinary } from 'cloudinary';
-// import serverless from 'serverless-http';  // Commented out for Render; re-enable for Lambda
-
-// Import routes at top (ESM requirement)
-import hackathonRoutes from './routes/hackathon.js';
-import ideathonRoutes from './routes/ideathon.js';
-import memewarRoutes from './routes/memewar.js';
-import podcastRoutes from './routes/podcast.js';
-import culturalRoutes from './routes/cultural.js';
-import esportsRoutes from './routes/esports.js';
-import standupRoutes from './routes/standup.js';
-import adminRoutes from './routes/admin.js';
 
 config();
 
@@ -26,8 +15,7 @@ cloudinary.config({
 
 const app = express();
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// CORS FIRST
 app.use(cors({
   origin: [
     'http://localhost:5173',
@@ -38,9 +26,25 @@ app.use(cors({
   credentials: true,
 }));
 
+// REMOVE express.json() ENTIRELY WHEN USING MULTER
+// app.use(express.json({ limit: '50mb' }));  // DELETE THIS LINE
+
+// Only keep this if you have pure JSON routes elsewhere
+// Otherwise, remove it completely
+
 app.get('/', (req, res) => {
   res.json({ message: 'Startup Club API Running!' });
 });
+
+// Routes
+import hackathonRoutes from './routes/hackathon.js';
+import ideathonRoutes from './routes/ideathon.js';
+import memewarRoutes from './routes/memewar.js';
+import podcastRoutes from './routes/podcast.js';
+import culturalRoutes from './routes/cultural.js';
+import esportsRoutes from './routes/esports.js';
+import adminRoutes from './routes/admin.js';
+import standupRoutes from './routes/standup.js';
 
 app.use('/hackathon', hackathonRoutes);
 app.use('/ideathon', ideathonRoutes);
@@ -48,10 +52,9 @@ app.use('/memewar', memewarRoutes);
 app.use('/podcast', podcastRoutes);
 app.use('/cultural', culturalRoutes);
 app.use('/esports', esportsRoutes);
-app.use('/standup', standupRoutes);
 app.use('/admin', adminRoutes);
+app.use('/standup', standupRoutes); // must be last
 
-// Connect to MongoDB (use top-level await or wrap in async IIFE)
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -61,7 +64,6 @@ async function startServer() {
     process.exit(1);
   }
 
-  // Always bind to PORT for Render/Vercel/local
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
@@ -70,7 +72,4 @@ async function startServer() {
 
 startServer();
 
-// For Lambda (if needed later):
-// const handler = serverless(app);
-// export { handler };
 export default app;
