@@ -41,7 +41,6 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
           id: Date.now(),
           name: '', regNo: '', email: '', phone: '', utrId: first.utrId, category: 'front'
         };
-        // toast.success('2nd Member Added Automatically! Please provide UTR ID for the duo payment.');
         return [first, second];
       } else if (field === 'category') {
         const first = { ...prev[0], category: value };
@@ -57,7 +56,6 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
 
       if (updated.length === 2 && field === 'utrId') {
         updated = updated.map(m => ({ ...m, utrId: value }));
-        // toast.info('UTR updated for both members');
       }
 
       return updated;
@@ -78,73 +76,69 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
     ) && screenshot !== null;
   };
 
-const handleSubmit = async () => {
-  if (!validateForm()) {
-    toast.error('Fix all errors: VIT email, 10-digit phone, UTR ≥12 chars');
-    return;
-  }
-
-  setIsSubmitting(true);
-  const fd = new FormData();
-
-  // Simple flat fields — NO NESTED BRACKETS
-  fd.append('title', title);
-  fd.append('totalAmount', totalPrice);
-  fd.append('offerApplied', isOfferApplied);
-
-  // Send members as flat indexed fields
-  members.forEach((m, i) => {
-    fd.append(`member_name_${i}`, m.name.trim());
-    fd.append(`member_regNo_${i}`, m.regNo.trim());
-    fd.append(`member_email_${i}`, m.email.trim().toLowerCase());
-    fd.append(`member_phone_${i}`, m.phone.trim());
-    fd.append(`member_utrId_${i}`, m.utrId.trim());
-    fd.append(`member_category_${i}`, m.category);
-  });
-
-  fd.append('screenshot', screenshot);
-
-  try {
-    const r = await fetch(`${API_BASE}/standup/register`, {
-      method: 'POST',
-      body: fd, // No headers needed — FormData sets correct Content-Type
-    });
-
-    if (!r.ok) {
-      let errorMsg = 'Registration failed';
-      try {
-        const text = await r.text();
-        try {
-          const data = JSON.parse(text);
-          errorMsg = data.error || errorMsg;
-        } catch (parseErr) {
-          // If not JSON, truncate text for display (e.g., HTML error page)
-          errorMsg = text.length > 200 ? text.substring(0, 200) + '...' : text;
-          if (!errorMsg.trim()) errorMsg = `HTTP ${r.status}: Server responded with unexpected content`;
-        }
-      } catch (textErr) {
-        errorMsg = `HTTP ${r.status}: Unable to read response`;
-      }
-      throw new Error(errorMsg);
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      toast.error('Fix all errors: VIT email, 10-digit phone, UTR ≥12 chars');
+      return;
     }
 
-    const data = await r.json();
-    toast.success(isOfferApplied
-      ? 'OFFER APPLIED! 2 Front Row Seats → Only ₹998!'
-      : `Registered ${members.length} member(s) → ₹${totalPrice}`
-    );
+    setIsSubmitting(true);
+    const fd = new FormData();
 
-    // Reset form
-    setMembers([{ id: Date.now(), name: '', regNo: '', email: '', phone: '', utrId: '', category: 'normal' }]);
-    setScreenshot(null);
-    document.querySelector('input[type="file"]')?.value && (document.querySelector('input[type="file"]').value = '');
+    fd.append('title', title);
+    fd.append('totalAmount', totalPrice);
+    fd.append('offerApplied', isOfferApplied);
 
-  } catch (e) {
-    toast.error(e.message || 'Registration failed. Try again.');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    members.forEach((m, i) => {
+      fd.append(`member_name_${i}`, m.name.trim());
+      fd.append(`member_regNo_${i}`, m.regNo.trim());
+      fd.append(`member_email_${i}`, m.email.trim().toLowerCase());
+      fd.append(`member_phone_${i}`, m.phone.trim());
+      fd.append(`member_utrId_${i}`, m.utrId.trim());
+      fd.append(`member_category_${i}`, m.category);
+    });
+
+    fd.append('screenshot', screenshot);
+
+    try {
+      const r = await fetch(`${API_BASE}/standup/register`, {
+        method: 'POST',
+        body: fd,
+      });
+
+      if (!r.ok) {
+        let errorMsg = 'Registration failed';
+        try {
+          const text = await r.text();
+          try {
+            const data = JSON.parse(text);
+            errorMsg = data.error || errorMsg;
+          } catch {
+            errorMsg = text.length > 200 ? text.substring(0, 200) + '...' : text;
+            if (!errorMsg.trim()) errorMsg = `HTTP ${r.status}: Server responded with unexpected content`;
+          }
+        } catch {
+          errorMsg = `HTTP ${r.status}: Unable to read response`;
+        }
+        throw new Error(errorMsg);
+      }
+
+      const data = await r.json();
+      toast.success(isOfferApplied
+        ? 'OFFER APPLIED! 2 Front Row Seats → Only ₹998!'
+        : `Registered ${members.length} member(s) → ₹${totalPrice}`
+      );
+
+      setMembers([{ id: Date.now(), name: '', regNo: '', email: '', phone: '', utrId: '', category: 'normal' }]);
+      setScreenshot(null);
+      document.querySelector('input[type="file"]')?.value && (document.querySelector('input[type="file"]').value = '');
+
+    } catch (e) {
+      toast.error(e.message || 'Registration failed. Try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -162,7 +156,17 @@ const handleSubmit = async () => {
       <section className="bg-gradient-to-b from-purple-50 to-pink-50 py-16">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-800">Group Registration – Best Deal!</h2>
-          <p className="text-center text-lg font-semibold text-red-600 mb-12 max-w-2xl mx-auto">If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.</p>
+
+          {/* BLINKING URGENCY BANNER */}
+          <div className="text-center mb-6">
+            <div className="inline-block animate-pulse bg-red-600 text-white font-extrabold text-sm md:text-lg px-7 py-4 rounded-full shadow-2xl border-4 border-red-300">
+              Prices Increasing Soon • Seats Filling Super Fast • Book NOW!
+            </div>
+          </div>
+
+          <p className="text-center text-lg font-semibold text-red-600 mb-12 max-w-2xl mx-auto">
+            If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.
+          </p>
 
           <div className="grid lg:grid-cols-2 gap-10">
             {/* LEFT: Member Forms */}
