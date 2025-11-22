@@ -3,16 +3,24 @@ import React from "react";
 
 const subEvents = [
   {
-    id: 1,
-    title: "Esports Tournament",
-    description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
-    img: "/Day 2-images/e-sports.avif",
-    venue: "Lab Complex",
-    time: "11:00 Am - 1:00 PM",
-    registrationFee: "₹149 per player",
-    teamSize: "Individual",
-    route: "https://unstop.com/events/s2-esports-tournament-vit-bhopal-university-vit-bhopal-1598015?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
-  },
+  id: 1,
+  title: "Esports Tournament",
+  description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
+  img: "/Day 2-images/e-sports.avif",
+  venue: "Lab Complex",
+  time: "11:00 Am - 1:00 PM",
+  registrationFee: "₹149 per player",
+  teamSize: "Individual",
+  route: "https://unstop.com/events/s2-esports-tournament-vit-bhopal-university-vit-bhopal-1598015?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp",
+
+  // ⭐ NEW FIELD ADDED
+  matchTypes: [
+  { name: "BGMI" },
+  { name: "Free Fire" },
+  { name: "Valorant" }
+]
+}
+,
   {
     id: 2,
     title: "StandUp Comedy",
@@ -73,12 +81,32 @@ const EventSelectionEntertainment = () => {
                 <p className="text-gray-600 mb-4 leading-relaxed">
                   {subEvent.description}
                 </p>
+                
                 <div className="space-y-2 text-sm text-gray-500 mb-4">
                   <p><span className="font-semibold">📍 Venue:</span> {subEvent.venue}</p>
                   <p><span className="font-semibold">⏰ Time:</span> {subEvent.time}</p>
                   <p><span className="font-semibold">💰 Fee:</span> {subEvent.registrationFee}</p>
                   {/* <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p> */}
                 </div>
+                {/* ⭐ MATCH TYPES UI SECTION */}
+                {/* ⭐ MATCH TYPES (TEXT ONLY) */}
+{subEvent.matchTypes && (
+  <div className="mb-4">
+    <p className="font-semibold text-gray-700 mb-2">🎮 Match Types:</p>
+
+    <div className="flex flex-wrap gap-2">
+      {subEvent.matchTypes.map((game, idx) => (
+        <span
+          key={idx}
+          className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700 border border-gray-300"
+        >
+          {game.name}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
 
                 {/* Push button to bottom so all align horizontally */}
                 <div className="mt-auto">
