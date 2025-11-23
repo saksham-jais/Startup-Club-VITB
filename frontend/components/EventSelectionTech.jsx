@@ -20,7 +20,7 @@ const subEvents = [
     img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763729598/Copy_of_STARTUP_SYNERGY_Banner_Landscape_rwheiq.png",
     venue: "AB1, Auditorium-1",
     time: "3:00 PM",
-    registrationFee: "₹399-₹549",
+    registrationFee: "₹499-₹699",
     teamSize: "Individual",
     route: "/register-standup"
   },
