@@ -15,9 +15,9 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [screenshot, setScreenshot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const PRICE_FRONT_SINGLE = 549;
-  const PRICE_FRONT_OFFER = 998;
-  const PRICE_NORMAL = 399;
+  const PRICE_FRONT_SINGLE = 699;
+  const PRICE_FRONT_OFFER = 1298;
+  const PRICE_NORMAL = 499;
 
   const calculateTotal = () => {
     const frontCount = members.filter(m => m.category === 'front').length;
@@ -125,7 +125,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
 
       const data = await r.json();
       toast.success(isOfferApplied
-        ? 'OFFER APPLIED! 2 Front Row Seats → Only ₹998!'
+        ? 'OFFER APPLIED! 2 Front Row Seats → Only ₹1298!'
         : `Registered ${members.length} member(s) → ₹${totalPrice}`
       );
 
@@ -148,7 +148,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
         <img src={mobileBanner} alt="Banner" className="w-full h-auto md:hidden" />
         <div className="absolute inset-x-0 bottom-0 translate-y-1/2 text-center">
           <div className="inline-block bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 px-8 py-4 rounded-full shadow-2xl">
-            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹998!</span>
+            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹1298!</span>
           </div>
         </div>
       </section>
@@ -215,9 +215,9 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                     {idx === 0 && members.length === 1 && (
                       <select value={member.category} onChange={e => updateMember(member.id, 'category', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition">
-                        <option value="normal">Normal Rows - ₹399</option>
-                        <option value="front">Front Rows - ₹549</option>
-                        <option value="duo">Duo Front Rows - ₹998</option>
+                        <option value="normal">Normal Rows - ₹499</option>
+                        <option value="front">Front Rows - ₹699</option>
+                        <option value="duo">Duo Front Rows - ₹1298</option>
                       </select>
                     )}
                   </div>
