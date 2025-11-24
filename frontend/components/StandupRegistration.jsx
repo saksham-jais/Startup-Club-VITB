@@ -16,17 +16,23 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const PRICE_FRONT_SINGLE = 699;
-  const PRICE_FRONT_OFFER = 1298;
-  const PRICE_NORMAL = 499;
+  const PRICE_FRONT_OFFER = 1198;
+  const PRICE_NORMAL_OFFER = 798;
+  const PRICE_NORMAL = 449;
 
   const calculateTotal = () => {
     const frontCount = members.filter(m => m.category === 'front').length;
+    const normalCount = members.filter(m => m.category === 'normal').length;
     if (members.length === 2 && frontCount === 2) return PRICE_FRONT_OFFER;
-    return frontCount * PRICE_FRONT_SINGLE + (members.length - frontCount) * PRICE_NORMAL;
+    if (members.length === 2 && normalCount === 2) return PRICE_NORMAL_OFFER;
+    return frontCount * PRICE_FRONT_SINGLE + normalCount * PRICE_NORMAL;
   };
 
+  const frontCount = members.filter(m => m.category === 'front').length;
+  const normalCount = members.filter(m => m.category === 'normal').length;
   const totalPrice = calculateTotal();
-  const isOfferApplied = members.length === 2 && members.every(m => m.category === 'front');
+  const isOfferApplied = members.length === 2 && (frontCount === 2 || normalCount === 2);
+  const offerType = frontCount === 2 ? 'Front' : normalCount === 2 ? 'Normal' : '';
 
   const removeMember = (id) => {
     setMembers(members.filter(m => m.id !== id));
@@ -35,11 +41,18 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
 
   const updateMember = (id, field, value) => {
     setMembers(prev => {
-      if (field === 'category' && value === 'duo' && prev.length === 1) {
+      if (field === 'category' && value === 'front_duo' && prev.length === 1) {
         const first = { ...prev[0], category: 'front' };
         const second = {
           id: Date.now(),
           name: '', regNo: '', email: '', phone: '', utrId: first.utrId, category: 'front'
+        };
+        return [first, second];
+      } else if (field === 'category' && value === 'normal_duo' && prev.length === 1) {
+        const first = { ...prev[0], category: 'normal' };
+        const second = {
+          id: Date.now(),
+          name: '', regNo: '', email: '', phone: '', utrId: first.utrId, category: 'normal'
         };
         return [first, second];
       } else if (field === 'category') {
@@ -48,11 +61,6 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
       }
 
       let updated = prev.map(m => m.id === id ? { ...m, [field]: value } : m);
-
-      if (updated[0].category === 'normal' && updated.length > 1) {
-        toast.warn('Normal row selected → 2nd member removed! Duo offer only for Front Seats.');
-        return [updated[0]];
-      }
 
       if (updated.length === 2 && field === 'utrId') {
         updated = updated.map(m => ({ ...m, utrId: value }));
@@ -124,10 +132,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
       }
 
       const data = await r.json();
-      toast.success(isOfferApplied
-        ? 'OFFER APPLIED! 2 Front Row Seats → Only ₹1298!'
-        : `Registered ${members.length} member(s) → ₹${totalPrice}`
-      );
+      const successMsg = isOfferApplied
+        ? `OFFER APPLIED! 2 ${offerType} Row Seats → Only ₹${totalPrice}!`
+        : `Registered ${members.length} member(s) → ₹${totalPrice}`;
+      toast.success(successMsg);
 
       setMembers([{ id: Date.now(), name: '', regNo: '', email: '', phone: '', utrId: '', category: 'normal' }]);
       setScreenshot(null);
@@ -148,7 +156,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
         <img src={mobileBanner} alt="Banner" className="w-full h-auto md:hidden" />
         <div className="absolute inset-x-0 bottom-0 translate-y-1/2 text-center">
           <div className="inline-block bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 px-8 py-4 rounded-full shadow-2xl">
-            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹1298!</span>
+            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹1198!</span>
           </div>
         </div>
       </section>
@@ -160,7 +168,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
           {/* BLINKING URGENCY BANNER */}
           <div className="text-center mb-6">
             <div className="inline-block animate-pulse bg-red-600 text-white font-extrabold text-sm md:text-lg px-7 py-4 rounded-full shadow-2xl border-4 border-red-300">
-              Prices Increasing Soon • Seats Filling Super Fast • Book NOW!
+              2 Days Flash Sale • Seats Filling Super Fast • Book NOW!
             </div>
           </div>
 
@@ -215,9 +223,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                     {idx === 0 && members.length === 1 && (
                       <select value={member.category} onChange={e => updateMember(member.id, 'category', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition">
-                        <option value="normal">Normal Rows - ₹499</option>
+                        <option value="normal">Normal Rows - ₹449</option>
                         <option value="front">Front Rows - ₹699</option>
-                        <option value="duo">Duo Front Rows - ₹1298</option>
+                        <option value="front_duo">Duo Front Rows - ₹1198</option>
+                        <option value="normal_duo">Duo Normal Rows - ₹798</option>
                       </select>
                     )}
                   </div>

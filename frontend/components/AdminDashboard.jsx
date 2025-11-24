@@ -100,7 +100,7 @@ function AdminDashboard() {
       'Phone': r.phone,
       'Reg No': r.registrationNumber,
       'UTR ID': r.utrId,
-      'Seat': r.category === 'front' ? (r.memberCount === 2 ? 'Front Row Duo' : 'Front Row Solo') : 'Normal Row',
+      'Seat': r.category === 'front' ? (r.memberCount === 2 ? 'Front Row Duo' : 'Front Row Solo') : (r.memberCount === 2 ? 'Normal Row Duo' : 'Normal Row'),
       'Amount': '₹' + r.totalAmount,
       'Offer': r.offerApplied ? 'DUO' : 'No',
       'Group Size': r.memberCount,
@@ -114,6 +114,22 @@ function AdminDashboard() {
     XLSX.utils.book_append_sheet(wb, ws, 'Standup');
     XLSX.writeFile(wb, `Standup_Comedy_Registrations_${new Date().toISOString().slice(0,10)}.xlsx`);
     toast.success('Excel downloaded!');
+  };
+
+  const getSeatDisplay = (r) => {
+    if (r.category === 'front') {
+      return r.memberCount === 2 ? 'Front Duo' : 'Front Solo';
+    } else {
+      return r.memberCount === 2 ? 'Normal Duo' : 'Normal';
+    }
+  };
+
+  const getSeatColor = (r) => {
+    if (r.category === 'front') {
+      return 'bg-purple-100 text-purple-800';
+    } else {
+      return 'bg-gray-100 text-gray-700';
+    }
   };
 
   return (
@@ -137,7 +153,7 @@ function AdminDashboard() {
             <option value="normal">Normal Row</option>
             <option value="front-solo">Front Row Solo</option>
             <option value="front-duo">Front Row Duo</option>
-            {/* <option value="duo">Normal Duo</option> */}
+            <option value="duo">Normal Duo</option>
           </select>
           <button onClick={fetchData} className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Refresh</button>
           <button onClick={downloadExcel} className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">Excel</button>
@@ -175,8 +191,8 @@ function AdminDashboard() {
                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{r.registrationNumber}</td>
                      <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">{r.utrId}</td>
                      <td className="px-6 py-4 whitespace-nowrap">
-                       <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${r.category === 'front' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-700'}`}>
-                         {r.category === 'front' ? (r.memberCount === 2 ? 'Front Duo' : 'Front Solo') : 'Normal'}
+                       <span className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${getSeatColor(r)}`}>
+                         {getSeatDisplay(r)}
                        </span>
                      </td>
                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">₹{r.totalAmount}</td>
