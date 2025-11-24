@@ -9,8 +9,8 @@ import * as XLSX from 'xlsx';
 const API_BASE = 'https://startup-club-dczt.onrender.com';
 
 function AdminDashboard() {
-  const [groups, setGroups] = useState([]);  // Raw group docs
-  const [flattened, setFlattened] = useState([]);  // Flattened for table/search/export
+  const [groups, setGroups] = useState([]);
+  const [flattened, setFlattened] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [seatFilter, setSeatFilter] = useState('all');
