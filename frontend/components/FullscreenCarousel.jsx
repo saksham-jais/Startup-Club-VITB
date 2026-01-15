@@ -1,35 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-const startupEvent = {
-  title: "S²-25 - StartUp Synergy Day-1",
-  subtitle: "28 November 2025",
-  description:
-    "Opening Ceremony+Live Podcast Session, Ideathon, Meme War Competition",
-  img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-  bannerImages: [
-    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1516321310764-9f3c2499b0b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-  ],
-  type: "Startup Summit",
-  collaboration: "With Tech Innovators Inc.",
-  time: "9:00 AM - 6:00 PM",
-  venue: "VIT Bhopal University, Auditorium Hall",
-  date: "November 29",
-  year: "2025",
-  detailedDescription:
-    "Join us for an immersive experience where ideas turn into realities.",
-  speaker: "Dr. Elena Vasquez",
-  designation: "CEO, InnovateX Ventures",
-  judges: ["Prof. Rajesh Kumar", "Ms. Priya Singh", "Dr. Amit Patel"],
-  mentors: ["John Doe, Startup Advisor", "Jane Smith, Venture Capitalist"],
-};
-
+// Only keep the tech fest event
 const techFestEvent = {
-  title: "S²-25 - StartUp Synergy Day-2",
-  subtitle: "29 November 2025",
+  title: "S²-25 - StartUp Synergy",
+  subtitle: "05 February 2026",
   description:
-    "Featuring E-Sports, Cultural Performances, and StandUp Comedy.",
+    "Opening Ceremony+Live Podcast Session, Ideathon, Meme War Competition Featuring E-Sports, Cultural Performances, and StandUp Comedy.",
   img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=2070&q=80",
   bannerImages: [
     "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=2070&q=80",
@@ -49,7 +26,8 @@ const techFestEvent = {
   mentors: ["Alex Johnson", "Sara Lee"],
 };
 
-const events = [startupEvent, techFestEvent];
+// Now only one event
+const events = [techFestEvent];
 
 const whoWeAreText = [
   "The StartUp Club is more than just a club; it's an ecosystem.",
@@ -93,10 +71,11 @@ const FullscreenCarousel = () => {
     }
   }, [currentIndex]);
 
-  const handleEventTitleClick = (i) => {
-    const eventTitle = events[i].title;
+  const handleEventTitleClick = () => {
+    // Since there's now only one event (index 0)
+    const eventTitle = events[0].title;
     navigate(`/eventstimeline/${eventTitle.replace(/\s+/g, "-")}`, {
-      state: { event: events[i] },
+      state: { event: events[0] },
     });
   };
 
@@ -109,73 +88,67 @@ const FullscreenCarousel = () => {
       >
         <div className="text-center mb-8 w-full max-w-4xl mx-auto px-4">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            UPCOMING EVENTS
+            UPCOMING EVENT
           </h1>
           <div className="w-40 h-2 bg-yellow-400 mx-auto mb-4 rounded-full" />
           <p className="text-blue-100 font-semibold">
-            A 2-day journey of innovation, creativity, and collaboration.
+            A day full of innovation, creativity, and collaboration.
           </p>
         </div>
 
         <div className="relative w-full max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {events.map((event, index) => (
-  <div
-    key={index}
-    className="event-card w-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-8 relative z-20"
-  >
+          {/* Single event – changed from grid to centered layout */}
+          <div className="flex justify-center">
+            <div
+              className="event-card w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 p-6 md:p-10 relative z-20"
+            >
+              <div className="text-center">
+                {/* Event Title */}
+                <button
+                  onClick={handleEventTitleClick}
+                  className="text-xl md:text-3xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity duration-200 block w-full"
+                >
+                  {events[0].title}
+                </button>
 
-
-                <div className="text-center">
-
-                  {/* Event Title */}
-                  <button
-                    onClick={() => handleEventTitleClick(index)}
-                    className="text-xl md:text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity duration-200 block w-full"
-                  >
-                    {event.title}
-                  </button>
-
-                  <div className="flex justify-center mb-6">
-                    <div className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full text-base font-bold shadow-md">
-                      <span className="mr-2">📅</span>
-                      {event.subtitle}
-                    </div>
+                <div className="flex justify-center mb-6">
+                  <div className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-5 py-3 rounded-full text-lg font-bold shadow-md">
+                    <span className="mr-2">📅</span>
+                    {events[0].subtitle}
                   </div>
+                </div>
 
-                  <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 mb-6 border border-white/10">
-                    <p className="text-sm md:text-base text-white leading-relaxed">
-                      {event.description}
-                    </p>
-                  </div>
-
-                  {/* 🔥 Register Button - no overlay can block this now */}
-                  <div className="flex justify-center">
-                    <a
-                      href={index === 0 ? "/event-selection" : "/event-selection-tech"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative z-[99999] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 rounded-full text-base font-bold transition-all duration-300 shadow-lg"
-                    >
-                      🚀 Register Now
-                    </a>
-                  </div>
-
-                  <p className="mt-4 text-white/70 text-xs">
-                    📍 VIT Bhopal University
+                <div className="bg-white/5 backdrop-blur-sm rounded-lg p-5 mb-8 border border-white/10">
+                  <p className="text-base md:text-lg text-white leading-relaxed">
+                    {events[0].description}
                   </p>
                 </div>
+
+                {/* Register Button */}
+                <div className="flex justify-center">
+                  <a
+                    href="/event-selection-tech"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative z-[99999] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-10 py-4 rounded-full text-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    🚀 Register Now
+                  </a>
+                </div>
+
+                <p className="mt-6 text-white/70 text-sm">
+                  📍 VIT Bhopal University
+                </p>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 🔥 FIXED: Typewriter Section moved to LOWER layer so it cannot overlap */}
+      {/* Typewriter Section – kept unchanged */}
       <section className="py-20 bg-white relative z-0">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex flex-col lg:flex-row items-start justify-between gap-12">
-
             {/* Left */}
             <div className="lg:w-2/5">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
@@ -231,17 +204,15 @@ const FullscreenCarousel = () => {
           </div>
         </div>
 
-        <style>
-          {`
-            @keyframes blink {
-              0%, 50% { opacity: 1; }
-              51%, 100% { opacity: 0; }
-            }
-            .typing-cursor {
-              animation: blink 1s infinite;
-            }
-          `}
-        </style>
+        <style>{`
+          @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+          }
+          .typing-cursor {
+            animation: blink 1s infinite;
+          }
+        `}</style>
       </section>
     </>
   );

@@ -1,28 +1,8 @@
-// EventSelectionEntertainment.jsx (New component for entertainment events - route to '/event-selection-entertainment')
 import React from "react";
 
 const subEvents = [
-  {
-  id: 1,
-  title: "Esports Tournament",
-  description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
-  img: "/Day 2-images/e-sports.avif",
-  venue: "Lab Complex",
-  time: "11:00 Am - 1:00 PM",
-  registrationFee: "₹149 per player",
-  teamSize: "Individual",
-  route: "https://unstop.com/events/s2-esports-tournament-vit-bhopal-university-vit-bhopal-1598015?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp",
-
-  // ⭐ NEW FIELD ADDED
-  matchTypes: [
-  { name: "BGMI" },
-  { name: "Free Fire" },
-  { name: "Valorant" }
-]
-}
-,
-  {
-    id: 2,
+    {
+    id: 5, // changed id to avoid duplicate
     title: "StandUp Comedy",
     description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
     img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763729598/Copy_of_STARTUP_SYNERGY_Banner_Landscape_rwheiq.png",
@@ -30,24 +10,73 @@ const subEvents = [
     time: "3:00 PM",
     registrationFee: "₹499-₹699",
     teamSize: "Individual",
-    route: "/register-standup"
+    route: "/register-standup",
+    hasRegistration: true   // ← only this one has registration button
+  },
+  {
+    id: 1,
+    title: "Live Podcast Session",
+    description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
+    img: "/Day 1-images/podcast.jpg",
+    venue: "AB2-Audi2",
+    time: "10:00 AM - 1:00 PM",
+    registrationFee: "Free",
+    route: "https://unstop.com/workshops-webinars/s2-ignite-opening-ceremony-innovation-talk-vit-bhopal-university-vit-bhopal-1597731",
+    hasRegistration: false
+  },
+  {
+    id: 2,
+    title: "Meme War Championship",
+    description: "Create the funniest, most relatable memes on given themes. Audience votes + judges decide the ultimate Meme Lord!",
+    img: "/Day 1-images/meme war.jpg",
+    venue: "Online/Offline Hybrid",
+    time: "1:00 PM - 5:00 PM",
+    registrationFee: "₹50 per person",
+    hasRegistration: false
   },
   {
     id: 3,
+    title: "Ideathon 2025",
+    description: "Solve real-world problems through innovation.",
+    img: "/Day 1-images/ideathon.jpg",
+    venue: "AB1 Coding Studio",
+    time: "1:00 PM - 5:00 PM",
+    registrationFee: "₹50 per person (in team)",
+    teamSize: "1-6 members",
+    route: "https://unstop.com/competitions/ideathon-vit-bhopal-university-vit-bhopal-1597709?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp",
+    hasRegistration: false
+  },
+  {
+    id: 4,
+    title: "Esports Tournament",
+    description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
+    img: "/Day 2-images/e-sports.avif",
+    venue: "Lab Complex",
+    time: "11:00 AM - 1:00 PM",
+    registrationFee: "₹149 per player",
+    teamSize: "Individual",
+    matchTypes: [
+      { name: "BGMI" },
+      { name: "Free Fire" },
+      { name: "Valorant" }
+    ],
+    hasRegistration: false
+  },
+  {
+    id: 6,
     title: "Cultural Performance Showcase",
     description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
     img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg",
     venue: "Cultural Hall",
     time: "1:00 PM - 2:00 PM",
     registrationFee: "Free for performers and audience",
-    // teamSize: "NA",
-    route: "https://unstop.com/events/music-performance-competition-vit-bhopal-university-vit-bhopal-1598020?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
+    hasRegistration: false
   }
 ];
 
 const EventSelectionEntertainment = () => {
   const handleRegisterClick = (route) => {
-    window.open(route, "_blank");
+    window.open(route, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -58,7 +87,8 @@ const EventSelectionEntertainment = () => {
             Entertainment Events: Select Your Fun
           </h1>
           <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-            Unwind and showcase your talents in our entertainment lineup at S²-25 - StartUp Synergy. From gaming battles to cultural celebrations and comedy nights. Each event has its own dedicated registration.
+            Unwind and showcase your talents in our entertainment lineup at S²-25 - StartUp Synergy.
+            <br />
           </p>
           <div className="w-24 h-1 bg-blue-500 mx-auto mt-6 rounded-full"></div>
         </div>
@@ -81,41 +111,50 @@ const EventSelectionEntertainment = () => {
                 <p className="text-gray-600 mb-4 leading-relaxed">
                   {subEvent.description}
                 </p>
-                
-                <div className="space-y-2 text-sm text-gray-500 mb-4">
+
+                <div className="space-y-2 text-sm text-gray-500 mb-6">
                   <p><span className="font-semibold">📍 Venue:</span> {subEvent.venue}</p>
                   <p><span className="font-semibold">⏰ Time:</span> {subEvent.time}</p>
                   <p><span className="font-semibold">💰 Fee:</span> {subEvent.registrationFee}</p>
-                  {/* <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p> */}
+                  {subEvent.teamSize && (
+                    <p><span className="font-semibold">👥 Team Size:</span> {subEvent.teamSize}</p>
+                  )}
                 </div>
-                {/* ⭐ MATCH TYPES UI SECTION */}
-                {/* ⭐ MATCH TYPES (TEXT ONLY) */}
-{subEvent.matchTypes && (
-  <div className="mb-4">
-    <p className="font-semibold text-gray-700 mb-2">🎮 Match Types:</p>
 
-    <div className="flex flex-wrap gap-2">
-      {subEvent.matchTypes.map((game, idx) => (
-        <span
-          key={idx}
-          className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700 border border-gray-300"
-        >
-          {game.name}
-        </span>
-      ))}
-    </div>
-  </div>
-)}
+                {/* Esports match types */}
+                {subEvent.matchTypes && (
+                  <div className="mb-6">
+                    <p className="font-semibold text-gray-700 mb-2">🎮 Match Types:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {subEvent.matchTypes.map((game, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700 border border-gray-300"
+                        >
+                          {game.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-
-                {/* Push button to bottom so all align horizontally */}
+                {/* Register button logic - only for StandUp Comedy */}
                 <div className="mt-auto">
-                  <button
-                    onClick={() => handleRegisterClick(subEvent.route)}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-md"
-                  >
-                    🚀 Register Now for {subEvent.title}
-                  </button>
+                  {subEvent.hasRegistration ? (
+                    <button
+                      onClick={() => handleRegisterClick(subEvent.route)}
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-lg font-bold transition-all duration-300 transform hover:scale-105 shadow-md"
+                    >
+                      🚀 Register Now
+                    </button>
+                  ) : (
+                    <button
+                      disabled
+                      className="w-full bg-gray-400 text-gray-700 py-3 rounded-lg font-bold cursor-not-allowed shadow-sm"
+                    >
+                      Registration Closed
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
