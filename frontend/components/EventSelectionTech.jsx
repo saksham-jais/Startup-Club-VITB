@@ -9,7 +9,7 @@ const subEvents = [
     venue: "AB1, Auditorium-1",
     time: "3:00 PM",
     registrationFee: "₹499-₹699",
-    teamSize: "Individual",
+    // teamSize: "Individual",
     route: "/register-standup",
     hasRegistration: true   // ← only this one has registration button
   },
