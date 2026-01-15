@@ -30,7 +30,7 @@ function Home({ cards = [] }) {
   const [showPopup, setShowPopup] = useState(true);
   return (
     <>
-    {showPopup && <EventPopup onClose={() => setShowPopup(false)} />}
+    {/* {showPopup && <EventPopup onClose={() => setShowPopup(false)} />} */}
       <HeroSection
         buildingImg="https://picsum.photos/300/200?random=1"
         personImg="https://picsum.photos/300/200?random=2"
@@ -64,7 +64,7 @@ function App({ cards = [] }) {
         <Route path="registration" element={<RegistrationPage />} />
 
         {/* 👇 fixed: removed leading slashes */}
-        <Route path="event-selection" element={<EventSelection />} />
+        {/* <Route path="event-selection" element={<EventSelection />} /> */}
         <Route path="event-selection-tech" element={<EventSelectionTech />} />
         <Route path="register-podcast" element={<PodcastRegistration />} />
         <Route path="register-hackathon" element={<HackathonRegistration />} />

@@ -9,8 +9,8 @@ export function EventTimeline() {
     
     const events = [
         {
-            date: "Nov 29 - 30",
-            year: "2025",
+            date: "Feb 05",
+            year: "2026",
             img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763665482/Your_paragraph_text_hsccv9.png",
             title: "S²-25 - StartUp Synergy",
             venue: "AUDITORIUM 1",

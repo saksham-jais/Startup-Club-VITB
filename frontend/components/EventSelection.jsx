@@ -2,16 +2,7 @@
 import React from "react";
 
 const subEvents = [
-  {
-    id: 1,
-    title: "Live Podcast Session",
-    description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
-    img: "/Day 1-images/podcast.jpg",
-    venue: "AB2-Audi2",
-    time: "10:00 AM - 1:00 PM",
-    registrationFee: "Free",
-    route: "https://unstop.com/workshops-webinars/s2-ignite-opening-ceremony-innovation-talk-vit-bhopal-university-vit-bhopal-1597731"
-  },
+
   // {
   //   id: 2,
   //   title: "Reverse Coding",
@@ -23,27 +14,7 @@ const subEvents = [
   //   teamSize: "Maximum 3 members",
   //   route: "/register-hackathon"
   // },
-  {
-    id: 3,
-    title: "Meme War Championship",
-    description: "Create the funniest, most relatable memes on given themes. Audience votes + judges decide the ultimate Meme Lord!",
-    img: "/Day 1-images/meme war.jpg",
-    venue: "Online/Offline Hybrid",
-    time: "1:00 PM - 5:00 PM",
-    registrationFee: "₹50 per person",
-    route: "https://unstop.com/events/meme-war-vit-bhopal-university-vit-bhopal-1597680?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
-  },
-  {
-    id: 4,
-    title: "Ideathon 2025",
-    description: "Solve real-world problems through innovation.",
-    img: "/Day 1-images/ideathon.jpg",
-    venue: "AB1 Coding Studio",
-    time: "1:00 PM - 5:00 PM",
-    registrationFee: "₹50 per person(in team)",
-    teamSize: "1-6 members",
-    route: "https://unstop.com/competitions/ideathon-vit-bhopal-university-vit-bhopal-1597709?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp"
-  }
+
 ];
 
 const EventSelection = () => {
