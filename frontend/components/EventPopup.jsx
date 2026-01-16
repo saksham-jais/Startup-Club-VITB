@@ -61,7 +61,7 @@ export default function EventPopup({ onClose }) {
 
           {/* Poster Image */}
           <img
-            src="https://res.cloudinary.com/dt83ijcjr/image/upload/v1763544172/event-registrations/standup/zkn1whqjmofjvm3cjgpi.jpg"
+            src="https://res.cloudinary.com/dt83ijcjr/image/upload/v1768554045/Red_Black_Bold_Modern_Comedy_Night_Show_Instagram_Story_z6cmmh.jpg"
             alt="Event Poster"
             className="w-full rounded-xl mb-4"
           />
