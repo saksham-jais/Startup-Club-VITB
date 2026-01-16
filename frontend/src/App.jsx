@@ -30,7 +30,7 @@ function Home({ cards = [] }) {
   const [showPopup, setShowPopup] = useState(true);
   return (
     <>
-    {/* {showPopup && <EventPopup onClose={() => setShowPopup(false)} />} */}
+    {showPopup && <EventPopup onClose={() => setShowPopup(false)} />}
       <HeroSection
         buildingImg="https://picsum.photos/300/200?random=1"
         personImg="https://picsum.photos/300/200?random=2"
