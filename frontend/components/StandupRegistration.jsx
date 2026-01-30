@@ -166,11 +166,11 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-800">Group Registration – Best Deal!</h2>
 
           {/* BLINKING URGENCY BANNER */}
-          {/* <div className="text-center mb-6">
-            <div className="inline-block animate-pulse bg-red-600 text-white font-extrabold text-sm md:text-lg px-7 py-4 rounded-full shadow-2xl border-4 border-red-300">
-              2 Days Flash Sale • Seats Filling Super Fast • Book NOW!
+         <div className="text-center mb-6">
+            <div className="inline-block animate-pulse bg-red-600 text-white font-extrabold text-sm md:text-lg px-12 py-2 rounded-full shadow-2xl border-4 border-red-300">
+              OD Provided
             </div>
-          </div> */}
+          </div>
 
           <p className="text-center text-lg font-semibold text-red-600 mb-12 max-w-2xl mx-auto">
             If you made the payment via Google Pay, please ensure the UTR ID is clearly visible in the screenshot.
