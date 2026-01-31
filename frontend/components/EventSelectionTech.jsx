@@ -2,7 +2,7 @@ import React from "react";
 
 const subEvents = [
     {
-    id: 5, // changed id to avoid duplicate
+    id: 1,
     title: "StandUp Comedy",
     description: "Get inspired, laugh loud, experience art & creativity together. Secure your seat for an evening of non-stop laughter.",
     img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763729598/Copy_of_STARTUP_SYNERGY_Banner_Landscape_rwheiq.png",
@@ -11,21 +11,32 @@ const subEvents = [
     registrationFee: "₹499-₹699",
     // teamSize: "Individual",
     route: "/register-standup",
-    hasRegistration: true   // ← only this one has registration button
+    hasRegistration: true 
   },
   {
-    id: 1,
+    id: 2,
     title: "Live Podcast Session",
     description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "/Day 1-images/podcast.jpg",
     venue: "AB2-Audi2",
     time: "10:00 AM - 1:00 PM",
     registrationFee: "Free",
-    route: "https://unstop.com/workshops-webinars/s2-ignite-opening-ceremony-innovation-talk-vit-bhopal-university-vit-bhopal-1597731",
-    hasRegistration: false
+    route: "https://docs.google.com/forms/d/e/1FAIpQLSfULj7pgGUDgk9Htzlu_HcN8TSXVby8byDoCQc00QxV58mhAw/viewform?usp=header",
+    hasRegistration: true
+  },
+    {
+    id: 3,
+    title: "Cultural Performance Showcase",
+    description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
+    img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg",
+    venue: "Cultural Hall",
+    time: "1:00 PM - 2:00 PM",
+    registrationFee: "Free for performers and audience",
+    route:  "https://forms.gle/DqdpNJ7FRqS4rrUq9",
+    hasRegistration: true
   },
   {
-    id: 2,
+    id: 4,
     title: "Meme War Championship",
     description: "Create the funniest, most relatable memes on given themes. Audience votes + judges decide the ultimate Meme Lord!",
     img: "/Day 1-images/meme war.jpg",
@@ -35,7 +46,7 @@ const subEvents = [
     hasRegistration: false
   },
   {
-    id: 3,
+    id: 5,
     title: "Ideathon 2025",
     description: "Solve real-world problems through innovation.",
     img: "/Day 1-images/ideathon.jpg",
@@ -47,7 +58,7 @@ const subEvents = [
     hasRegistration: false
   },
   {
-    id: 4,
+    id: 6,
     title: "Esports Tournament",
     description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
     img: "/Day 2-images/e-sports.avif",
@@ -62,16 +73,6 @@ const subEvents = [
     ],
     hasRegistration: false
   },
-  {
-    id: 6,
-    title: "Cultural Performance Showcase",
-    description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
-    img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg",
-    venue: "Cultural Hall",
-    time: "1:00 PM - 2:00 PM",
-    registrationFee: "Free for performers and audience",
-    hasRegistration: false
-  }
 ];
 
 const EventSelectionEntertainment = () => {
