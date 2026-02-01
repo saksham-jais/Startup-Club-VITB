@@ -9,63 +9,27 @@ export function EventTimeline() {
     
     const events = [
         {
-            date: "Feb 05",
+            date: "Feb 04",
             year: "2026",
-            img: "https://res.cloudinary.com/dt83ijcjr/image/upload/v1763665482/Your_paragraph_text_hsccv9.png",
+            img: "https://res.cloudinary.com/djtn57e6e/image/upload/v1769964954/WhatsApp_Image_2026-02-01_at_10.22.11_PM_n7dibc.jpg",
             title: "S²-25 - StartUp Synergy",
             venue: "AUDITORIUM 1",
-            time: "28th - 29th Nov 2025",
-            description: "A two-day event fostering innovation, collaboration, and intellectual engagement through competitions, speaker sessions, and entertainment activities.",
-            registrationFee: "NA as of now",
-            teamSize: "Individual & Team Events",
+            time: "04th Feb 2026",
+            description: "A One-day event fostering innovation, collaboration, and intellectual engagement through competitions, speaker sessions, and entertainment activities.",
             type: "Multi-Event Competition",
+            registrationFee: "499-1298",
+            teamSize: "Individual",
             isUpcoming: true,
             bannerImages: [
                 "/event_timeline/Nov 29-30.1.jpg",
                 "/event_timeline/Nov 29-30.2.jpg"
             ],
             day1: {
-                title: "Day 1: 29th Nov 2025 - Knowledge, Innovation, and Competition",
-                description: "The event begins with an Opening Ceremony, featuring a keynote speaker who will set the stage with insights into emerging trends and industry advancements. This session aims to inspire participants and provide direction for the competitions and discussions that follow.",
-                events: [
-                    {
-                        time: "10 AM - 1 PM",
-                        name: "Opening Ceremony & Keynote Session",
-                        venue: "Auditorium 1",
-                        description: "Setting the stage with insights into emerging trends and industry advancements"
-                    },
-                    {
-                        time: "1 PM - 5 PM",
-                        name: "Paper Presentation",
-                        venue: "Auditorium 1",
-                        description: "Showcase research papers, patents, and innovative ideas on cutting-edge topics. Connect with faculty and industry experts for publication support and idea refinement."
-                    },
-                    {
-                        time: "1 PM - 5 PM",
-                        name: "Reverse Coding",
-                        venue: "AB1 307",
-                        description: "A unique coding challenge where participants decipher logic from given outputs. Tests analytical thinking, debugging skills, and algorithmic problem-solving."
-                    },
-                    {
-                        time: "1 PM - 5 PM",
-                        name: "Ideathon",
-                        venue: "Coding Studio AB1",
-                        description: "Fast-paced brainstorming competition to develop innovative solutions to real-world problems. Teams pitch ideas to judges assessing creativity and feasibility."
-                    },
-                    {
-                        time: "1 PM - 5 PM",
-                        name: "E-Sports Tournament",
-                        venue: "Arch 103",
-                        description: "Competitive gaming event featuring popular e-sports titles. Fosters teamwork, strategy, and sportsmanship in a structured tournament format."
-                    }
-                ]
-            },
-            day2: {
-                title: "Day 2: 30th Nov 2025 - Inspiration, Engagement, and Entertainment",
+                title: "Day 1: 04th Feb 2026 - Inspiration, Engagement, and Entertainment",
                 description: "The second day of the event shifts the focus toward thought-provoking discussions, creative expression, and entertainment.",
                 events: [
                     {
-                        time: "10 AM - 12 PM",
+                        time: "10 AM - 01 PM",
                         name: "Podcast Session with Guest Speaker",
                         venue: "Auditorium 1",
                         description: "A live podcast discussion with an expert guest, offering an in-depth conversation on Entrepreneurship and relevant topics. This session is designed to be interactive, with an opportunity for the audience to engage with the speaker through questions and discussions."
@@ -75,12 +39,6 @@ export function EventTimeline() {
                         name: "Stand-Up Comedy",
                         venue: "Auditorium 1",
                         description: "A dedicated segment featuring a professional well known comedian, bringing a refreshing break with humor and light-hearted entertainment. This segment aims to create a lively atmosphere and provide a space for relaxation and enjoyment."
-                    },
-                    {
-                        time: "3 PM - 5 PM",
-                        name: "Meme War",
-                        venue: "Auditorium 1",
-                        description: "A unique competition where participants create and submit memes based on given themes. The memes will be judged based on creativity, humor, and relevance. The audience will participate in voting, and the winner will receive a special prize. This event encourages digital creativity and provides a fun and engaging experience."
                     },
                     {
                         time: "3 PM - 5 PM",

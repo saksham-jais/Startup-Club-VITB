@@ -31,7 +31,7 @@ const subEvents = [
     img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg",
     venue: "Cultural Hall",
     time: "1:00 PM - 2:00 PM",
-    registrationFee: "Free for performers and audience",
+    registrationFee: "Free",
     route:  "https://forms.gle/DqdpNJ7FRqS4rrUq9",
     hasRegistration: true
   }
