@@ -15,7 +15,7 @@ const subEvents = [
   },
   {
     id: 2,
-    title: "Live Podcast Session",
+    title: "Speaker Session",
     description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "/Day 1-images/podcast.jpg",
     venue: "AB2-Audi2",
@@ -34,45 +34,7 @@ const subEvents = [
     registrationFee: "Free for performers and audience",
     route:  "https://forms.gle/DqdpNJ7FRqS4rrUq9",
     hasRegistration: true
-  },
-  {
-    id: 4,
-    title: "Meme War Championship",
-    description: "Create the funniest, most relatable memes on given themes. Audience votes + judges decide the ultimate Meme Lord!",
-    img: "/Day 1-images/meme war.jpg",
-    venue: "Online/Offline Hybrid",
-    time: "1:00 PM - 5:00 PM",
-    registrationFee: "₹50 per person",
-    hasRegistration: false
-  },
-  {
-    id: 5,
-    title: "Ideathon 2025",
-    description: "Solve real-world problems through innovation.",
-    img: "/Day 1-images/ideathon.jpg",
-    venue: "AB1 Coding Studio",
-    time: "1:00 PM - 5:00 PM",
-    registrationFee: "₹50 per person (in team)",
-    teamSize: "1-6 members",
-    route: "https://unstop.com/competitions/ideathon-vit-bhopal-university-vit-bhopal-1597709?lb=hxH3aCkc&utm_medium=Share&utm_source=WhatsApp",
-    hasRegistration: false
-  },
-  {
-    id: 6,
-    title: "Esports Tournament",
-    description: "Compete in high-stakes esports matches across popular titles. Showcase your gaming prowess and claim victory.",
-    img: "/Day 2-images/e-sports.avif",
-    venue: "Lab Complex",
-    time: "11:00 AM - 1:00 PM",
-    registrationFee: "₹149 per player",
-    teamSize: "Individual",
-    matchTypes: [
-      { name: "BGMI" },
-      { name: "Free Fire" },
-      { name: "Valorant" }
-    ],
-    hasRegistration: false
-  },
+  }
 ];
 
 const EventSelectionEntertainment = () => {

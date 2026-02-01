@@ -15,10 +15,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [screenshot, setScreenshot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const PRICE_FRONT_SINGLE = 699;
-  const PRICE_FRONT_OFFER = 1198;
-  const PRICE_NORMAL_OFFER = 798;
-  const PRICE_NORMAL = 449;
+  const PRICE_FRONT_SINGLE = 799;
+  const PRICE_FRONT_OFFER = 1298;
+  const PRICE_NORMAL_OFFER = 898;
+  const PRICE_NORMAL = 499;
 
   const calculateTotal = () => {
     const frontCount = members.filter(m => m.category === 'front').length;
@@ -223,10 +223,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                     {idx === 0 && members.length === 1 && (
                       <select value={member.category} onChange={e => updateMember(member.id, 'category', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition">
-                        <option value="normal">Normal Rows - ₹449</option>
-                        <option value="front">Front Rows - ₹699</option>
-                        <option value="front_duo">Duo Front Rows - ₹1198</option>
-                        <option value="normal_duo">Duo Normal Rows - ₹798</option>
+                        <option value="normal">Normal Rows - ₹499</option>
+                        <option value="front">Front Rows - ₹799</option>
+                        <option value="front_duo">Duo Front Rows - ₹1298</option>
+                        <option value="normal_duo">Duo Normal Rows - ₹898</option>
                       </select>
                     )}
                   </div>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 // Only keep the tech fest event
 const techFestEvent = {
   title: "S²-25 - StartUp Synergy",
-  subtitle: "05 February 2026",
+  subtitle: "04 February 2026",
   description:
     "Opening Ceremony+Live Podcast Session, Ideathon, Meme War Competition Featuring E-Sports, Cultural Performances, and StandUp Comedy.",
   img: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=2070&q=80",
@@ -16,8 +16,8 @@ const techFestEvent = {
   collaboration: "With Campus Tech Society",
   time: "10:00 AM - 8:00 PM",
   venue: "VIT Bhopal University, Main Campus",
-  date: "December 15",
-  year: "2025",
+  date: "February 04",
+  year: "2026",
   detailedDescription:
     "Dive into a world of technology with hands-on workshops, coding challenges, and expert talks.",
   speaker: "Mr. Raj Patel",
