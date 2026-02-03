@@ -19,7 +19,7 @@ const subEvents = [
     description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "/Day 1-images/podcast.jpg",
     venue: "AB2-Audi2",
-    time: "10:00 AM - 1:00 PM",
+    time: "10:00 AM - 11:40 PM",
     registrationFee: "Free",
     route: "https://docs.google.com/forms/d/e/1FAIpQLSfULj7pgGUDgk9Htzlu_HcN8TSXVby8byDoCQc00QxV58mhAw/viewform?usp=header",
     hasRegistration: true
@@ -30,7 +30,7 @@ const subEvents = [
     description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
     img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg",
     venue: "Cultural Hall",
-    time: "1:00 PM - 2:00 PM",
+    time: "12:00 PM - 1:00 PM",
     registrationFee: "Free",
     route:  "https://forms.gle/DqdpNJ7FRqS4rrUq9",
     hasRegistration: true
