@@ -156,7 +156,7 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
         <img src={mobileBanner} alt="Banner" className="w-full h-auto md:hidden" />
         <div className="absolute inset-x-0 bottom-0 translate-y-1/2 text-center">
           <div className="inline-block bg-gradient-to-r from-orange-500 via-red-600 to-pink-600 px-8 py-4 rounded-full shadow-2xl">
-            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹1198!</span>
+            <span className="text-xl md:text-2xl font-bold text-white">2 FRONT SEAT = ONLY ₹1298!</span>
           </div>
         </div>
       </section>
