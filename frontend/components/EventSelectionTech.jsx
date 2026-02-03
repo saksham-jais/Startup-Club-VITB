@@ -28,7 +28,7 @@ const subEvents = [
     id: 3,
     title: "Cultural Performance Showcase",
     description: "Celebrate diversity through dance, music, and drama performances. Register to perform or attend as an audience member.",
-    img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg",
+    img: "https://www.shutterstock.com/image-photo/staff-treble-clef-musical-notes-600nw-2271621591.jpg ",
     venue: "Cultural Hall",
     time: "12:00 PM - 1:00 PM",
     registrationFee: "Free",
