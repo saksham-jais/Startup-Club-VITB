@@ -16,7 +16,7 @@ const subEvents = [
   {
     id: 2,
     title: "Speaker Session",
-    description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
+    description: "Join a live speaker session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "/Day 1-images/podcast.jpg",
     venue: "AB1, Auditorium-1",
     time: "10:00 AM - 11:40 PM",
