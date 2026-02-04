@@ -16,13 +16,13 @@ const subEvents = [
   {
     id: 2,
     title: "Speaker Session",
-    description: "Join a live podcast session with top speakers and get a chance to ask questions and interact in real-time.",
+    description: "Join a live speaker session with top speakers and get a chance to ask questions and interact in real-time.",
     img: "/Day 1-images/podcast.jpg",
     venue: "AB1, Auditorium-1",
     time: "10:00 AM - 11:40 PM",
     registrationFee: "Free",
     route: "https://docs.google.com/forms/d/e/1FAIpQLSfULj7pgGUDgk9Htzlu_HcN8TSXVby8byDoCQc00QxV58mhAw/viewform?usp=header",
-    hasRegistration: true
+    hasRegistration: false
   },
     {
     id: 3,
@@ -33,7 +33,7 @@ const subEvents = [
     time: "12:00 PM - 1:00 PM",
     registrationFee: "Free",
     route:  "https://forms.gle/DqdpNJ7FRqS4rrUq9",
-    hasRegistration: true
+    hasRegistration: false
   }
 ];
 
