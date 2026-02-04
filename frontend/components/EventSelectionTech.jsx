@@ -22,7 +22,7 @@ const subEvents = [
     time: "10:00 AM - 11:40 PM",
     registrationFee: "Free",
     route: "https://docs.google.com/forms/d/e/1FAIpQLSfULj7pgGUDgk9Htzlu_HcN8TSXVby8byDoCQc00QxV58mhAw/viewform?usp=header",
-    hasRegistration: false
+    hasRegistration: true
   },
     {
     id: 3,
@@ -33,7 +33,7 @@ const subEvents = [
     time: "12:00 PM - 1:00 PM",
     registrationFee: "Free",
     route:  "https://forms.gle/DqdpNJ7FRqS4rrUq9",
-    hasRegistration: false
+    hasRegistration: true
   }
 ];
 
