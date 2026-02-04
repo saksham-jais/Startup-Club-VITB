@@ -15,10 +15,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
   const [screenshot, setScreenshot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const PRICE_FRONT_SINGLE = 799;
-  const PRICE_FRONT_OFFER = 1298;
-  const PRICE_NORMAL_OFFER = 898;
-  const PRICE_NORMAL = 499;
+  const PRICE_FRONT_SINGLE = 949;
+  const PRICE_FRONT_OFFER = 1448;
+  const PRICE_NORMAL_OFFER = 1048;
+  const PRICE_NORMAL = 649;
 
   const calculateTotal = () => {
     const frontCount = members.filter(m => m.category === 'front').length;
