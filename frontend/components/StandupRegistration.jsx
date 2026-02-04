@@ -223,10 +223,10 @@ function StandupRegistration({ title = 'Comedy Standup Night' }) {
                     {idx === 0 && members.length === 1 && (
                       <select value={member.category} onChange={e => updateMember(member.id, 'category', e.target.value)}
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition">
-                        <option value="normal">Normal Rows - ₹499</option>
-                        <option value="front">Front Rows - ₹799</option>
-                        <option value="front_duo">Duo Front Rows - ₹1298</option>
-                        <option value="normal_duo">Duo Normal Rows - ₹898</option>
+                        <option value="normal">Normal Rows - ₹649</option>
+                        <option value="front">Front Rows - ₹949</option>
+                        <option value="front_duo">Duo Front Rows - ₹1448</option>
+                        <option value="normal_duo">Duo Normal Rows - ₹1048</option>
                       </select>
                     )}
                   </div>

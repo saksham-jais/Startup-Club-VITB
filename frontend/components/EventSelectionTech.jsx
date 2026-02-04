@@ -11,7 +11,7 @@ const subEvents = [
     registrationFee: "₹499-₹1298",
     // teamSize: "Individual",
     route: "/register-standup",
-    hasRegistration: true 
+    hasRegistration: false 
   },
   {
     id: 2,
